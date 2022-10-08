@@ -1,4 +1,29 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+import TaskCard from "@/components/TaskCard.vue";
+import { useMockStore } from "@/stores/mock";
+import { ref } from "vue";
+import router from "@/router";
+import ModalContainer from "@/components/ModalContainer.vue";
+
+const mockStore = useMockStore();
+
+const showModal = ref(false);
+
+function openTask(id: number) {
+  showModal.value = true;
+  router.push({ name: "task", params: { id } });
+}
+
+function closeTask() {
+  showModal.value = false;
+  router.push({ name: "home" });
+}
+
+if (router.currentRoute.value.name === "task") {
+  showModal.value = true;
+}
+
+</script>
 
 <template>
   <main>
@@ -8,9 +33,12 @@
     </p>
 
     <div class="flex flex-col gap-4">
-      <button class="btn btn-primary">Primary</button>
-      <button class="btn btn-secondary">Secondary</button>
-      <button class="btn btn-tertiary">Tertiary</button>
+      <div v-for="task in mockStore.tasks" :key="task">
+        <TaskCard :task="task" @click="openTask(task.id)" />
+      </div>
     </div>
+    <ModalContainer v-if="showModal" @close="closeTask">
+      <RouterView @close="closeTask" />
+    </ModalContainer>
   </main>
 </template>

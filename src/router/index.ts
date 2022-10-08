@@ -1,27 +1,37 @@
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import EditTaskView from "../views/modals/EditTaskView.vue";
+import type { Task } from "@/models/Task";
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: "/",
+      redirect: "/home",
+    },
+    {
+      path: "/home",
+      name: "home",
+      component: HomeView,
+      children: [
         {
-            path: "/",
-            redirect: "/home",
+          path: "task/:id",
+          name: "task",
+          component: EditTaskView,
+          props: true,
         },
-        {
-            path: "/home",
-            name: "home",
-            component: HomeView,
-        },
-        {
-            path: "/about",
-            name: "about",
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import("../views/LoginView.vue"),
-        },
-    ],
+      ],
+    },
+    {
+      path: "/about",
+      name: "about",
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("../views/LoginView.vue"),
+    },
+  ],
 });
 
 export default router;
