@@ -22,7 +22,6 @@ function closeTask() {
 if (router.currentRoute.value.name === "task") {
   showModal.value = true;
 }
-
 </script>
 
 <template>

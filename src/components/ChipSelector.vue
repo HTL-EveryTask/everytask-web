@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 defineProps<{
   entries: object[];
-
 }>();
 </script>
 
