@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import TaskCard from "@/components/TaskCard.vue";
 import { useMockStore } from "@/stores/mock";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import router from "@/router";
 import ModalContainer from "@/components/ModalContainer.vue";
 
@@ -11,7 +11,7 @@ const showModal = ref(false);
 
 function openTask(id: number) {
   showModal.value = true;
-  router.push({ name: "task", params: { id } });
+  router.push({ name: "showTask", params: { id } });
 }
 
 function closeTask() {
@@ -19,9 +19,12 @@ function closeTask() {
   router.push({ name: "home" });
 }
 
-if (router.currentRoute.value.name === "task") {
-  showModal.value = true;
-}
+onMounted(() => {
+  if (router.currentRoute.value.name === "showTask") {
+    showModal.value = true;
+    console.log("showing modal");
+  }
+});
 </script>
 
 <template>

@@ -2,10 +2,14 @@
 defineProps<{
   id: number;
 }>();
+
+defineEmits(["close"]);
 </script>
 
-<template v-slot="scope">
-  <h1>Edit task {{ id }}</h1>
-  <button @click="$parent.$emit('close')">Close</button>
+<template>
+  <div>
+    <h1>Edit task {{ id }}</h1>
+    <button @click="$emit('close')">Close</button>
+  </div>
 </template>
 <style scoped></style>

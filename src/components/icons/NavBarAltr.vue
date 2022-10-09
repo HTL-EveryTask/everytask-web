@@ -71,7 +71,7 @@ nav.collapsed {
 }
 
 nav.collapsed span {
-//opacity: 0;
+  //opacity: 0;
 }
 
 nav li {
