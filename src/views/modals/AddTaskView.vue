@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { Field, Form } from "vee-validate";
 
 const title = ref("");
 const description = ref("");
@@ -11,23 +12,17 @@ function addTask() {
 </script>
 
 <template>
-  <div class="bg-red-500">
+  <div>
     <h1>Add A Task</h1>
 
-    <div>
-      <div class="input-field">
+    <Form @submit="addTask">
+      <Field label="title" name="title">
         <label for="title">Title</label>
-        <input id="title" v-model.trim="title" type="text" />
-      </div>
-      <div class="input-field">
-        <label for="description">Description</label>
-        <input id="description" v-model="description" type="text" />
-      </div>
-      <div class="input-field">
-        <label for="due">Due</label>
-        <input id="due" v-model="due" type="datetime-local" />
-      </div>
-    </div>
+      </Field>
+      <Field label="description" name="description" />
+      <Field label="due" name="due" type="datetime-local" />
+      <button type="submit">Add Task</button>
+    </Form>
 
     <button
       class="absolute right-0 bottom-0 bg-blue-600 text-white w-20 h-20 rounded-full m-12"
