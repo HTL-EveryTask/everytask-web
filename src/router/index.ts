@@ -36,6 +36,11 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/LoginView.vue"),
     },
+    {
+      path: "/notification-test",
+      name: "notification-test",
+      component: () => import("../views/test/NotificationTestView.vue"),
+    },
   ],
 });
 

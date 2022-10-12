@@ -1,6 +1,7 @@
 {
   "name": "everytask-web",
   "version": "0.0.0",
+  "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
@@ -10,9 +11,11 @@
     "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "electron:start": "electron ."
   },
   "dependencies": {
+    "path": "^0.12.7",
     "pinia": "^2.0.21",
     "vee-validate": "^4.7.0",
     "vue": "^3.2.38",
@@ -29,6 +32,8 @@
     "@vue/tsconfig": "^0.1.3",
     "autoprefixer": "^10.4.11",
     "cypress": "^10.7.0",
+    "electron": "^21.1.0",
+    "electron-packager": "^16.0.0",
     "eslint": "8.22.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.3.0",

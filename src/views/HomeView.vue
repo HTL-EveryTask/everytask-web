@@ -35,7 +35,7 @@ onMounted(() => {
     </p>
 
     <div class="flex flex-col gap-4">
-      <div v-for="task in mockStore.tasks" :key="task">
+      <div v-for="task in mockStore.tasks" :key="task.id">
         <TaskCard :task="task" @click="openTask(task.id)" />
       </div>
     </div>

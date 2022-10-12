@@ -29,7 +29,7 @@ const mouseOver = ref(false);
         </router-link>
       </li>
       <li>
-        <router-link class="nav-link" to="/">
+        <router-link class="nav-link" to="/notification-test">
           <GroupIcon />
           <span class="">Groups</span>
         </router-link>
