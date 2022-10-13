@@ -1,35 +1,93 @@
 <script lang="ts" setup>
+import { maxLength, required } from "@vuelidate/validators";
 import { ref } from "vue";
-import { Field, Form } from "vee-validate";
+import useVuelidate from "@vuelidate/core";
+import { useMockStore } from "@/stores/mock";
+import ModalContainer from "@/components/ModalContainer.vue";
 
-const title = ref("");
-const description = ref("");
-const due = ref("");
+defineEmits(["close"]);
+const props = defineProps<{
+  taskId: number;
+}>();
 
-function addTask() {
-  console.log(title.value, description.value, due.value);
+const mockStore = useMockStore();
+const task = ref(mockStore.tasks.find((t) => t.id === props.taskId));
+
+const title = ref(task.value?.title ?? "");
+const description = ref(task.value?.description ?? "");
+const due = ref(task.value?.due ?? false);
+
+let showDeleteModal = ref(false);
+
+const rules = {
+  title: {
+    required,
+    maxLength: maxLength(32),
+  },
+  description: {
+    maxLength: maxLength(300),
+  },
+  due: {
+    required,
+  },
+};
+
+const v$ = useVuelidate(rules, { title, description, due });
+
+function onSubmit() {
+  if (v$.value.$invalid) {
+    v$.value.$touch();
+    return;
+  }
+  console.log("submit");
 }
 </script>
 
 <template>
   <div>
-    <h1>Add A Task</h1>
-
-    <Form @submit="addTask">
-      <Field label="title" name="title">
+    <form class="" @submit.prevent="onSubmit">
+      <div>
         <label for="title">Title</label>
-      </Field>
-      <Field label="description" name="description" />
-      <Field label="due" name="due" type="datetime-local" />
-      <button type="submit">Add Task</button>
-    </Form>
+        <input id="title" v-model="title" type="text" @blur="v$.title.$touch" />
+        <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
+      </div>
 
-    <button
-      class="absolute right-0 bottom-0 bg-blue-600 text-white w-20 h-20 rounded-full m-12"
-      @click="addTask"
-    >
-      Save
-    </button>
+      <div>
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          v-model="description"
+          @blur="v$.description.$touch"
+        />
+        <span v-if="v$.description.$error" class="input-error">{{
+          v$.description.$errors[0].$message
+        }}</span>
+      </div>
+
+      <div>
+        <label for="due">Due</label>
+        <input
+          id="due"
+          v-model="due"
+          type="datetime-local"
+          @blur="v$.due.$touch"
+        />
+        <span v-if="v$.due.$error" class="input-error">{{
+          v$.due.$errors[0].$message
+        }}</span>
+      </div>
+
+      <button class="btn-primary mt-4" type="submit">Add Task</button>
+    </form>
+
+    <button class="btn-red" @click="showDeleteModal = true">Delete Task</button>
+
+    <ModalContainer v-if="showDeleteModal" @close="showDeleteModal = false">
+      <button class="btn-red" @click="showDeleteModal = false">Delete</button>
+      <button class="btn-primary" @click="showDeleteModal = false">
+        Cancel
+      </button>
+    </ModalContainer>
   </div>
 </template>
 <style scoped></style>

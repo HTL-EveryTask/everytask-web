@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import EditTaskView from "../views/modals/EditTaskView.vue";
 import AddTaskView from "../views/modals/AddTaskView.vue";
 
 const router = createRouter({
@@ -18,8 +17,8 @@ const router = createRouter({
         {
           path: "task/:id",
           name: "showTask",
-          component: EditTaskView,
-          props: (route) => ({ id: Number(route.params.id) }),
+          component: AddTaskView,
+          props: (route) => ({ taskId: Number(route.params.id) }),
         },
       ],
     },

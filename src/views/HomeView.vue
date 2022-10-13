@@ -39,7 +39,12 @@ onMounted(() => {
         <TaskCard :task="task" @click="openTask(task.id)" />
       </div>
     </div>
-    <ModalContainer v-if="showModal" @close="closeTask">
+    <ModalContainer
+      v-if="showModal"
+      @close="closeTask"
+      title="Edit Task"
+      effect="shadow"
+    >
       <RouterView @close="closeTask" />
     </ModalContainer>
   </main>
