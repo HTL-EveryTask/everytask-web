@@ -36,5 +36,17 @@ export const useMockStore = defineStore("mock", () => {
     },
   ]);
 
-  return { tasks, users };
+  const deleteTask = (id: number) => {
+    tasks.value = tasks.value.filter((task) => task.id !== id);
+  };
+
+  const addTask = (task: Task) => {
+    tasks.value.push(task);
+  };
+
+  const updateTask = (task: Task) => {
+    tasks.value = tasks.value.map((t) => (t.id === task.id ? task : t));
+  };
+
+  return { tasks, users, deleteTask, addTask, updateTask };
 });

@@ -20,12 +20,12 @@ const router = createRouter({
           component: AddTaskView,
           props: (route) => ({ taskId: Number(route.params.id) }),
         },
+        {
+          path: "/add-task",
+          name: "addTask",
+          component: AddTaskView,
+        },
       ],
-    },
-    {
-      path: "/add-task",
-      name: "add-task",
-      component: AddTaskView,
     },
     {
       path: "/about",

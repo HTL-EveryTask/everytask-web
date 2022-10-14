@@ -19,10 +19,24 @@ function closeTask() {
   router.push({ name: "home" });
 }
 
+const showAddTaskModal = ref(false);
+
+function openAddTaskModal() {
+  showAddTaskModal.value = true;
+  router.push({ name: "addTask" });
+}
+
+function closeAddTaskModal() {
+  showAddTaskModal.value = false;
+  router.push({ name: "home" });
+}
+
 onMounted(() => {
   if (router.currentRoute.value.name === "showTask") {
     showModal.value = true;
     console.log("showing modal");
+  } else if (router.currentRoute.value.name === "addTask") {
+    showAddTaskModal.value = true;
   }
 });
 </script>
@@ -39,13 +53,25 @@ onMounted(() => {
         <TaskCard :task="task" @click="openTask(task.id)" />
       </div>
     </div>
+
+    <button class="btn-primary" @click="openAddTaskModal">Add task</button>
+
     <ModalContainer
       v-if="showModal"
-      @close="closeTask"
-      title="Edit Task"
       effect="shadow"
+      title="Edit Task"
+      @close="closeTask"
     >
       <RouterView @close="closeTask" />
+    </ModalContainer>
+
+    <ModalContainer
+      v-if="showAddTaskModal"
+      effect="shadow"
+      title="Add A Task"
+      @close="closeAddTaskModal"
+    >
+      <RouterView @close="closeAddTaskModal" />
     </ModalContainer>
   </main>
 </template>
