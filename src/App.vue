@@ -6,8 +6,8 @@ import NavBarAltr from "@/components/icons/NavBarAltr.vue";
 <template>
   <div class="flex min-h-screen">
     <NavBarAltr />
-    <div class="p-3 mx-auto">
-      <RouterView />
+    <div class="p-3 w-full flex">
+      <RouterView class="" />
     </div>
   </div>
 </template>

@@ -45,7 +45,8 @@ export const useMockStore = defineStore("mock", () => {
   };
 
   const updateTask = (task: Task) => {
-    tasks.value = tasks.value.map((t) => (t.id === task.id ? task : t));
+    const index = tasks.value.findIndex((t) => t.id === task.id);
+    tasks.value[index] = task;
   };
 
   return { tasks, users, deleteTask, addTask, updateTask };

@@ -24,19 +24,21 @@ const rules = {
   title: {
     required,
     maxLength: maxLength(32),
+    $autoDirty: true,
   },
   description: {
     maxLength: maxLength(300),
+    $autoDirty: true,
   },
   due: {
     required,
+    $autoDirty: true,
   },
 };
 
 const v$ = useVuelidate(rules, { title, description, due });
 
 function onSubmit() {
-  // make task object from form data
   const newTask: Task = {
     id: task.value?.id ?? mockStore.tasks.length + 1,
     title: title.value,
@@ -46,12 +48,12 @@ function onSubmit() {
   };
 
   if (task.value) {
-    // update task
     mockStore.updateTask(newTask);
   } else {
-    // create task
     mockStore.addTask(newTask);
   }
+
+  emit("close");
 }
 
 function deleteTask() {
@@ -69,17 +71,15 @@ function deleteTask() {
     <form class="" @submit.prevent="onSubmit">
       <div>
         <label for="title">Title</label>
-        <input id="title" v-model="title" type="text" @blur="v$.title.$touch" />
-        <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
+        <input id="title" v-model="title" type="text" />
+        <span class="input-error" v-if="v$.title.$error">{{
+          v$.title.$errors[0].$message
+        }}</span>
       </div>
 
       <div>
         <label for="description">Description</label>
-        <textarea
-          id="description"
-          v-model="description"
-          @blur="v$.description.$touch"
-        />
+        <textarea id="description" v-model="description" />
         <span v-if="v$.description.$error" class="input-error">{{
           v$.description.$errors[0].$message
         }}</span>
@@ -87,21 +87,20 @@ function deleteTask() {
 
       <div>
         <label for="due">Due</label>
-        <input
-          id="due"
-          v-model="due"
-          type="datetime-local"
-          @blur="v$.due.$touch"
-        />
+        <input id="due" v-model="due" type="datetime-local" />
         <span v-if="v$.due.$error" class="input-error">{{
           v$.due.$errors[0].$message
         }}</span>
       </div>
 
-      <button class="btn-primary mt-4" type="submit">Add Task</button>
+      <button class="btn-primary mt-4" type="submit" :disabled="v$.$invalid">
+        {{ task ? "Update" : "Add" }}
+      </button>
     </form>
 
-    <button class="btn-red" @click="showDeleteModal = true">Delete Task</button>
+    <button v-if="task" class="btn-red" @click="showDeleteModal = true">
+      Delete Task
+    </button>
 
     <ModalContainer v-if="showDeleteModal" @close="showDeleteModal = false">
       <div>
