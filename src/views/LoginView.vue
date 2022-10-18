@@ -35,19 +35,19 @@ function onSubmit() {
         <div>
           <label for="email">Email</label>
           <input id="email" v-model="email" type="email" />
-          <span class="input-error" v-if="v$.email.$error">{{
+          <span v-if="v$.email.$error" class="input-error">{{
             v$.email.$errors[0].$message
           }}</span>
         </div>
         <div>
           <label for="password">Password</label>
           <input id="password" v-model="password" type="password" />
-          <span class="input-error" v-if="v$.password.$error">{{
+          <span v-if="v$.password.$error" class="input-error">{{
             v$.password.$errors[0].$message
           }}</span>
         </div>
         <div>
-          <button type="submit" class="btn-primary">Login</button>
+          <button class="btn-primary" type="submit">Login</button>
         </div>
       </form>
     </div>

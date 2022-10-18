@@ -19,10 +19,10 @@ defineProps({
 
 <template>
   <div
-    class="absolute w-screen h-screen left-0 top-0"
     :class="{
       'overlay-shadow': effect === 'shadow',
     }"
+    class="absolute w-screen h-screen left-0 top-0"
     @click="$emit('close')"
   />
   <div

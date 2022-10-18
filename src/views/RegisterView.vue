@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import useVuelidate from "@vuelidate/core";
 import { ref } from "vue";
-import { helpers, minLength, required, email } from "@vuelidate/validators";
+import { email, helpers, minLength, required } from "@vuelidate/validators";
 
 const username = ref("");
 const emailInput = ref("");
