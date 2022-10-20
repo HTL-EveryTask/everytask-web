@@ -37,7 +37,7 @@ onMounted(() => {
   }
 });
 
-function onEnter(el: HTMLElement, done: () => void) {
+function onEnter(el: any, done: () => void) {
   const index: number = el.dataset.index ? parseInt(el.dataset.index) : 0;
 
   // entrance animation with transformX and opacity and bobbing effect
@@ -58,7 +58,7 @@ function onEnter(el: HTMLElement, done: () => void) {
   );
 }
 
-function onLeave(el: HTMLElement, done: () => void) {
+function onLeave(el: any, done: () => void) {
   const index: number = el.dataset.index ? parseInt(el.dataset.index) : 0;
 
   gsap.fromTo(
