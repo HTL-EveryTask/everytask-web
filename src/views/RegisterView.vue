@@ -73,7 +73,7 @@ function onSubmit() {
           <input id="username" v-model="username" type="text" />
           <span
             v-for="error in v$.username.$errors"
-            :key="error"
+            :key="error.$uid"
             class="input-error"
             >{{ error.$message }}</span
           >
@@ -83,7 +83,7 @@ function onSubmit() {
           <input id="email" v-model="emailInput" type="email" />
           <span
             v-for="error in v$.email.$errors"
-            :key="error"
+            :key="error.$uid"
             class="input-error"
             >{{ error.$message }}</span
           >
@@ -93,7 +93,7 @@ function onSubmit() {
           <input id="password" v-model="password" type="password" />
           <span
             v-for="error in v$.password.$errors"
-            :key="error"
+            :key="error.$uid"
             class="input-error"
             >{{ error.$message }}</span
           >
@@ -107,7 +107,7 @@ function onSubmit() {
           />
           <span
             v-for="error in v$.confirmPassword.$errors"
-            :key="error"
+            :key="error.$uid"
             class="input-error"
             >{{ error.$message }}</span
           >
