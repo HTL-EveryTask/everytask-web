@@ -49,8 +49,16 @@ function onSubmit() {
 
   if (task.value) {
     mockStore.updateTask(newTask);
+    // send a desktop notification
+    new Notification("Task updated", {
+      body: `Task "${newTask.title}" has been updated`,
+    });
   } else {
     mockStore.addTask(newTask);
+    // send a desktop notification
+    new Notification("New task", {
+      body: `Task "${newTask.title}" has been added`,
+    });
   }
 
   emit("close");
