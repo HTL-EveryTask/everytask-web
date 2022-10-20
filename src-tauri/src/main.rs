@@ -41,7 +41,6 @@ fn main() {
                 api.prevent_exit();
             }
             RunEvent::WindowEvent {
-                label,
                 event: WindowEvent::CloseRequested { api, .. },
                 ..
             } => {
