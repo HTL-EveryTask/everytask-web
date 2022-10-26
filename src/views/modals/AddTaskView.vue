@@ -102,7 +102,7 @@ function deleteTask() {
       Delete Task
     </button>
 
-    <ModalContainer v-if="showDeleteModal" @close="showDeleteModal = false">
+    <ModalContainer :show="showDeleteModal" @close="showDeleteModal = false">
       <div>
         <button class="btn-red" @click="deleteTask">Delete</button>
         <button class="btn-primary" @click="showDeleteModal = false">

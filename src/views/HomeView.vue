@@ -39,8 +39,6 @@ onMounted(() => {
 
 function onEnter(el: any, done: () => void) {
   const index: number = el.dataset.index ? parseInt(el.dataset.index) : 0;
-
-  // entrance animation with transformX and opacity and bobbing effect
   gsap.fromTo(
     el,
     {
@@ -56,6 +54,7 @@ function onEnter(el: any, done: () => void) {
       onComplete: done,
     }
   );
+  done();
 }
 
 function onLeave(el: any, done: () => void) {
@@ -76,6 +75,7 @@ function onLeave(el: any, done: () => void) {
       onComplete: done,
     }
   );
+  done();
 }
 </script>
 
@@ -107,10 +107,10 @@ function onLeave(el: any, done: () => void) {
     <button class="btn-primary" @click="openAddTaskModal">Add task</button>
 
     <ModalContainer
-      v-if="showModal"
       :title="modalTitle"
       effect="shadow"
       @close="closeModal"
+      :show="showModal"
     >
       <RouterView @close="closeModal" />
     </ModalContainer>
