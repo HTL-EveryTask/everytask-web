@@ -51,13 +51,14 @@ function onSubmit() {
     mockStore.updateTask(newTask);
     // send a desktop notification
     new Notification("Task updated", {
-      body: `Task "${newTask.title}" has been updated`,
+      body: `"${newTask.title}" has been updated`,
+      silent: false,
     });
   } else {
     mockStore.addTask(newTask);
     // send a desktop notification
     new Notification("New task", {
-      body: `Task "${newTask.title}" has been added`,
+      body: `"${newTask.title}" has been added`,
     });
   }
 
