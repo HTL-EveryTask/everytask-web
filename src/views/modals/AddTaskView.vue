@@ -68,7 +68,7 @@ function deleteTask() {
 
 <template>
   <div>
-    <form class="" @submit.prevent="onSubmit">
+    <form class="w-96" @submit.prevent="onSubmit">
       <div>
         <label for="title">Title</label>
         <input id="title" v-model="title" type="text" />

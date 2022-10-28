@@ -7,6 +7,7 @@
         font-family: proxima-nova, sans-serif;
         font-weight: 500;
         font-style: normal;
+        @apply bg-ghost text-raisin;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -21,7 +22,7 @@
     }
 
     input, textarea {
-        @apply block w-full p-2 border-2 border-indigo-50 rounded-md focus:outline-none focus:border-indigo-200;
+        @apply block w-full p-2 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-200 bg-ghost
     }
 
     button:disabled {
