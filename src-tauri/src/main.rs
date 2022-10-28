@@ -32,6 +32,14 @@ fn main() {
                     _ => {}
                 }
             }
+            SystemTrayEvent::LeftClick {
+                position: _,
+                size: _,
+                ..
+            } => {
+                let window = app.get_window("main").unwrap();
+                window.show().unwrap();
+            }
             _ => {}
         })
         .build(tauri::generate_context!())
