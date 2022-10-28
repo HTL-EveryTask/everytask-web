@@ -11,14 +11,14 @@ const mouseOver = ref(false);
 <template>
   <nav
     :class="
-      'w-[300px] bg-slate-800 p-[15px] py-[20px] transition-all' +
+      'w-[250px] bg-ghost shadow-xl p-[22px] py-[20px] transition-all rounded-2xl' +
       (!mouseOver ? ' collapsed' : '')
     "
     @mouseleave="mouseOver = false"
     @mouseover="mouseOver = true"
   >
-    <header class="w-12 mx-auto">
-      <img alt="logo" src="@/assets/logo.svg" />
+    <header class="w-16 mx-auto">
+      <img alt="logo" src="@/assets/logo_light.svg" />
       <span>EveryTask</span>
     </header>
     <ul class="">
@@ -56,13 +56,15 @@ const mouseOver = ref(false);
 </template>
 
 <style scoped>
+/*noinspection CssUnusedSymbol*/
 nav.collapsed {
-  width: 90px;
+  width: 100px;
 }
 
 .nav-link svg {
-  min-width: 60px;
-  height: 24px;
+  min-width: 53px;
+  height: 28px;
+  margin-right: 8px;
 }
 
 .nav-link span {
@@ -76,7 +78,7 @@ nav.collapsed span {
 
 nav li {
   height: 50px;
-  @apply bg-red-800 mt-4 flex;
+  @apply rounded-xl bg-ghost border-2 border-indigo-200 mt-4 flex;
   display: flex;
 }
 
