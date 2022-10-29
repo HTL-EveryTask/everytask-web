@@ -2,6 +2,7 @@
 import useVuelidate from "@vuelidate/core";
 import { ref } from "vue";
 import { email, helpers, minLength, required } from "@vuelidate/validators";
+import InputField from "@/components/InputField.vue";
 
 const username = ref("");
 const emailInput = ref("");
@@ -11,17 +12,14 @@ const confirmPassword = ref("");
 const rules = {
   username: {
     required,
-    $autoDirty: true,
     minLength: minLength(4),
   },
   email: {
     required,
-    $autoDirty: true,
     email: email,
   },
   password: {
     required,
-    $autoDirty: true,
     minLength: minLength(8),
     specialChar: helpers.withMessage(
       "Password must contain at least one special character",
@@ -38,7 +36,6 @@ const rules = {
   },
   confirmPassword: {
     required,
-    $autoDirty: true,
     sameAsPassword: helpers.withMessage(
       "Passwords must match",
       (value: string) => {
@@ -48,12 +45,16 @@ const rules = {
   },
 };
 
-const v$ = useVuelidate(rules, {
-  username,
-  email: emailInput,
-  password,
-  confirmPassword,
-});
+const v$ = useVuelidate(
+  rules,
+  {
+    username,
+    email: emailInput,
+    password,
+    confirmPassword,
+  },
+  { $autoDirty: true }
+);
 
 function onSubmit() {
   console.log("submitted");
@@ -68,50 +69,29 @@ function onSubmit() {
       <h1 class="text-3xl text-center">Register to EveryTask</h1>
 
       <form @submit.prevent="onSubmit">
-        <div class="form-control">
-          <label for="username">Username</label>
-          <input id="username" v-model="username" type="text" />
-          <span
-            v-for="error in v$.username.$errors"
-            :key="error.$uid"
-            class="input-error"
-            >{{ error.$message }}</span
-          >
-        </div>
-        <div>
-          <label for="email">Email</label>
+        <InputField id="username" :validation="v$.username" label="Username">
+          <input id="username" v-model="username" type="text" required />
+        </InputField>
+
+        <InputField id="email" :validation="v$.email" label="Email">
           <input id="email" v-model="emailInput" type="email" />
-          <span
-            v-for="error in v$.email.$errors"
-            :key="error.$uid"
-            class="input-error"
-            >{{ error.$message }}</span
-          >
-        </div>
-        <div>
-          <label for="password">Password</label>
+        </InputField>
+
+        <InputField id="password" :validation="v$.password" label="Password">
           <input id="password" v-model="password" type="password" />
-          <span
-            v-for="error in v$.password.$errors"
-            :key="error.$uid"
-            class="input-error"
-            >{{ error.$message }}</span
-          >
-        </div>
-        <div>
-          <label for="confirmPassword">Confirm Password</label>
+        </InputField>
+
+        <InputField
+          id="confirmPassword"
+          :validation="v$.confirmPassword"
+          label="Confirm Password"
+        >
           <input
             id="confirmPassword"
             v-model="confirmPassword"
             type="password"
           />
-          <span
-            v-for="error in v$.confirmPassword.$errors"
-            :key="error.$uid"
-            class="input-error"
-            >{{ error.$message }}</span
-          >
-        </div>
+        </InputField>
         <button :disabled="v$.$invalid" class="btn-primary" type="submit">
           Register
         </button>

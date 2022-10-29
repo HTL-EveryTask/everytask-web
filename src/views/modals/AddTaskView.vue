@@ -5,6 +5,7 @@ import useVuelidate from "@vuelidate/core";
 import { useMockStore } from "@/stores/mock";
 import ModalContainer from "@/components/ModalContainer.vue";
 import type { Task } from "@/models/Task";
+import InputField from "@/components/InputField.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -24,19 +25,20 @@ const rules = {
   title: {
     required,
     maxLength: maxLength(32),
-    $autoDirty: true,
   },
   description: {
     maxLength: maxLength(300),
-    $autoDirty: true,
   },
   due: {
     required,
-    $autoDirty: true,
   },
 };
 
-const v$ = useVuelidate(rules, { title, description, due });
+const v$ = useVuelidate(
+  rules,
+  { title, description, due },
+  { $autoDirty: true }
+);
 
 function onSubmit() {
   const newTask: Task = {
@@ -69,31 +71,36 @@ function deleteTask() {
 <template>
   <div>
     <form class="w-96" @submit.prevent="onSubmit">
-      <div>
-        <label for="title">Title</label>
-        <input id="title" v-model="title" type="text" />
-        <span class="input-error" v-if="v$.title.$error">{{
-          v$.title.$errors[0].$message
-        }}</span>
-      </div>
+      <InputField id="title" :validation="v$.title" label="Title">
+        <input id="title" v-model="title" class="w-full" type="text" />
+        <template v-slot:right>
+          <span class="text-gray-500 text-sm"> {{ title.length }}/32 </span>
+        </template>
+      </InputField>
 
-      <div>
-        <label for="description">Description</label>
-        <textarea id="description" v-model="description" />
-        <span v-if="v$.description.$error" class="input-error">{{
-          v$.description.$errors[0].$message
-        }}</span>
-      </div>
+      <InputField
+        id="description"
+        :validation="v$.description"
+        label="Description"
+      >
+        <textarea
+          id="description"
+          v-model="description"
+          class="w-full"
+          rows="3"
+        ></textarea>
+        <template v-slot:right>
+          <span class="text-gray-500 text-sm">
+            {{ description.length }}/300
+          </span>
+        </template>
+      </InputField>
 
-      <div>
-        <label for="due">Due</label>
-        <input id="due" v-model="due" type="datetime-local" />
-        <span v-if="v$.due.$error" class="input-error">{{
-          v$.due.$errors[0].$message
-        }}</span>
-      </div>
+      <InputField id="due" :validation="v$.due" label="Due">
+        <input id="due" v-model="due" class="w-full" type="datetime-local" />
+      </InputField>
 
-      <button class="btn-primary mt-4" type="submit" :disabled="v$.$invalid">
+      <button :disabled="v$.$invalid" class="btn-primary mt-4" type="submit">
         {{ task ? "Update" : "Add" }}
       </button>
     </form>

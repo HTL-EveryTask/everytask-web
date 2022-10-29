@@ -2,6 +2,7 @@
 import useVuelidate from "@vuelidate/core";
 import { ref } from "vue";
 import { minLength, required } from "@vuelidate/validators";
+import InputField from "@/components/InputField.vue";
 
 const email = ref("");
 const password = ref("");
@@ -17,7 +18,7 @@ const rules = {
   },
 };
 
-const v$ = useVuelidate(rules, { email, password });
+const v$ = useVuelidate(rules, { email, password }, { $autoDirty: true });
 
 function onSubmit() {
   console.log("submitted");
@@ -32,23 +33,13 @@ function onSubmit() {
       <h1 class="text-3xl text-center">Login to EveryTask</h1>
 
       <form @submit.prevent="onSubmit">
-        <div>
-          <label for="email">Email</label>
+        <InputField id="email" :validation="v$.email" label="Email">
           <input id="email" v-model="email" type="email" />
-          <span v-if="v$.email.$error" class="input-error">{{
-            v$.email.$errors[0].$message
-          }}</span>
-        </div>
-        <div>
-          <label for="password">Password</label>
+        </InputField>
+
+        <InputField id="password" :validation="v$.password" label="Password">
           <input id="password" v-model="password" type="password" />
-          <span v-if="v$.password.$error" class="input-error">{{
-            v$.password.$errors[0].$message
-          }}</span>
-        </div>
-        <div>
-          <button class="btn-primary" type="submit">Login</button>
-        </div>
+        </InputField>
       </form>
     </div>
   </div>

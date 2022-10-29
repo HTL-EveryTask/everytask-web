@@ -5,7 +5,7 @@
 @layer base {
     html {
         font-family: proxima-nova, sans-serif;
-        font-weight: 500;
+        font-weight: 400;
         font-style: normal;
         @apply bg-ghost text-raisin;
     }
@@ -21,8 +21,16 @@
         @apply text-gray-700;
     }
 
-    input, textarea {
+    input, textarea, select {
         @apply block w-full p-2 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-200 bg-ghost
+    }
+
+    .input-error input, .input-error textarea, .input-error select {
+        @apply border-red-400 focus:border-red-500;
+    }
+
+    label > input[required] {
+        @apply text-red-500;
     }
 
     button:disabled {
@@ -34,10 +42,6 @@
 @layer utilities {
     .btn-base {
         @apply font-bold py-2 px-4 rounded;
-    }
-
-    .input-error {
-        @apply text-red-500 text-sm block;
     }
 }
 
