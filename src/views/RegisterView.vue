@@ -3,11 +3,15 @@ import useVuelidate from "@vuelidate/core";
 import { ref } from "vue";
 import { email, helpers, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
+import { useAuthenticateStore } from "@/stores/authenticate";
+import router from "@/router";
 
-const username = ref("");
-const emailInput = ref("");
-const password = ref("");
-const confirmPassword = ref("");
+const username = ref("MyUserName");
+const emailInput = ref("nayonyx@gmail.com");
+const password = ref("MyPassword.");
+const confirmPassword = ref("MyPassword.");
+
+const currentErrors = ref<string[]>([]);
 
 const rules = {
   username: {
@@ -56,8 +60,22 @@ const v$ = useVuelidate(
   { $autoDirty: true }
 );
 
-function onSubmit() {
-  console.log("submitted");
+async function onSubmit() {
+  const authenticateStore = useAuthenticateStore();
+  const response = await authenticateStore.register(
+    username.value,
+    emailInput.value,
+    password.value
+  );
+
+  console.log(response);
+  // if the response is successful, router push to the route named login
+  if (response.type === "Success") {
+    await router.push({ name: "login" });
+  } else {
+    // make the error the first element of the array
+    currentErrors.value = [response.message];
+  }
 }
 </script>
 
@@ -67,6 +85,17 @@ function onSubmit() {
       class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg max-w-[36em] sm:w-full"
     >
       <h1 class="text-3xl text-center">Register to EveryTask</h1>
+
+      <div class="min-h-[5em] flex">
+        <ul
+          v-if="currentErrors.length > 0"
+          class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-lg list-disc"
+        >
+          <li v-for="error in currentErrors" :key="error">
+            {{ error }}
+          </li>
+        </ul>
+      </div>
 
       <form @submit.prevent="onSubmit">
         <InputField id="username" :validation="v$.username" label="Username">

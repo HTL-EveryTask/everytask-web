@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { RouterView } from "vue-router";
 import NavBarAltr from "@/components/NavBarAltr.vue";
+import { onMounted } from "vue";
+
+onMounted(() => {});
 </script>
 
 <template>
