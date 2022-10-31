@@ -11,7 +11,6 @@ export const useMockStore = defineStore("mock", () => {
       description: "Description 1",
       is_done: false,
       due_time: "2021-01-01",
-      note: "Note 1",
     },
     {
       pk_task_id: "2",
@@ -19,7 +18,6 @@ export const useMockStore = defineStore("mock", () => {
       description: "Description 2",
       is_done: false,
       due_time: "2021-01-02",
-      note: "Note 2",
     },
   ]);
 

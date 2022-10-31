@@ -77,7 +77,6 @@ function onLeave(el: any, done: () => void) {
       onComplete: done,
     }
   );
-  done();
 }
 </script>
 

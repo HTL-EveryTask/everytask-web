@@ -78,7 +78,6 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
           title: Task.title,
           description: Task.description,
           due_time: Task.due_time,
-          note: Task.note,
         }),
       {
         method: "POST",
@@ -99,7 +98,6 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
           title: Task.title,
           description: Task.description,
           due_time: Task.due_time,
-          note: Task.note,
         }),
       {
         method: "POST",
