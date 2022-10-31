@@ -3,7 +3,7 @@ import useVuelidate from "@vuelidate/core";
 import { ref } from "vue";
 import { email, helpers, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
-import { useAuthenticateStore } from "@/stores/authenticate";
+import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
 
 const username = ref("MyUserName");
