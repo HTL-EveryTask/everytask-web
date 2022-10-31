@@ -99,7 +99,7 @@ async function onSubmit() {
 
       <form @submit.prevent="onSubmit">
         <InputField id="username" :validation="v$.username" label="Username">
-          <input id="username" v-model="username" type="text" required />
+          <input id="username" v-model="username" type="text" />
         </InputField>
 
         <InputField id="email" :validation="v$.email" label="Email">
