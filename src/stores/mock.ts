@@ -6,18 +6,20 @@ import type { User } from "@/models/User";
 export const useMockStore = defineStore("mock", () => {
   const tasks = ref<Task[]>([
     {
-      id: 1,
+      pk_task_id: 1,
       title: "Task 1",
       description: "Description 1",
-      completed: false,
-      due: "2021-01-01",
+      is_done: false,
+      due_time: "2021-01-01",
+      note: "Note 1",
     },
     {
-      id: 2,
+      pk_task_id: 2,
       title: "Task 2",
       description: "Description 2",
-      completed: false,
-      due: "2021-01-02",
+      is_done: false,
+      due_time: "2021-01-02",
+      note: "Note 2",
     },
   ]);
 
@@ -36,8 +38,8 @@ export const useMockStore = defineStore("mock", () => {
     },
   ]);
 
-  const deleteTask = (id: number) => {
-    tasks.value = tasks.value.filter((task) => task.id !== id);
+  const deleteTask = (pk_task_id: number) => {
+    tasks.value = tasks.value.filter((task) => task.pk_task_id !== pk_task_id);
   };
 
   const addTask = (task: Task) => {
@@ -45,7 +47,9 @@ export const useMockStore = defineStore("mock", () => {
   };
 
   const updateTask = (task: Task) => {
-    const index = tasks.value.findIndex((t) => t.id === task.id);
+    const index = tasks.value.findIndex(
+      (t) => t.pk_task_id === task.pk_task_id
+    );
     tasks.value[index] = task;
   };
 

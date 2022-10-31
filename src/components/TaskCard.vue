@@ -11,7 +11,7 @@ const mockStore = useMockStore();
 function toggleCompleted() {
   mockStore.updateTask({
     ...props.task,
-    completed: !props.task.completed,
+    completed: !props.task.is_done,
   });
 
   // check if it changed in the store
@@ -26,7 +26,7 @@ function toggleCompleted() {
     <div
       :class="
         'w-4 h-4 rounded-full mr-4' +
-        (task.completed
+        (task.is_done
           ? ' bg-green-500 hover:bg-green-600'
           : ' bg-gray-300 hover:bg-gray-400')
       "
@@ -34,7 +34,7 @@ function toggleCompleted() {
     ></div>
     <div>
       <p class="text-sm">{{ task.title }}</p>
-      <p class="text-xs text-gray-500">{{ task.due }}</p>
+      <p class="text-xs text-gray-500">{{ task.due_time }}</p>
     </div>
   </div>
 </template>

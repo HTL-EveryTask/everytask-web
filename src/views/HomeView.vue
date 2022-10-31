@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import TaskCard from "@/components/TaskCard.vue";
-import { useMockStore } from "@/stores/mock";
 import { onMounted, ref } from "vue";
 import router from "@/router";
 import ModalContainer from "@/components/ModalContainer.vue";
 import { gsap } from "gsap";
+import { useAuthenticateStore } from "@/stores/auth";
 
-const mockStore = useMockStore();
+const authenticateStore = useAuthenticateStore();
 
 const showModal = ref(false);
 let modalTitle = ref("");
@@ -35,6 +35,8 @@ onMounted(() => {
     modalTitle.value =
       router.currentRoute.value.name === "addTask" ? "Add Task" : "Edit Task";
   }
+
+  authenticateStore.fetchTasks();
 });
 
 function onEnter(el: any, done: () => void) {
@@ -94,12 +96,12 @@ function onLeave(el: any, done: () => void) {
         @leave="onLeave"
       >
         <TaskCard
-          v-for="(task, index) in mockStore.tasks"
-          :key="task.id"
+          v-for="(task, index) in authenticateStore.tasks"
+          :key="task.pk_task_id"
           :data-index="index"
           :task="task"
           class="my-4"
-          @click="openTask(task.id)"
+          @click="openTask(task.pk_task_id)"
         />
       </TransitionGroup>
     </div>
@@ -107,10 +109,10 @@ function onLeave(el: any, done: () => void) {
     <button class="btn-primary" @click="openAddTaskModal">Add task</button>
 
     <ModalContainer
+      :show="showModal"
       :title="modalTitle"
       effect="shadow"
       @close="closeModal"
-      :show="showModal"
     >
       <RouterView @close="closeModal" />
     </ModalContainer>

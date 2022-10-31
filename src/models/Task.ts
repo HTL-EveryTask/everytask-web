@@ -1,7 +1,8 @@
 export interface Task {
-  id: number;
+  pk_task_id?: number;
   title: string;
   description: string;
-  completed: boolean;
-  due: string;
+  is_done: boolean;
+  due_time: string;
+  note: string;
 }

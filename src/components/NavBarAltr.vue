@@ -4,6 +4,9 @@ import GroupIcon from "@/components/icons/GroupIcon.vue";
 import ConnectionIcon from "@/components/icons/ConnectionIcon.vue";
 import UserIcon from "@/components/icons/UserIcon.vue";
 import { ref } from "vue";
+import { useAuthenticateStore } from "@/stores/auth";
+
+const authenticateStore = useAuthenticateStore();
 
 const mouseOver = ref(false);
 </script>
@@ -49,8 +52,12 @@ const mouseOver = ref(false);
     </ul>
     <!-- Profile -->
     <div>
-      <UserIcon class="w-10 h-10" />
-      <span class="ml-4 whitespace-nowrap condensed-hidden">John Doe</span>
+      <router-link class="nav-link" to="login">
+        <UserIcon class="w-10 h-10" />
+        <span class="ml-4 whitespace-nowrap condensed-hidden">{{
+          authenticateStore.token ? authenticateStore.token : "Not Logged In"
+        }}</span>
+      </router-link>
     </div>
   </nav>
 </template>
