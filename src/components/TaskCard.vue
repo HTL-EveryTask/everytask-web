@@ -11,11 +11,13 @@ const mockStore = useMockStore();
 function toggleCompleted() {
   mockStore.updateTask({
     ...props.task,
-    completed: !props.task.is_done,
+    is_done: !props.task.is_done,
   });
 
   // check if it changed in the store
-  console.log(mockStore.tasks.find((t) => t.id === props.task.id));
+  console.log(
+    mockStore.tasks.find((t) => t.pk_task_id === props.task.pk_task_id)
+  );
 }
 </script>
 

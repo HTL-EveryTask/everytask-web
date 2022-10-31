@@ -41,6 +41,7 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
 
     if (response.token) {
       token.value = response.token;
+      localStorage.setItem("token", response.token);
     }
     return response;
   }
@@ -70,7 +71,6 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
       return [];
     }
 
-    // put the task properties into the query params
     return await fetch(
       `${API_URL}/task/add?` +
         new URLSearchParams({
@@ -86,6 +86,44 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     ).then((response) => response.json());
   }
 
+  async function updateTask(Task: Task) {
+    if (!token.value) {
+      return [];
+    }
+
+    return await fetch(
+      `${API_URL}/task/update?` +
+        new URLSearchParams({
+          token: token.value,
+          pk_task_id: Task.pk_task_id,
+          title: Task.title,
+          description: Task.description,
+          due_time: Task.due_time,
+          note: Task.note,
+        }),
+      {
+        method: "POST",
+      }
+    ).then((response) => response.json());
+  }
+
+  async function deleteTask(pk_task_id: string) {
+    if (!token.value) {
+      return [];
+    }
+
+    return await fetch(
+      `${API_URL}/task/remove?` +
+        new URLSearchParams({
+          token: token.value,
+          task_id: pk_task_id,
+        }),
+      {
+        method: "POST",
+      }
+    ).then((response) => response.json());
+  }
+
   return {
     isAuthenticated,
     register,
@@ -93,6 +131,8 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     token,
     fetchTasks,
     createTask,
+    updateTask,
+    deleteTask,
     tasks,
   };
 });

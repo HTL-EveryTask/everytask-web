@@ -6,7 +6,7 @@ import type { User } from "@/models/User";
 export const useMockStore = defineStore("mock", () => {
   const tasks = ref<Task[]>([
     {
-      pk_task_id: 1,
+      pk_task_id: "1",
       title: "Task 1",
       description: "Description 1",
       is_done: false,
@@ -14,7 +14,7 @@ export const useMockStore = defineStore("mock", () => {
       note: "Note 1",
     },
     {
-      pk_task_id: 2,
+      pk_task_id: "2",
       title: "Task 2",
       description: "Description 2",
       is_done: false,
@@ -38,7 +38,7 @@ export const useMockStore = defineStore("mock", () => {
     },
   ]);
 
-  const deleteTask = (pk_task_id: number) => {
+  const deleteTask = (pk_task_id: string) => {
     tasks.value = tasks.value.filter((task) => task.pk_task_id !== pk_task_id);
   };
 

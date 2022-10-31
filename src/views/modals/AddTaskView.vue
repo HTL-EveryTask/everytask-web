@@ -2,7 +2,6 @@
 import { maxLength, required } from "@vuelidate/validators";
 import { ref } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { useMockStore } from "@/stores/mock";
 import ModalContainer from "@/components/ModalContainer.vue";
 import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
@@ -13,7 +12,6 @@ const props = defineProps<{
   taskId?: string;
 }>();
 
-const mockStore = useMockStore();
 const authenticateStore = useAuthenticateStore();
 
 console.log(authenticateStore.tasks, props.taskId);
@@ -26,9 +24,9 @@ const task = ref<Task | undefined>(
 
 console.log(task.value);
 
-const title = ref(task.value?.title ?? "");
-const description = ref(task.value?.description ?? "");
-const due = ref(task.value?.due_time ?? "");
+const title = ref(task.value?.title ?? "Test");
+const description = ref(task.value?.description ?? "test");
+const due = ref(task.value?.due_time ?? "2022-09-27 23:02:00");
 
 let showDeleteModal = ref(false);
 
@@ -51,29 +49,29 @@ const v$ = useVuelidate(
   { $autoDirty: true }
 );
 
-function onSubmit() {
+async function onSubmit() {
   const newTask: Task = {
+    pk_task_id: task.value?.pk_task_id ?? "0",
     title: title.value,
     description: description.value,
     due_time: due.value,
     is_done: false,
-    note: "hello",
   };
 
   if (task.value) {
-    mockStore.updateTask(newTask);
+    await authenticateStore.updateTask(newTask);
   } else {
-    authenticateStore.createTask(newTask);
-    authenticateStore.fetchTasks();
+    await authenticateStore.createTask(newTask);
   }
+  await authenticateStore.fetchTasks();
 
   emit("close");
 }
 
-function deleteTask() {
-  // if (task.value) {
-  //   mockStore.deleteTask(task.value.id);
-  // }
+async function deleteTask() {
+  await authenticateStore.deleteTask(task.value?.pk_task_id ?? "");
+  await authenticateStore.fetchTasks();
+
   showDeleteModal.value = false;
   emit("close");
 }

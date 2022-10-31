@@ -16,7 +16,7 @@ function closeModal() {
   router.push({ name: "home" });
 }
 
-function openTask(id: number) {
+function openTask(id: string) {
   showModal.value = true;
   modalTitle.value = "Edit Task";
   router.push({ name: "showTask", params: { id } });
