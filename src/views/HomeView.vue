@@ -99,11 +99,11 @@ function onLeave(el: any, done: () => void) {
       >
         <TaskCard
           v-for="(task, index) in authenticateStore.tasks"
-          :key="task.pk_task_id"
+          :key="task.id"
           :data-index="index"
           :task="task"
           class="my-4"
-          @click="openTask(task.pk_task_id)"
+          @click="openTask(task.id)"
         />
       </TransitionGroup>
     </div>

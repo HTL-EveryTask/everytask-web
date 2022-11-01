@@ -50,12 +50,24 @@ const mouseOver = ref(false);
         </router-link>
       </li>
 
-      <li>
+      <li :class="!authenticateStore.token ? 'bg-opacity-20 bg-red-500' : ''">
         <router-link :to="{ name: 'login' }" class="nav-link">
           <UserIcon />
-          <span>{{
-            authenticateStore.token ? authenticateStore.token : "Not Logged In"
-          }}</span>
+          <span
+            >{{
+              authenticateStore.token
+                ? authenticateStore.token
+                : "Not Logged In"
+            }}
+            <span
+              v-if="authenticateStore.token"
+              class="text-xs text-raisin/60 block"
+              @click="authenticateStore.logout()"
+            >
+              Logout
+            </span>
+          </span>
+          <br />
         </router-link>
       </li>
     </ul>
@@ -87,7 +99,7 @@ nav.collapsed span {
 
 nav li {
   height: 50px;
-  @apply rounded-xl bg-ghost border-2 border-indigo-200 mt-4 flex;
+  @apply rounded-xl border-2 border-indigo-200 mt-4 flex;
   display: flex;
 }
 

@@ -13,6 +13,20 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     return token.value !== null;
   }
 
+  async function authenticate() {
+    if (!token.value) {
+      return false;
+    }
+
+    const response = await fetch(`${API_URL}/token/${token.value}`);
+
+    if (response.status !== 200) {
+      token.value = null;
+      return false;
+    }
+    return true;
+  }
+
   async function register(username: string, email: string, password: string) {
     const response = await fetch(
       `${API_URL}/register_user?` +
@@ -43,7 +57,14 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
       token.value = response.token;
       localStorage.setItem("token", response.token);
     }
+
+    console.log(response);
     return response;
+  }
+
+  async function logout() {
+    token.value = null;
+    localStorage.removeItem("token");
   }
 
   async function fetchTasks() {
@@ -63,6 +84,8 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
 
     if (response.data) {
       tasks.value = response.data as Task[];
+    } else {
+      tasks.value = [];
     }
   }
 
@@ -94,7 +117,7 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
       `${API_URL}/task/update?` +
         new URLSearchParams({
           token: token.value,
-          pk_task_id: Task.pk_task_id,
+          pk_task_id: Task.id,
           title: Task.title,
           description: Task.description,
           due_time: Task.due_time,
@@ -105,16 +128,15 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     ).then((response) => response.json());
   }
 
-  async function deleteTask(pk_task_id: string) {
+  async function deleteTask(id: string) {
     if (!token.value) {
       return [];
     }
 
     return await fetch(
-      `${API_URL}/task/remove?` +
+      `${API_URL}/task/remove/${id}?` +
         new URLSearchParams({
           token: token.value,
-          task_id: pk_task_id,
         }),
       {
         method: "POST",
@@ -126,6 +148,8 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     isAuthenticated,
     register,
     login,
+    logout,
+    authenticate,
     token,
     fetchTasks,
     createTask,

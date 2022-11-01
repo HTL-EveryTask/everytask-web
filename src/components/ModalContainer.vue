@@ -48,13 +48,13 @@ onMounted(() => {
   <Transition appear name="modal">
     <div
       v-if="show"
-      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-ghost rounded-lg shadow-lg z-10"
+      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-ghost rounded-lg shadow-lg z-10 h-screen sm:h-auto"
     >
       <div class="flex justify-between items-center p-4">
         <h1 class="text-xl font-bold">{{ title }}</h1>
         <button class="text-2xl" @click="$emit('close')">×</button>
       </div>
-      <div class="p-4 max-h-[75vh] overflow-auto">
+      <div class="p-4 md:max-h-[75vh] w-screen sm:w-full overflow-auto">
         <slot></slot>
       </div>
     </div>

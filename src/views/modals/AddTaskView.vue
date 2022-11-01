@@ -18,7 +18,7 @@ console.log(authenticateStore.tasks, props.taskId);
 
 const task = ref<Task | undefined>(
   props.taskId
-    ? authenticateStore.tasks.find((t) => t.pk_task_id === props.taskId)
+    ? authenticateStore.tasks.find((t) => t.id === props.taskId)
     : undefined
 );
 
@@ -51,7 +51,7 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   const newTask: Task = {
-    pk_task_id: task.value?.pk_task_id ?? "0",
+    id: task.value?.id ?? "0",
     title: title.value,
     description: description.value,
     due_time: due.value,
@@ -69,7 +69,7 @@ async function onSubmit() {
 }
 
 async function deleteTask() {
-  await authenticateStore.deleteTask(task.value?.pk_task_id ?? "");
+  await authenticateStore.deleteTask(task.value?.id ?? "");
   await authenticateStore.fetchTasks();
 
   showDeleteModal.value = false;
@@ -79,7 +79,7 @@ async function deleteTask() {
 
 <template>
   <div>
-    <form class="w-96" @submit.prevent="onSubmit">
+    <form class="sm:w-96 w-full" @submit.prevent="onSubmit">
       <InputField id="title" :validation="v$.title" label="Title">
         <input id="title" v-model="title" class="w-full" type="text" />
         <template v-slot:right>

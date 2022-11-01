@@ -15,9 +15,7 @@ function toggleCompleted() {
   });
 
   // check if it changed in the store
-  console.log(
-    mockStore.tasks.find((t) => t.pk_task_id === props.task.pk_task_id)
-  );
+  console.log(mockStore.tasks.find((t) => t.id === props.task.id));
 }
 </script>
 
