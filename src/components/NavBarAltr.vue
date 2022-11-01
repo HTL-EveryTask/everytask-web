@@ -49,16 +49,18 @@ const mouseOver = ref(false);
           <span class="">Settings</span>
         </router-link>
       </li>
+
+      <li>
+        <router-link :to="{ name: 'login' }" class="nav-link">
+          <UserIcon />
+          <span>{{
+            authenticateStore.token ? authenticateStore.token : "Not Logged In"
+          }}</span>
+        </router-link>
+      </li>
     </ul>
     <!-- Profile -->
-    <div>
-      <router-link class="nav-link" :to="{ name: 'login' }">
-        <UserIcon class="w-10 h-10" />
-        <span class="ml-4 whitespace-nowrap condensed-hidden">{{
-          authenticateStore.token ? authenticateStore.token : "Not Logged In"
-        }}</span>
-      </router-link>
-    </div>
+    <div></div>
   </nav>
 </template>
 

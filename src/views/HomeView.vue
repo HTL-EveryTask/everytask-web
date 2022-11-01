@@ -82,10 +82,13 @@ function onLeave(el: any, done: () => void) {
 
 <template>
   <main class="mx-auto">
-    <h1 class="text-2xl">This is the home</h1>
+    <h1 class="text-2xl">This is the Task View</h1>
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quae.
     </p>
+
+    <button class="btn-primary" @click="openAddTaskModal">Add task</button>
+
     <div class="flex flex-col gap-4">
       <TransitionGroup
         :css="false"
@@ -104,8 +107,6 @@ function onLeave(el: any, done: () => void) {
         />
       </TransitionGroup>
     </div>
-
-    <button class="btn-primary" @click="openAddTaskModal">Add task</button>
 
     <ModalContainer
       :show="showModal"

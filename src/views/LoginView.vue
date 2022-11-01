@@ -30,17 +30,16 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
-  const response = await authenticateStore.login(
-    emailInput.value,
-    password.value
-  );
+  const response = await authenticateStore
+    .login(emailInput.value, password.value)
+    .catch(() => {
+      console.log("hi");
+      currentErrors.value = ["Connection error"];
+    });
 
-  console.log(response);
-  // if the response is successful, router push to the route named login
   if (response.type === "Success") {
     await router.push({ name: "home" });
   } else {
-    // make the error the first element of the array
     currentErrors.value = [response.message];
   }
 }
@@ -52,6 +51,12 @@ async function onSubmit() {
       class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg max-w-[36em] sm:w-full"
     >
       <h1 class="text-3xl text-center">Login to EveryTask</h1>
+      <h2 class="text-center text-sm text-raisin/60">
+        Don't have an account?
+        <router-link class="underline text-raisin/80" :to="{ name: 'register' }"
+          >Register
+        </router-link>
+      </h2>
 
       <div class="min-h-[5em] flex">
         <ul
