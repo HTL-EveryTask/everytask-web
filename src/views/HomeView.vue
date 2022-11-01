@@ -28,15 +28,14 @@ function openAddTaskModal() {
   router.push({ name: "addTask" });
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await authenticateStore.fetchTasks();
+
   if (router.currentRoute.value.name !== "home") {
     showModal.value = true;
-    // set the modal title based on the route name
     modalTitle.value =
       router.currentRoute.value.name === "addTask" ? "Add Task" : "Edit Task";
   }
-
-  authenticateStore.fetchTasks();
 });
 
 function onEnter(el: any, done: () => void) {
@@ -90,13 +89,7 @@ function onLeave(el: any, done: () => void) {
     <button class="btn-primary" @click="openAddTaskModal">Add task</button>
 
     <div class="flex flex-col gap-4">
-      <TransitionGroup
-        :css="false"
-        appear
-        tag="div"
-        @enter="onEnter"
-        @leave="onLeave"
-      >
+      <TransitionGroup appear name="list" tag="div">
         <TaskCard
           v-for="(task, index) in authenticateStore.tasks"
           :key="task.id"
@@ -119,4 +112,26 @@ function onLeave(el: any, done: () => void) {
   </main>
 </template>
 
-<style scoped></style>
+<!--suppress CssUnusedSymbol -->
+<style scoped>
+.list-move, /* apply transition to moving elements */
+.list-enter-active,
+.list-leave-active {
+  transition: all 2.5s ease;
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px) translateY(-15px);
+}
+
+.list-leave-active {
+  position: absolute;
+  width: 100%;
+}
+</style>

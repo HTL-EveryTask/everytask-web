@@ -118,12 +118,21 @@ async function deleteTask() {
       Delete Task
     </button>
 
-    <ModalContainer :show="showDeleteModal" @close="showDeleteModal = false">
-      <div>
-        <button class="btn-red" @click="deleteTask">Delete</button>
-        <button class="btn-primary" @click="showDeleteModal = false">
-          Cancel
-        </button>
+    <ModalContainer
+      :show="showDeleteModal"
+      headless
+      @close="showDeleteModal = false"
+    >
+      <div class="flex flex-col items-center">
+        <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+          Are you sure you want to delete this task?
+        </p>
+        <div class="flex w-full gap-4 justify-center">
+          <button class="btn-red" @click="deleteTask">Delete</button>
+          <button class="btn-primary" @click="showDeleteModal = false">
+            Cancel
+          </button>
+        </div>
       </div>
     </ModalContainer>
   </div>

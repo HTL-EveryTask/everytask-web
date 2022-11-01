@@ -21,6 +21,11 @@ defineProps({
     type: Boolean,
     required: true,
   },
+
+  headless: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 onMounted(() => {
@@ -50,7 +55,7 @@ onMounted(() => {
       v-if="show"
       class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-ghost rounded-lg shadow-lg z-10 h-screen sm:h-auto"
     >
-      <div class="flex justify-between items-center p-4">
+      <div v-if="!headless" class="flex justify-between items-center p-4">
         <h1 class="text-xl font-bold">{{ title }}</h1>
         <button class="text-2xl" @click="$emit('close')">×</button>
       </div>
