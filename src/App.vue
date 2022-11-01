@@ -9,7 +9,9 @@ const authenticateStore = useAuthenticateStore();
 
 onMounted(async () => {
   authenticateStore.token = localStorage.getItem("token") ?? "";
-  let loggedIn = await authenticateStore.authenticate();
+  let loggedIn = await authenticateStore.authenticate().catch(() => {
+    router.push({ name: "login" });
+  });
   if (!loggedIn) {
     localStorage.removeItem("token");
     await router.push({ name: "login" });
