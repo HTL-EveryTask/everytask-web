@@ -117,7 +117,7 @@ function onLeave(el: any, done: () => void) {
 .list-move, /* apply transition to moving elements */
 .list-enter-active,
 .list-leave-active {
-  transition: all 2.5s ease;
+  transition: all 0.5s ease;
 }
 
 .list-enter-from {

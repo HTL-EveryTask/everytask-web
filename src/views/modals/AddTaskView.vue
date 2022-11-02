@@ -6,6 +6,7 @@ import ModalContainer from "@/components/ModalContainer.vue";
 import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
+import router from "@/router";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -21,6 +22,10 @@ const task = ref<Task | undefined>(
     ? authenticateStore.tasks.find((t) => t.id === props.taskId)
     : undefined
 );
+
+if (!task.value) {
+  router.push({ name: "addTask" });
+}
 
 console.log(task.value);
 

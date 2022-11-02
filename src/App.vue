@@ -21,7 +21,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex min-h-screen">
-    <NavBarAltr v-if="authenticateStore.token" />
+    <NavBarAltr v-if="!$route.meta.hideNavBar" />
     <div class="p-3 w-full flex overflow-auto">
       <RouterView class="" />
     </div>

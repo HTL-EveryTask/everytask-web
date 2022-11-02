@@ -53,7 +53,7 @@ async function onSubmit() {
       <h1 class="text-3xl text-center">Login to EveryTask</h1>
       <h2 class="text-center text-sm text-raisin/60">
         Don't have an account?
-        <router-link class="underline text-raisin/80" :to="{ name: 'register' }"
+        <router-link :to="{ name: 'register' }" class="underline text-raisin/80"
           >Register
         </router-link>
       </h2>
@@ -85,8 +85,8 @@ async function onSubmit() {
 
         <div class="flex justify-center">
           <button
-            type="submit"
             class="bg-cerulean hover:bg-gradient-to-r hover:from-cerulean hover:to-cerulean-dark text-white font-bold py-2 px-4 rounded"
+            type="submit"
           >
             Login
           </button>
@@ -96,4 +96,4 @@ async function onSubmit() {
   </div>
 </template>
 
-<style></style>
+<style scoped></style>

@@ -11,6 +11,8 @@ const emailInput = ref("nayonyx@gmail.com");
 const password = ref("MyPassword.");
 const confirmPassword = ref("MyPassword.");
 
+const emailInputElement = ref();
+
 const currentErrors = ref<string[]>([]);
 
 const rules = {
@@ -73,7 +75,7 @@ async function onSubmit() {
   if (response.type === "Success") {
     await router.push({ name: "login" });
   } else {
-    currentErrors.value = [response.message];
+    emailInputElement.value.createError("Email already in use");
   }
 }
 </script>
@@ -107,7 +109,13 @@ async function onSubmit() {
           <input id="username" v-model="username" type="text" />
         </InputField>
 
-        <InputField id="email" :validation="v$.email" label="Email">
+        <InputField
+          id="email"
+          :validation="v$.email"
+          label="Email"
+          ref="emailInputElement"
+          :input="emailInput"
+        >
           <input id="email" v-model="emailInput" type="email" />
         </InputField>
 
