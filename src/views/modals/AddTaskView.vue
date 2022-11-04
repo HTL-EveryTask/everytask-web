@@ -10,24 +10,18 @@ import router from "@/router";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
-  taskId?: string;
+  id?: string;
 }>();
 
 const authenticateStore = useAuthenticateStore();
 
-console.log(authenticateStore.tasks, props.taskId);
-
 const task = ref<Task | undefined>(
-  props.taskId
-    ? authenticateStore.tasks.find((t) => t.id === props.taskId)
-    : undefined
+  props.id ? authenticateStore.tasks.find((t) => t.id === props.id) : undefined
 );
 
 if (!task.value) {
   router.push({ name: "addTask" });
 }
-
-console.log(task.value);
 
 const title = ref(task.value?.title ?? "Test");
 const description = ref(task.value?.description ?? "test");

@@ -87,6 +87,7 @@ async function onSubmit() {
           <button
             class="bg-cerulean hover:bg-gradient-to-r hover:from-cerulean hover:to-cerulean-dark text-white font-bold py-2 px-4 rounded"
             type="submit"
+            :disabled="v$.$invalid"
           >
             Login
           </button>
