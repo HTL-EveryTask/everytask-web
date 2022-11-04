@@ -19,6 +19,7 @@ const task = ref<Task | undefined>(
   props.id ? authenticateStore.tasks.find((t) => t.id === props.id) : undefined
 );
 
+// TODO: make reload work
 if (!task.value) {
   router.push({ name: "addTask" });
 }
