@@ -5,6 +5,7 @@ import { email, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
+import TagSelector from "@/components/TagSelector.vue";
 
 const currentErrors = ref<string[]>([]);
 
@@ -92,6 +93,9 @@ async function onSubmit() {
             Login
           </button>
         </div>
+        <InputField class="block" id="remember" label="Remember me">
+          <TagSelector />
+        </InputField>
       </form>
     </div>
   </div>
