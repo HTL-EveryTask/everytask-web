@@ -5,11 +5,14 @@ import { email, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 const currentErrors = ref<string[]>([]);
 
 const emailInput = ref("nayonyx@gmail.com");
 const password = ref("MyPassword.");
+
+const loading = ref(false);
 
 const rules = {
   email: {
@@ -30,12 +33,14 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
+  loading.value = true;
   const response = await authenticateStore
     .login(emailInput.value, password.value)
     .catch(() => {
       console.log("hi");
       currentErrors.value = ["Connection error"];
     });
+  loading.value = false;
 
   if (response.type === "Success") {
     await router.push({ name: "home" });
@@ -83,15 +88,14 @@ async function onSubmit() {
           />
         </InputField>
 
-        <div class="flex justify-center">
-          <button
-            class="bg-cerulean hover:bg-gradient-to-r hover:from-cerulean hover:to-cerulean-dark text-white font-bold py-2 px-4 rounded"
-            type="submit"
-            :disabled="v$.$invalid"
-          >
-            Login
-          </button>
-        </div>
+        <LoadingButton
+          :disabled="v$.$invalid"
+          class="text-center bg-cerulean text-white font-bold py-2 px-4 rounded"
+          type="submit"
+          :loading="loading"
+        >
+          Login
+        </LoadingButton>
       </form>
     </div>
   </div>

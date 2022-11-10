@@ -7,6 +7,7 @@ import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -27,6 +28,9 @@ if (!task.value) {
 const title = ref(task.value?.title ?? "Test");
 const description = ref(task.value?.description ?? "test");
 const due = ref(task.value?.due_time ?? "2022-09-27 23:02:00");
+
+const loading = ref(false);
+const loadingDelete = ref(false);
 
 let showDeleteModal = ref(false);
 
@@ -58,20 +62,23 @@ async function onSubmit() {
     is_done: false,
   };
 
+  loading.value = true;
   if (task.value) {
     await authenticateStore.updateTask(newTask);
   } else {
     await authenticateStore.createTask(newTask);
   }
+  loading.value = false;
   await authenticateStore.fetchTasks();
 
   emit("close");
 }
 
 async function deleteTask() {
+  loadingDelete.value = true;
   await authenticateStore.deleteTask(task.value?.id ?? "");
   await authenticateStore.fetchTasks();
-
+  loadingDelete.value = false;
   showDeleteModal.value = false;
   emit("close");
 }
@@ -109,9 +116,14 @@ async function deleteTask() {
         <input id="due" v-model="due" class="w-full" type="datetime-local" />
       </InputField>
 
-      <button :disabled="v$.$invalid" class="btn-primary mt-4" type="submit">
+      <LoadingButton
+        :disabled="v$.$invalid"
+        :loading="loading"
+        class="btn-primary mt-4"
+        type="submit"
+      >
         {{ task ? "Update" : "Add" }}
-      </button>
+      </LoadingButton>
     </form>
 
     <button v-if="task" class="btn-red" @click="showDeleteModal = true">
@@ -128,7 +140,12 @@ async function deleteTask() {
           Are you sure you want to delete this task?
         </p>
         <div class="flex w-full gap-4 justify-center">
-          <button class="btn-red" @click="deleteTask">Delete</button>
+          <LoadingButton
+            :loading="loadingDelete"
+            class="btn-red"
+            @click="deleteTask"
+            >Delete
+          </LoadingButton>
           <button class="btn-primary" @click="showDeleteModal = false">
             Cancel
           </button>

@@ -5,11 +5,14 @@ import { email, helpers, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 const username = ref("MyUserName");
 const emailInput = ref("nayonyx@gmail.com");
 const password = ref("MyPassword.");
 const confirmPassword = ref("MyPassword.");
+
+const loading = ref(false);
 
 const emailInputElement = ref();
 
@@ -64,12 +67,13 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
+  loading.value = true;
   const response = await authenticateStore
     .register(username.value, emailInput.value, password.value)
     .catch(() => {
-      console.log("hi");
       currentErrors.value = ["Connection error"];
     });
+  loading.value = false;
 
   console.log(response);
   if (response.type === "Success") {
@@ -88,7 +92,7 @@ async function onSubmit() {
       <h1 class="text-3xl text-center">Register to EveryTask</h1>
       <h2 class="text-center text-sm text-raisin/60">
         Already have an account?
-        <router-link class="underline text-raisin/80" :to="{ name: 'login' }"
+        <router-link :to="{ name: 'login' }" class="underline text-raisin/80"
           >Login
         </router-link>
       </h2>
@@ -111,10 +115,10 @@ async function onSubmit() {
 
         <InputField
           id="email"
-          :validation="v$.email"
-          label="Email"
           ref="emailInputElement"
           :input="emailInput"
+          :validation="v$.email"
+          label="Email"
         >
           <input id="email" v-model="emailInput" type="email" />
         </InputField>
@@ -134,9 +138,14 @@ async function onSubmit() {
             type="password"
           />
         </InputField>
-        <button :disabled="v$.$invalid" class="btn-primary" type="submit">
+        <LoadingButton
+          :disabled="v$.$invalid"
+          class="bg-yonder text-white font-bold py-2 px-4 rounded"
+          type="submit"
+          :loading="loading"
+        >
           Register
-        </button>
+        </LoadingButton>
       </form>
     </div>
   </div>
