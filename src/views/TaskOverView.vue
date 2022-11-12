@@ -7,8 +7,6 @@ import { useAuthenticateStore } from "@/stores/auth";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import IconTooling from "@/components/icons/IconTooling.vue";
 
-5;
-
 const authenticateStore = useAuthenticateStore();
 
 const mockGroups = [
@@ -159,7 +157,14 @@ onMounted(async () => {
       <RouterView @close="router.push({ name: 'tasks' })" />
     </ModalContainer>
 
-    <div class="bg-blue-100 w-full sticky bottom-0 p-2">
+    <div class="bg-blue-100 transition-all w-full sticky bottom-0 p-2">
+      <ModalContainer
+        :show="$route.name === 'showTask' || $route.name === 'addTask'"
+        :title="$route.meta.modalTitle"
+        @close="router.push({ name: 'tasks' })"
+      >
+        <RouterView @close="router.push({ name: 'tasks' })" />
+      </ModalContainer>
       <div class="flex mx-24 p-2 rounded-xl items-center">
         <div class="p-2 m-2 rounded-full bg-blue-200">
           <IconTooling class="w-6 h-6" />
