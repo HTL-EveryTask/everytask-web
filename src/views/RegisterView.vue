@@ -108,7 +108,7 @@ async function onSubmit() {
         </ul>
       </div>
 
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="onSubmit" class="pr-12">
         <InputField id="username" :validation="v$.username" label="Username">
           <input id="username" v-model="username" type="text" />
         </InputField>

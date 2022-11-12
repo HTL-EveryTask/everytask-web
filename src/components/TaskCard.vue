@@ -20,9 +20,7 @@ function toggleCompleted() {
 </script>
 
 <template>
-  <div
-    class="bg-ghost max-w-[32em] min-w-[12em] p-4 flex items-center rounded-lg shadow-md"
-  >
+  <div class="bg-gh min-w-[12em] p-4 flex items-center rounded-lg shadow-md">
     <div
       :class="
         'w-4 h-4 rounded-full mr-4' +

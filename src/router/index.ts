@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 import AddTaskView from "../views/modals/AddTaskView.vue";
+import TaskOverView from "../views/TaskOverView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -8,12 +8,12 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/home",
+      redirect: "/tasks",
     },
     {
-      path: "/home",
-      name: "home",
-      component: HomeView,
+      path: "/tasks",
+      name: "tasks",
+      component: TaskOverView,
       children: [
         {
           path: "task/:id",

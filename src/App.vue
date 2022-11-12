@@ -20,10 +20,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex min-h-screen">
+  <div class="flex min-h-screen h-screen">
     <NavBarAltr v-if="!$route.meta.hideNavBar" />
-    <div class="p-3 w-full flex overflow-auto">
-      <RouterView class="" />
+    <div class="w-full flex overflow-auto">
+      <RouterView />
     </div>
   </div>
 </template>
