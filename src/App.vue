@@ -21,7 +21,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex min-h-screen">
-    <NavBarAltr v-if="!$route.meta.hideNavBar" class="z-20" />
+    <NavBarAltr v-if="!$route.meta.hideNavBar" class="z-10" />
     <div class="flex w-full h-screen">
       <RouterView />
     </div>
