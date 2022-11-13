@@ -141,7 +141,7 @@ useClickOutside(addTaskPopUp, () => {
   </nav>
   <main class="flex-1 overflow-y-scroll flex flex-col relative">
     <div class="px-8 py-2 flex-1 w-full">
-      <div class="flex flex-col gap-4 max-w-[48em] mx-auto">
+      <div class="flex flex-col gap-4 max-w-[48em]">
         <TransitionGroup appear name="list" tag="div">
           <TaskCard
             v-for="(task, index) in authenticateStore.tasks"
@@ -174,7 +174,7 @@ useClickOutside(addTaskPopUp, () => {
       <div class="px-8">
         <div
           ref="addTaskPopUp"
-          class="add-task-glass my-4 max-w-[48em] mx-auto p-2 bg-raisin/70 rounded-lg text-ghost"
+          class="add-task-glass my-4 max-w-[48em] p-2 bg-raisin/70 rounded-lg text-ghost"
         >
           <AddTaskPopUp />
         </div>
