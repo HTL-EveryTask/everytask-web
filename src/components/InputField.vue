@@ -33,10 +33,10 @@ watch(
 </script>
 
 <template>
-  <div :class="{ 'input-error': error || createdError }">
+  <div :class="{ 'input-error': error || createdError }" class="input-field">
     <label :for="id">{{ label }}</label>
     <slot />
-    <div class="flex text-sm text-gray-500 min-h-[1.5em]">
+    <div class="flex text-sm min-h-[1.5em]">
       <div>
         <span v-if="error || createdError" class="text-red-500 text-sm block">
           {{

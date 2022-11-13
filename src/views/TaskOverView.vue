@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import TaskCard from "@/components/TaskCard.vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import router from "@/router";
 import { useAuthenticateStore } from "@/stores/auth";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
-import IconPlus from "@/components/icons/IconPlus.vue";
-import AddTaskView from "@/views/modals/AddTaskView.vue";
+import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
+import ModalContainer from "@/components/ModalContainer.vue";
+import { useClickOutside } from "@/composables/useClickOutside";
 
 const authenticateStore = useAuthenticateStore();
-
 const mockGroups = [
   {
     id: 1,
@@ -96,6 +96,13 @@ const mockGroups = [
 onMounted(async () => {
   await authenticateStore.fetchTasks();
 });
+
+const addTaskPopUp = ref();
+useClickOutside(addTaskPopUp, () => {
+  if (router.currentRoute.value.name === "addTask") {
+    router.push({ name: "tasks" });
+  }
+});
 </script>
 
 <template>
@@ -134,55 +141,42 @@ onMounted(async () => {
   </nav>
   <main class="flex-1 overflow-y-scroll flex flex-col relative">
     <div class="px-8 py-2 flex-1 w-full">
-      <div class="flex flex-col gap-4 max-w-[32em] mx-auto">
+      <div class="flex flex-col gap-4 max-w-[48em] mx-auto">
         <TransitionGroup appear name="list" tag="div">
           <TaskCard
             v-for="(task, index) in authenticateStore.tasks"
             :key="task.id"
             :data-index="index"
             :task="task"
-            class="my-4"
+            class="my-4 shadow-md shadow-yonder/10"
             @click="router.push({ name: 'showTask', params: { id: task.id } })"
           />
         </TransitionGroup>
       </div>
     </div>
 
-    <!--    <ModalContainer-->
-    <!--      :show="$route.name === 'showTask' || $route.name === 'addTask'"-->
-    <!--      :title="$route.meta.modalTitle"-->
-    <!--      effect="shadow"-->
-    <!--      @close="router.push({ name: 'tasks' })"-->
-    <!--    >-->
-    <!--      <RouterView @close="router.push({ name: 'tasks' })" />-->
-    <!--    </ModalContainer>-->
+    <ModalContainer
+      :show="$route.name === 'showTask'"
+      :title="$route.meta.modalTitle"
+      effect="shadow"
+      @close="router.push({ name: 'tasks' })"
+    >
+      <RouterView @close="router.push({ name: 'tasks' })" />
+    </ModalContainer>
 
-    <div
-      v-if="$route.name === 'addTask'"
-      class="absolute h-full w-full left-0 top-0 bg-slate-800 bg-opacity-10 backdrop-blur-sm"
-      @click="$router.push({ name: 'tasks' })"
-    />
+    <!--    <div-->
+    <!--      v-if="$route.name === 'addTask'"-->
+    <!--      class="absolute h-full w-full left-0 top-0 backdrop-blur-sm"-->
+    <!--      @click="$router.push({ name: 'tasks' })"-->
+    <!--    />-->
 
     <div class="sticky bottom-0">
-      <div class="my-4 mx-8 p-4 bg-raisin/70 rounded-lg text-ghost">
-        <Transition name="expand">
-          <div v-if="$route.name === 'addTask'" class="h-96 overflow-scroll">
-            <AddTaskView />
-          </div>
-        </Transition>
-        <div class="flex items-center">
-          <div
-            :class="{ 'text-ghost/70': $route.name !== 'addTask' }"
-            class="flex items-center justify-center pr-4 transition-colors duration-300"
-          >
-            <IconPlus />
-          </div>
-          <input
-            class="border-0 border-b-2 border-ghost/70 bg-transparent rounded-none p-0 placeholder-ghost/70 caret-ghost/70 focus:outline-none focus:placeholder-ghost/100 focus:border-ghost/100 transition-colors duration-300"
-            placeholder="Add a task"
-            type="text"
-            @click="router.push({ name: 'addTask' })"
-          />
+      <div class="px-8">
+        <div
+          ref="addTaskPopUp"
+          class="add-task-glass my-4 max-w-[48em] mx-auto p-2 bg-raisin/70 rounded-lg text-ghost"
+        >
+          <AddTaskPopUp />
         </div>
       </div>
     </div>
@@ -212,18 +206,9 @@ onMounted(async () => {
   width: 100%;
 }
 
-.expand-enter-active,
-.expand-leave-active {
-  transition: all 0.5s ease;
-}
-
-.expand-enter-from,
-.expand-leave-to {
-  opacity: 0;
-  height: 0;
-}
-
-.expand-leave-active {
-  overflow: hidden;
+.add-task-glass {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(9px);
 }
 </style>

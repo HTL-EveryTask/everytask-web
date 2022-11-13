@@ -1,26 +1,17 @@
 <script lang="ts" setup>
 import type { Task } from "@/models/Task";
-import { useMockStore } from "@/stores/mock";
 
 const props = defineProps<{
   task: Task;
 }>();
 
-const mockStore = useMockStore();
-
 function toggleCompleted() {
-  mockStore.updateTask({
-    ...props.task,
-    is_done: !props.task.is_done,
-  });
-
-  // check if it changed in the store
-  console.log(mockStore.tasks.find((t) => t.id === props.task.id));
+  // TODO: toggle completed
 }
 </script>
 
 <template>
-  <div class="bg-gh min-w-[12em] p-4 flex items-center rounded-lg shadow-md">
+  <div class="bg-ghost min-w-[12em] p-4 flex items-center rounded-lg">
     <div
       :class="
         'w-4 h-4 rounded-full mr-4' +

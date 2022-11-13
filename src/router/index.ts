@@ -1,19 +1,23 @@
 import { createRouter, createWebHistory } from "vue-router";
 import AddTaskView from "../views/modals/AddTaskView.vue";
-import TaskOverView from "../views/TaskOverView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: NotFoundView,
+    },
+    {
       path: "/",
-      redirect: "/tasks",
+      redirect: { name: "tasks" },
     },
     {
       path: "/tasks",
       name: "tasks",
-      component: TaskOverView,
+      component: () => import("../views/TaskOverView.vue"),
       children: [
         {
           path: "task/:id",
@@ -44,11 +48,6 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/LoginView.vue"),
-    },
-    {
-      path: "/:pathMatch(.*)*",
-      name: "not-found",
-      component: NotFoundView,
     },
   ],
 });

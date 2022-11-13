@@ -85,7 +85,7 @@ async function deleteTask() {
 </script>
 
 <template>
-  <div>
+  <div class="w-96">
     <form class="w-full" @submit.prevent="onSubmit">
       <InputField id="title" :validation="v$.title" label="Title">
         <input id="title" v-model="title" class="w-full" type="text" />

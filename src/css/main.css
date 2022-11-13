@@ -5,7 +5,7 @@
 @layer base {
     html {
         font-family: proxima-nova, sans-serif;
-        font-weight: 600;
+        font-weight: 500;
         font-style: normal;
         @apply bg-ghost text-raisin;
     }
@@ -16,17 +16,25 @@
         font-style: normal;
     }
 
-    label {
+    .input-field > label {
         @apply block;
-        @apply text-gray-700;
+        @apply text-current opacity-80;
     }
 
-    input, textarea, select {
-        @apply block w-full p-2 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-200 bg-ghost text-raisin;
+    .input-field > input, .input-field > textarea, .input-field > select {
+        @apply block w-full p-2 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-200 bg-transparent;
     }
 
     .input-error input, .input-error textarea, .input-error select {
         @apply border-red-400 focus:border-red-500;
+    }
+
+    button {
+        @apply focus:outline-none;
+    }
+
+    ::-webkit-resizer {
+        @apply bg-indigo-100;
     }
 
     button:disabled {
