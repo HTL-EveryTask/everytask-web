@@ -43,7 +43,7 @@ async function onSubmit() {
   loading.value = false;
 
   if (response.type === "Success") {
-    await router.push({ name: "home" });
+    await router.push({ name: "tasks" });
   } else {
     currentErrors.value = [response.message];
   }

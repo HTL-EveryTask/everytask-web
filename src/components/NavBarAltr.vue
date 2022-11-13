@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import GroupIcon from "@/components/icons/GroupIcon.vue";
-import ConnectionIcon from "@/components/icons/ConnectionIcon.vue";
+import IconConnections from "@/components/icons/IconConnections.vue";
 import UserIcon from "@/components/icons/UserIcon.vue";
 import { ref } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
@@ -14,15 +14,14 @@ const mouseOver = ref(false);
 <template>
   <nav
     :class="
-      'w-[250px] bg-ghost shadow-xl p-[22px] py-[20px] transition-all rounded-2xl' +
+      'w-[250px] bg-ghost shadow-lg p-[22px] py-[20px] transition-all rounded-r-2xl' +
       (!mouseOver ? ' collapsed' : '')
     "
     @mouseleave="mouseOver = false"
     @mouseover="mouseOver = true"
   >
-    <header class="w-16 mx-auto">
+    <header class="w-14 mx-auto mb-2">
       <img alt="logo" src="@/assets/logo_light.svg" />
-      <span>EveryTask</span>
     </header>
     <ul class="">
       <li>
@@ -39,7 +38,7 @@ const mouseOver = ref(false);
       </li>
       <li>
         <router-link class="nav-link" to="/">
-          <ConnectionIcon />
+          <IconConnections />
           <span class="">Connections</span>
         </router-link>
       </li>

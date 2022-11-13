@@ -2,10 +2,10 @@
 import TaskCard from "@/components/TaskCard.vue";
 import { onMounted } from "vue";
 import router from "@/router";
-import ModalContainer from "@/components/ModalContainer.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
-import IconTooling from "@/components/icons/IconTooling.vue";
+import IconPlus from "@/components/icons/IconPlus.vue";
+import AddTaskView from "@/views/modals/AddTaskView.vue";
 
 const authenticateStore = useAuthenticateStore();
 
@@ -98,7 +98,7 @@ onMounted(async () => {
 });
 </script>
 
-<template class="flex flex-col h-full">
+<template>
   <nav class="w-44 h-screen shadow-lg text-sm">
     <ul class="py-4">
       <li>
@@ -132,9 +132,9 @@ onMounted(async () => {
       </li>
     </ul>
   </nav>
-  <main class="flex-1 overflow-scroll">
-    <div class="px-8 py-2">
-      <div class="flex flex-col gap-4">
+  <main class="flex-1 overflow-y-scroll flex flex-col relative">
+    <div class="px-8 py-2 flex-1 w-full">
+      <div class="flex flex-col gap-4 max-w-[32em] mx-auto">
         <TransitionGroup appear name="list" tag="div">
           <TaskCard
             v-for="(task, index) in authenticateStore.tasks"
@@ -148,33 +148,42 @@ onMounted(async () => {
       </div>
     </div>
 
-    <ModalContainer
-      :show="$route.name === 'showTask' || $route.name === 'addTask'"
-      :title="$route.meta.modalTitle"
-      effect="shadow"
-      @close="router.push({ name: 'tasks' })"
-    >
-      <RouterView @close="router.push({ name: 'tasks' })" />
-    </ModalContainer>
+    <!--    <ModalContainer-->
+    <!--      :show="$route.name === 'showTask' || $route.name === 'addTask'"-->
+    <!--      :title="$route.meta.modalTitle"-->
+    <!--      effect="shadow"-->
+    <!--      @close="router.push({ name: 'tasks' })"-->
+    <!--    >-->
+    <!--      <RouterView @close="router.push({ name: 'tasks' })" />-->
+    <!--    </ModalContainer>-->
 
-    <div class="bg-blue-100 transition-all w-full sticky bottom-0 p-2">
-      <ModalContainer
-        :show="$route.name === 'showTask' || $route.name === 'addTask'"
-        :title="$route.meta.modalTitle"
-        @close="router.push({ name: 'tasks' })"
-      >
-        <RouterView @close="router.push({ name: 'tasks' })" />
-      </ModalContainer>
-      <div class="flex mx-24 p-2 rounded-xl items-center">
-        <div class="p-2 m-2 rounded-full bg-blue-200">
-          <IconTooling class="w-6 h-6" />
+    <div
+      v-if="$route.name === 'addTask'"
+      class="absolute h-full w-full left-0 top-0 bg-slate-800 bg-opacity-10 backdrop-blur-sm"
+      @click="$router.push({ name: 'tasks' })"
+    />
+
+    <div class="sticky bottom-0">
+      <div class="my-4 mx-8 p-4 bg-raisin/70 rounded-lg text-ghost">
+        <Transition name="expand">
+          <div v-if="$route.name === 'addTask'" class="h-96 overflow-scroll">
+            <AddTaskView />
+          </div>
+        </Transition>
+        <div class="flex items-center">
+          <div
+            :class="{ 'text-ghost/70': $route.name !== 'addTask' }"
+            class="flex items-center justify-center pr-4 transition-colors duration-300"
+          >
+            <IconPlus />
+          </div>
+          <input
+            class="border-0 border-b-2 border-ghost/70 bg-transparent rounded-none p-0 placeholder-ghost/70 caret-ghost/70 focus:outline-none focus:placeholder-ghost/100 focus:border-ghost/100 transition-colors duration-300"
+            placeholder="Add a task"
+            type="text"
+            @click="router.push({ name: 'addTask' })"
+          />
         </div>
-        <input
-          class="w-full bg-transparent focus:outline-none"
-          placeholder="Add a task"
-          type="text"
-          @click="router.push({ name: 'addTask' })"
-        />
       </div>
     </div>
   </main>
@@ -201,5 +210,20 @@ onMounted(async () => {
 .list-leave-active {
   position: absolute;
   width: 100%;
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  transition: all 0.5s ease;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  opacity: 0;
+  height: 0;
+}
+
+.expand-leave-active {
+  overflow: hidden;
 }
 </style>

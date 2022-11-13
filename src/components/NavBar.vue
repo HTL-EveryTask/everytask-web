@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import GroupIcon from "@/components/icons/GroupIcon.vue";
-import ConnectionIcon from "@/components/icons/ConnectionIcon.vue";
+import IconConnections from "@/components/icons/IconConnections.vue";
 import UserIcon from "@/components/icons/UserIcon.vue";
 import LogoutIcon from "@/components/icons/LogoutIcon.vue";
 import { ref } from "vue";
@@ -39,7 +39,7 @@ const mouseOver = ref(false);
         </li>
         <li>
           <router-link class="nav-link" to="/">
-            <ConnectionIcon />
+            <IconConnections />
             <span class="condensed-hidden">Connections</span>
           </router-link>
         </li>
