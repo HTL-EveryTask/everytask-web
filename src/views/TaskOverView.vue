@@ -113,7 +113,7 @@ function beforeTaskLeave(el: any) {
 </script>
 
 <template>
-  <div class="flex bg-gradient-to-tr from-cerulean to-rebecca bg-opacity-50">
+  <div class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50">
     <nav class="w-44 h-screen shadow-lg text-sm bg-ghost">
       <ul class="py-4">
         <li>
@@ -210,7 +210,7 @@ function beforeTaskLeave(el: any) {
         <div class="px-8">
           <div
             ref="addTaskPopUp"
-            class="effect-glass my-4 max-w-[48em] p-2 bg-raisin/70 rounded-lg text-ghost mx-auto"
+            class="effect-glass my-4 max-w-[48em] p-2 bg-ghost/70 rounded-lg text-raisin mx-auto"
           >
             <AddTaskPopUp />
           </div>
@@ -222,7 +222,7 @@ function beforeTaskLeave(el: any) {
       <Transition name="side">
         <div
           v-if="$route.name === 'showTask'"
-          class="w-[30vw] h-full bg-white rounded-l-xl"
+          class="w-[30vw] h-full effect-glass bg-ghost/70 rounded-l-xl"
           @close="router.push({ name: 'tasks' })"
         >
           <div class="p-8">
@@ -274,6 +274,6 @@ function beforeTaskLeave(el: any) {
 .effect-glass {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(5px);
 }
 </style>

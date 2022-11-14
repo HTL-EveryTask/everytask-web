@@ -22,7 +22,7 @@
     }
 
     .input-field > input, .input-field > textarea, .input-field > select {
-        @apply block w-full p-2 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-200 bg-transparent;
+        @apply block w-full p-2 border-2 border-indigo-100 rounded-md focus:outline-none focus:border-indigo-200;
     }
 
     .input-error input, .input-error textarea, .input-error select {

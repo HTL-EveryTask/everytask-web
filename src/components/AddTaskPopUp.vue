@@ -87,9 +87,9 @@ async function onSubmit() {
     </Transition>
     <div class="flex items-center">
       <button
-        :class="{ 'text-ghost/70': $route.name !== 'addTask' }"
+        :class="{ 'text-raisin/70': $route.name !== 'addTask' }"
         :disabled="v$.$invalid"
-        class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-ghost hover:shadow-sm rounded-md p-2 border-2 border-ghost/40 disabled:opacity-50 disabled:border-transparent"
+        class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-raisin hover:shadow-sm rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
         type="submit"
       >
         <IconPlus v-if="!loading" />
@@ -97,13 +97,13 @@ async function onSubmit() {
       </button>
       <input
         v-model="title"
-        class="w-full border-b-2 border-ghost/70 bg-transparent p-0 placeholder-ghost/70 caret-ghost/70 focus:outline-none focus:placeholder-ghost/100 focus:border-ghost/100 transition-colors duration-300"
+        class="w-full border-b-2 border-raisin/50 bg-transparent p-0 placeholder-raisin/70 caret-raisin/70 focus:outline-none focus:placeholder-raisin/100 focus:border-raisin/100 transition-colors duration-300"
         placeholder="Add a task"
         type="text"
         @click="router.push({ name: 'addTask' })"
       />
       <select
-        class="mx-4 bg-transparent border-ghost/70 border-b-2 p-0 caret-ghost/70 focus:outline-none focus:border-ghost/100 transition-colors duration-300"
+        class="mx-4 bg-transparent border-raisin/70 border-b-2 p-0 caret-raisin/70 focus:outline-none focus:border-raisin/100 transition-colors duration-300"
       >
         <option value="1">Fach</option>
         <option value="2">2</option>
