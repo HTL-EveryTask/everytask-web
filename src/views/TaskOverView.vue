@@ -5,7 +5,6 @@ import router from "@/router";
 import { useAuthenticateStore } from "@/stores/auth";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
-import ModalContainer from "@/components/ModalContainer.vue";
 import { useClickOutside } from "@/composables/useClickOutside";
 
 const authenticateStore = useAuthenticateStore();
@@ -103,108 +102,136 @@ useClickOutside(addTaskPopUp, () => {
     router.push({ name: "tasks" });
   }
 });
+
+function beforeTaskLeave(el: any) {
+  const { marginLeft, marginTop, width, height } = window.getComputedStyle(el);
+  el.style.left = `${el.offsetLeft - parseFloat(marginLeft)}px`;
+  el.style.top = `${el.offsetTop - parseFloat(marginTop)}px`;
+  el.style.width = width;
+  el.style.height = height;
+}
 </script>
 
 <template>
-  <nav class="w-44 h-screen shadow-lg text-sm bg-ghost">
-    <ul class="py-4">
-      <li>
-        <div class="flex gap-2 px-4 py-2">
-          <HomeIcon />
-          <span>All</span>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2 px-4 py-2">
-          <HomeIcon />
-          <span>Today</span>
-        </div>
-      </li>
-      <li>
-        <div class="flex gap-2 px-4 py-2">
-          <HomeIcon />
-          <span>Private</span>
-        </div>
-      </li>
-    </ul>
-
-    <div class="border-t-2 border-yonder" />
-
-    <ul class="py-4">
-      <li v-for="group in mockGroups" :key="group.id">
-        <div class="flex gap-2 px-4 py-2">
-          <HomeIcon />
-          <span>{{ group.name }}</span>
-        </div>
-      </li>
-    </ul>
-  </nav>
-  <main class="flex-1 flex flex-col relative">
-    <div class="px-16 flex-1 py-8 bg-cerulean">
-      <div class="p-4 flex flex-col bg-white rounded-xl h-[80vh]">
-        <header
-          class="text-3xl font-bold p-4 border-b-2 [border-image: linear-gradient(to right, darkblue, darkorchid) 1]"
-        >
-          <h1>All</h1>
-          <div class="text-sm flex gap-2">
-            <span>{{ authenticateStore.tasks.length }}</span>
-            <button
-              class="text-red-500"
-              @click="
-                authenticateStore.tasks.forEach((task) =>
-                  authenticateStore.deleteTask(task.id).then(() => {
-                    authenticateStore.fetchTasks();
-                  })
-                )
-              "
-            >
-              Delete all
-            </button>
+  <div class="flex bg-gradient-to-tr from-cerulean to-rebecca bg-opacity-50">
+    <nav class="w-44 h-screen shadow-lg text-sm bg-ghost">
+      <ul class="py-4">
+        <li>
+          <div class="flex gap-2 px-4 py-2">
+            <HomeIcon />
+            <span>All</span>
           </div>
-        </header>
-        <div class="p-8 overflow-y-auto w-full bg-ghost h-full">
-          <TransitionGroup appear class="gap-4" name="list" tag="div">
-            <TaskCard
-              v-for="(task, index) in authenticateStore.tasks"
-              :key="task.id"
-              :data-index="index"
-              :task="task"
-              class="bg-white shadow-md shadow-yonder/10"
-              @click="
-                router.push({ name: 'showTask', params: { id: task.id } })
-              "
-            />
-          </TransitionGroup>
+        </li>
+        <li>
+          <div class="flex gap-2 px-4 py-2">
+            <HomeIcon />
+            <span>Today</span>
+          </div>
+        </li>
+        <li>
+          <div class="flex gap-2 px-4 py-2">
+            <HomeIcon />
+            <span>Private</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="border-t-2 border-yonder" />
+
+      <ul class="py-4">
+        <li v-for="group in mockGroups" :key="group.id">
+          <div class="flex gap-2 px-4 py-2">
+            <HomeIcon />
+            <span>{{ group.name }}</span>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <main class="flex-1 flex flex-col relative">
+      <div class="px-16 flex-1 py-8">
+        <div class="p-4 flex flex-col bg-white rounded-xl h-[80vh]">
+          <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
+            <h1>All</h1>
+            <div class="text-sm flex gap-2">
+              <span>{{ authenticateStore.tasks.length }}</span>
+              <button
+                class="text-red-500"
+                @click="
+                  authenticateStore.tasks.forEach((task) =>
+                    authenticateStore.deleteTask(task.id).then(() => {
+                      authenticateStore.fetchTasks();
+                    })
+                  )
+                "
+              >
+                Delete all
+              </button>
+            </div>
+          </header>
+          <div class="p-8 overflow-y-auto w-full bg-ghost h-full">
+            <TransitionGroup
+              appear
+              class="flex flex-col gap-4"
+              name="list"
+              tag="div"
+              @before-leave="beforeTaskLeave"
+            >
+              <TaskCard
+                v-for="(task, index) in authenticateStore.tasks"
+                :key="task.id"
+                :data-index="index"
+                :task="task"
+                class="bg-white shadow-md shadow-yonder/10"
+                @click="
+                  router.push({ name: 'showTask', params: { id: task.id } })
+                "
+              />
+            </TransitionGroup>
+          </div>
         </div>
       </div>
-    </div>
 
-    <ModalContainer
-      :show="$route.name === 'showTask'"
-      :title="$route.meta.modalTitle"
-      effect="shadow"
-      @close="router.push({ name: 'tasks' })"
-    >
-      <RouterView @close="router.push({ name: 'tasks' })" />
-    </ModalContainer>
+      <!--    <ModalContainer-->
+      <!--      :show="$route.name === 'showTask'"-->
+      <!--      :title="$route.meta.modalTitle"-->
+      <!--      effect="shadow"-->
+      <!--      @close="router.push({ name: 'tasks' })"-->
+      <!--    >-->
+      <!--      <RouterView @close="router.push({ name: 'tasks' })" />-->
+      <!--    </ModalContainer>-->
 
-    <!--    <div-->
-    <!--      v-if="$route.name === 'addTask'"-->
-    <!--      class="absolute h-full w-full left-0 top-0 backdrop-blur-sm"-->
-    <!--      @click="$router.push({ name: 'tasks' })"-->
-    <!--    />-->
+      <!--    <div-->
+      <!--      v-if="$route.name === 'addTask'"-->
+      <!--      class="absolute h-full w-full left-0 top-0 backdrop-blur-sm"-->
+      <!--      @click="$router.push({ name: 'tasks' })"-->
+      <!--    />-->
 
-    <div class="absolute bottom-0 left-0 right-0">
-      <div class="px-8">
+      <div class="absolute bottom-0 left-0 right-0">
+        <div class="px-8">
+          <div
+            ref="addTaskPopUp"
+            class="effect-glass my-4 max-w-[48em] p-2 bg-raisin/70 rounded-lg text-ghost mx-auto"
+          >
+            <AddTaskPopUp />
+          </div>
+        </div>
+      </div>
+    </main>
+    <div class="w-[30vw]" />
+    <aside class="absolute right-0 h-full">
+      <Transition name="side">
         <div
-          ref="addTaskPopUp"
-          class="effect-glass my-4 max-w-[48em] p-2 bg-raisin/70 rounded-lg text-ghost mx-auto"
+          v-if="$route.name === 'showTask'"
+          class="w-[30vw] h-full bg-white rounded-l-xl"
+          @close="router.push({ name: 'tasks' })"
         >
-          <AddTaskPopUp />
+          <div class="p-8">
+            <RouterView @close="router.push({ name: 'tasks' })" />
+          </div>
         </div>
-      </div>
-    </div>
-  </main>
+      </Transition>
+    </aside>
+  </div>
 </template>
 
 <!--suppress CssUnusedSymbol -->
@@ -222,12 +249,26 @@ useClickOutside(addTaskPopUp, () => {
 
 .list-leave-to {
   opacity: 0;
-  transform: translateX(-30px);
 }
 
 .list-leave-active {
   position: absolute;
   width: 100%;
+}
+
+.side-enter-active,
+.side-leave-active {
+  transition: all 0.4s ease-in-out;
+}
+
+.side-enter-from,
+.side-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.side-leave-active {
+  overflow: hidden;
 }
 
 .effect-glass {
