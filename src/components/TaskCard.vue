@@ -11,7 +11,7 @@ function toggleCompleted() {
 </script>
 
 <template>
-  <div class="bg-ghost min-w-[12em] p-4 flex items-center rounded-lg">
+  <div class="min-w-[12em] p-4 flex items-center rounded-lg">
     <div
       :class="
         'w-4 h-4 rounded-full mr-4' +

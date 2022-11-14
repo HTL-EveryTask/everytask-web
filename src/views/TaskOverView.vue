@@ -106,7 +106,7 @@ useClickOutside(addTaskPopUp, () => {
 </script>
 
 <template>
-  <nav class="w-44 h-screen shadow-lg text-sm">
+  <nav class="w-44 h-screen shadow-lg text-sm bg-ghost">
     <ul class="py-4">
       <li>
         <div class="flex gap-2 px-4 py-2">
@@ -139,19 +139,43 @@ useClickOutside(addTaskPopUp, () => {
       </li>
     </ul>
   </nav>
-  <main class="flex-1 overflow-y-scroll flex flex-col relative">
-    <div class="px-8 py-2 flex-1 w-full">
-      <div class="flex flex-col gap-4 max-w-[48em]">
-        <TransitionGroup appear name="list" tag="div">
-          <TaskCard
-            v-for="(task, index) in authenticateStore.tasks"
-            :key="task.id"
-            :data-index="index"
-            :task="task"
-            class="my-4 shadow-md shadow-yonder/10"
-            @click="router.push({ name: 'showTask', params: { id: task.id } })"
-          />
-        </TransitionGroup>
+  <main class="flex-1 flex flex-col relative">
+    <div class="px-16 flex-1 py-8 bg-cerulean">
+      <div class="p-4 flex flex-col bg-white rounded-xl h-[80vh]">
+        <header
+          class="text-3xl font-bold p-4 border-b-2 [border-image: linear-gradient(to right, darkblue, darkorchid) 1]"
+        >
+          <h1>All</h1>
+          <div class="text-sm flex gap-2">
+            <span>{{ authenticateStore.tasks.length }}</span>
+            <button
+              class="text-red-500"
+              @click="
+                authenticateStore.tasks.forEach((task) =>
+                  authenticateStore.deleteTask(task.id).then(() => {
+                    authenticateStore.fetchTasks();
+                  })
+                )
+              "
+            >
+              Delete all
+            </button>
+          </div>
+        </header>
+        <div class="p-8 overflow-y-auto w-full bg-ghost h-full">
+          <TransitionGroup appear class="gap-4" name="list" tag="div">
+            <TaskCard
+              v-for="(task, index) in authenticateStore.tasks"
+              :key="task.id"
+              :data-index="index"
+              :task="task"
+              class="bg-white shadow-md shadow-yonder/10"
+              @click="
+                router.push({ name: 'showTask', params: { id: task.id } })
+              "
+            />
+          </TransitionGroup>
+        </div>
       </div>
     </div>
 
@@ -170,11 +194,11 @@ useClickOutside(addTaskPopUp, () => {
     <!--      @click="$router.push({ name: 'tasks' })"-->
     <!--    />-->
 
-    <div class="sticky bottom-0">
+    <div class="absolute bottom-0 left-0 right-0">
       <div class="px-8">
         <div
           ref="addTaskPopUp"
-          class="add-task-glass my-4 max-w-[48em] p-2 bg-raisin/70 rounded-lg text-ghost"
+          class="effect-glass my-4 max-w-[48em] p-2 bg-raisin/70 rounded-lg text-ghost mx-auto"
         >
           <AddTaskPopUp />
         </div>
@@ -198,7 +222,7 @@ useClickOutside(addTaskPopUp, () => {
 
 .list-leave-to {
   opacity: 0;
-  transform: translateX(30px) translateY(-15px);
+  transform: translateX(-30px);
 }
 
 .list-leave-active {
@@ -206,7 +230,7 @@ useClickOutside(addTaskPopUp, () => {
   width: 100%;
 }
 
-.add-task-glass {
+.effect-glass {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(9px);
