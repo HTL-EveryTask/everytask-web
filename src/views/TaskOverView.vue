@@ -218,7 +218,7 @@ function beforeTaskLeave(el: any) {
       </div>
     </main>
     <div class="w-[30vw]" />
-    <aside class="absolute right-0 h-full">
+    <aside class="absolute right-0 h-full overflow-hidden">
       <Transition name="side">
         <div
           v-if="$route.name === 'showTask'"
