@@ -5,7 +5,6 @@ import useVuelidate from "@vuelidate/core";
 import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
-import router from "@/router";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 
@@ -99,6 +98,7 @@ async function onSubmit() {
         :disabled="v$.$invalid"
         class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-raisin hover:shadow-sm rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
         type="submit"
+        @click.stop
       >
         <IconPlus v-if="!loading" />
         <IconSpinner v-else />
@@ -108,7 +108,6 @@ async function onSubmit() {
         class="w-full border-b-2 border-raisin/50 bg-transparent p-0 placeholder-raisin/70 caret-raisin/70 focus:outline-none focus:placeholder-raisin/100 focus:border-raisin/100 transition-colors duration-300"
         placeholder="Add a task"
         type="text"
-        @click="router.push({ name: 'addTask' })"
       />
       <select
         class="mx-4 bg-transparent border-raisin/70 border-b-2 p-0 caret-raisin/70 focus:outline-none focus:border-raisin/100 transition-colors duration-300"

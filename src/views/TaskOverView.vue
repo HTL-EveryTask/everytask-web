@@ -157,8 +157,8 @@ function beforeTaskLeave(el: any) {
     </nav>
 
     <main class="flex-1 flex flex-col relative">
-      <div class="px-16 flex-1 py-8">
-        <div class="p-4 flex flex-col bg-white rounded-xl h-[80vh]">
+      <div class="flex-1">
+        <div class="mx-16 my-8 p-4 flex flex-col bg-white rounded-xl h-[80vh]">
           <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
             <h1>All</h1>
             <div class="text-sm flex gap-2">
