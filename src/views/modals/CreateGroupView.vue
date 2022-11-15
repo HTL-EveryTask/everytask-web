@@ -46,11 +46,11 @@ async function onSubmit() {}
 function onSectionEnter(element: any, done: any) {
   gsap.fromTo(
     element,
-    { x: change.value * 100, opacity: 0 },
+    { x: change.value * 50, opacity: 0 },
     {
       x: 0,
       opacity: 1,
-      duration: 0.5,
+      duration: 0.3,
       onComplete: done,
     }
   );
@@ -61,9 +61,9 @@ function onSectionLeave(element: any, done: any) {
     element,
     { x: 0, opacity: 1 },
     {
-      x: -change.value * 100,
+      x: -change.value * 50,
       opacity: 0,
-      duration: 0.5,
+      duration: 0.3,
       onComplete: done,
     }
   );

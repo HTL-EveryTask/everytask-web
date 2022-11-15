@@ -107,14 +107,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex">
-    <div class="p-4 h-screen overflow-y-scroll flex-1 z-10 bg-ghost">
-      <div class="flex flex-col gap-4">
+  <div class="flex h-full">
+    <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
+      <div class="flex flex-col gap-4 overflow-y-auto p-4">
         <GroupCard
           v-for="group in mockGroups"
           :key="group.id"
           :group="group"
-          class="bg-white shadow-md shadow-yonder/10"
+          class="bg-white"
         />
       </div>
     </div>

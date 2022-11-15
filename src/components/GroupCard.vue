@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="min-w-[12em] p-4 flex items-center rounded-lg">
+  <div class="min-w-[12em] p-4 flex items-center rounded-xl">
     <div class="flex items-center rounded-full bg-ghost p-2">
       <IconGroup class="w-8 h-8" />
     </div>
@@ -25,9 +25,6 @@ const props = defineProps<{
       <span class="text-sm text-gray-500">{{
         props.group.memberIds.length
       }}</span>
-    </div>
-    <div class="ml-8">
-      <button class="text-gray-500 hover:text-gray-700">Edit</button>
     </div>
   </div>
 </template>

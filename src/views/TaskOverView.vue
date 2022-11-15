@@ -98,10 +98,10 @@ onMounted(async () => {
 
 const addPopUpExpanded = ref(false);
 
-const addTaskPopUp = ref();
-useClickOutside(addTaskPopUp, () => {
-  addPopUpExpanded.value = false;
-});
+// const addTaskPopUp = ref();
+// useClickOutside(addTaskPopUp, () => {
+//   addPopUpExpanded.value = false;
+// });
 
 function deleteAllTasks() {
   authenticateStore.tasks.forEach((task) =>
@@ -191,7 +191,10 @@ function beforeTaskLeave(el: any) {
                 @click="
                   router.currentRoute.value.params.id === task.id
                     ? router.push({ name: 'tasks' })
-                    : router.push({ name: 'showTask', params: { id: task.id } })
+                    : router.replace({
+                        name: 'showTask',
+                        params: { id: task.id },
+                      })
                 "
               />
             </TransitionGroup>
@@ -214,11 +217,22 @@ function beforeTaskLeave(el: any) {
       <!--      @click="$router.push({ name: 'tasks' })"-->
       <!--    />-->
 
+      <Transition name="overlay">
+        <div
+          v-if="addPopUpExpanded"
+          class="fixed w-screen h-screen left-0 top-0 backdrop-blur-sm bg-raisin/5 z-20"
+          @click="addPopUpExpanded = false"
+        />
+      </Transition>
+
       <div class="absolute bottom-0 left-0 right-0 px-8">
         <div
           ref="addTaskPopUp"
-          class="effect-glass my-4 max-w-[48em] p-2 bg-ghost/70 rounded-lg text-raisin mx-auto"
-          @click="addPopUpExpanded = true"
+          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto bg-white shadow-lg shadow-yonder/50 z-30 relative"
+          @click="
+            addPopUpExpanded = true;
+            router.push({ name: 'tasks' });
+          "
         >
           <AddTaskPopUp
             :expanded="addPopUpExpanded"
@@ -286,5 +300,15 @@ function beforeTaskLeave(el: any) {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+}
+
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: all 0.4s ease-in-out;
+}
+
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
 }
 </style>
