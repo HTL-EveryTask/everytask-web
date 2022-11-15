@@ -9,6 +9,14 @@ import router from "@/router";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 
+defineProps<{
+  expanded: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const authenticateStore = useAuthenticateStore();
 const loading = ref(false);
 
@@ -49,14 +57,14 @@ async function onSubmit() {
   await authenticateStore.createTask(newTask);
   await authenticateStore.fetchTasks();
   loading.value = false;
-  await router.push({ name: "tasks" });
+  emit("close");
 }
 </script>
 
 <template>
   <form class="w-full" @submit.prevent="onSubmit">
     <Transition name="expand">
-      <div v-if="$route.name === 'addTask'" class="h-96 overflow-auto">
+      <div v-if="expanded" class="h-96 overflow-auto">
         <div class="w-full p-4">
           <InputField
             id="description"
@@ -87,7 +95,7 @@ async function onSubmit() {
     </Transition>
     <div class="flex items-center">
       <button
-        :class="{ 'text-raisin/70': $route.name !== 'addTask' }"
+        :class="{ 'text-raisin/70': !expanded }"
         :disabled="v$.$invalid"
         class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-raisin hover:shadow-sm rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
         type="submit"

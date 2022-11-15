@@ -96,12 +96,20 @@ onMounted(async () => {
   await authenticateStore.fetchTasks();
 });
 
+const addPopUpExpanded = ref(false);
+
 const addTaskPopUp = ref();
 useClickOutside(addTaskPopUp, () => {
-  if (router.currentRoute.value.name === "addTask") {
-    router.push({ name: "tasks" });
-  }
+  addPopUpExpanded.value = false;
 });
+
+function deleteAllTasks() {
+  authenticateStore.tasks.forEach((task) =>
+    authenticateStore.deleteTask(task.id).then(() => {
+      authenticateStore.fetchTasks();
+    })
+  );
+}
 
 function beforeTaskLeave(el: any) {
   const { marginLeft, marginTop, width, height } = window.getComputedStyle(el);
@@ -147,6 +155,7 @@ function beforeTaskLeave(el: any) {
         </li>
       </ul>
     </nav>
+
     <main class="flex-1 flex flex-col relative">
       <div class="px-16 flex-1 py-8">
         <div class="p-4 flex flex-col bg-white rounded-xl h-[80vh]">
@@ -154,16 +163,7 @@ function beforeTaskLeave(el: any) {
             <h1>All</h1>
             <div class="text-sm flex gap-2">
               <span>{{ authenticateStore.tasks.length }}</span>
-              <button
-                class="text-red-500"
-                @click="
-                  authenticateStore.tasks.forEach((task) =>
-                    authenticateStore.deleteTask(task.id).then(() => {
-                      authenticateStore.fetchTasks();
-                    })
-                  )
-                "
-              >
+              <button class="text-red-500" @click="deleteAllTasks">
                 Delete all
               </button>
             </div>
@@ -179,11 +179,17 @@ function beforeTaskLeave(el: any) {
               <TaskCard
                 v-for="(task, index) in authenticateStore.tasks"
                 :key="task.id"
+                :class="{
+                  'border-cerulean border-2':
+                    router.currentRoute.value.params.id === task.id,
+                }"
                 :data-index="index"
                 :task="task"
                 class="bg-white shadow-md shadow-yonder/10"
                 @click="
-                  router.push({ name: 'showTask', params: { id: task.id } })
+                  router.currentRoute.value.params.id === task.id
+                    ? router.push({ name: 'tasks' })
+                    : router.push({ name: 'showTask', params: { id: task.id } })
                 "
               />
             </TransitionGroup>
@@ -206,17 +212,20 @@ function beforeTaskLeave(el: any) {
       <!--      @click="$router.push({ name: 'tasks' })"-->
       <!--    />-->
 
-      <div class="absolute bottom-0 left-0 right-0">
-        <div class="px-8">
-          <div
-            ref="addTaskPopUp"
-            class="effect-glass my-4 max-w-[48em] p-2 bg-ghost/70 rounded-lg text-raisin mx-auto"
-          >
-            <AddTaskPopUp />
-          </div>
+      <div class="absolute bottom-0 left-0 right-0 px-8">
+        <div
+          ref="addTaskPopUp"
+          class="effect-glass my-4 max-w-[48em] p-2 bg-ghost/70 rounded-lg text-raisin mx-auto"
+          @click="addPopUpExpanded = true"
+        >
+          <AddTaskPopUp
+            :expanded="addPopUpExpanded"
+            @close="addPopUpExpanded = false"
+          />
         </div>
       </div>
     </main>
+
     <div class="w-[30vw]" />
     <aside class="absolute right-0 h-full overflow-hidden">
       <Transition name="side">
