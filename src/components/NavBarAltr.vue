@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import HomeIcon from "@/components/icons/HomeIcon.vue";
-import GroupIcon from "@/components/icons/GroupIcon.vue";
+import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
 import UserIcon from "@/components/icons/UserIcon.vue";
 import { ref } from "vue";
@@ -31,8 +31,8 @@ const mouseOver = ref(false);
         </router-link>
       </li>
       <li>
-        <router-link class="nav-link" to="/">
-          <GroupIcon />
+        <router-link class="nav-link" to="/groups">
+          <IconGroup />
           <span class="">Groups</span>
         </router-link>
       </li>

@@ -29,6 +29,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/groups",
+      name: "groups",
+      component: () => import("../views/GroupOverView.vue"),
+    },
+    {
       path: "/register",
       name: "register",
       meta: { hideNavBar: true },

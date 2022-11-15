@@ -22,7 +22,7 @@ const task = ref<Task | undefined>(
 
 // TODO: make reload work
 if (!task.value) {
-  router.push({ name: "addTask" });
+  router.push({ name: "tasks" });
 }
 
 const title = ref(task.value?.title ?? "Test");

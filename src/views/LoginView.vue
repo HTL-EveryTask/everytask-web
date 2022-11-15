@@ -51,7 +51,7 @@ async function onSubmit() {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full h-full">
     <div
       class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg max-w-[36em] sm:w-full"
     >

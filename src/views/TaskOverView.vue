@@ -121,8 +121,10 @@ function beforeTaskLeave(el: any) {
 </script>
 
 <template>
-  <div class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50">
-    <nav class="w-44 h-screen shadow-lg text-sm bg-ghost">
+  <div
+    class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50 h-full relative"
+  >
+    <nav class="w-44 h-full shadow-lg text-sm bg-ghost">
       <ul class="py-4">
         <li>
           <div class="flex gap-2 px-4 py-2">
@@ -226,8 +228,8 @@ function beforeTaskLeave(el: any) {
       </div>
     </main>
 
-    <div class="w-[30vw]" />
-    <aside class="absolute right-0 h-full overflow-hidden">
+    <!--    <div class="w-[30vw]" />-->
+    <aside class="h-full right-0 overflow-hidden">
       <Transition name="side">
         <div
           v-if="$route.name === 'showTask'"
@@ -273,7 +275,7 @@ function beforeTaskLeave(el: any) {
 .side-enter-from,
 .side-leave-to {
   opacity: 0;
-  transform: translateX(100%);
+  width: 0;
 }
 
 .side-leave-active {
