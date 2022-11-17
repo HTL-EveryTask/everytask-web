@@ -45,7 +45,7 @@ const v$ = useVuelidate(
 async function onSubmit() {
   console.log("submit");
   const newTask: Task = {
-    id: "0",
+    id: 0,
     title: title.value,
     description: description.value,
     due_time: due.value,

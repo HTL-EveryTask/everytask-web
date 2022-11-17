@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import type { Group } from "@/models/Group";
 import IconGroup from "@/components/icons/IconGroup.vue";
 
 const props = defineProps<{
-  group: Group;
+  // TODO: Make type safe
+  group: any;
 }>();
 </script>
 
