@@ -239,7 +239,7 @@ function beforeTaskLeave(el: any) {
       <div class="absolute bottom-0 left-0 right-0 px-8">
         <div
           ref="addTaskPopUp"
-          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto bg-white shadow-lg shadow-yonder/50 z-30 relative"
+          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto bg-ghost shadow-lg shadow-yonder/50 z-30 relative"
           @click="
             addPopUpExpanded = true;
             router.push({ name: 'tasks' });

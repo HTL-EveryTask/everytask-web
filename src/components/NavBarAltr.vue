@@ -22,25 +22,25 @@ const mouseOver = ref(false);
 
 <template>
   <nav
-    class="w-[240px] bg-ghost shadow-lg p-[22px] py-[20px] transition-all text-raisin"
+    class="w-[240px] bg-ghost shadow-lg shadow-yonder/10 p-[22px] py-[20px] transition-all text-raisin"
     @mouseleave="mouseOver = false"
     @mouseover="mouseOver = true"
   >
     <ul class="">
-      <li :class="{ 'active-link': $route.name === 'tasks' }">
-        <router-link class="nav-link" to="/">
+      <li>
+        <router-link :to="{ name: 'tasks' }" class="nav-link">
           <HomeIcon />
           <span class="condensed-hidden">Home</span>
         </router-link>
       </li>
-      <li :class="{ 'active-link': $route.name === 'groups' }">
-        <router-link class="nav-link" to="/groups">
+      <li>
+        <router-link :to="{ name: 'groups' }" class="nav-link">
           <IconGroup />
           <span class="">Groups</span>
         </router-link>
       </li>
-      <li :class="{ 'active-link': $route.name === 'connections' }">
-        <router-link class="nav-link" to="/">
+      <li>
+        <router-link :to="{ name: 'not-found' }" class="nav-link">
           <IconConnections />
           <span class="">Connections</span>
         </router-link>
@@ -68,8 +68,8 @@ const mouseOver = ref(false);
   </nav>
 </template>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
-/*noinspection CssUnusedSymbol*/
 nav.collapsed {
   width: 100px;
 }
@@ -90,13 +90,16 @@ nav.collapsed span {
   /* opacity: 0; */
 }
 
-nav li {
-  height: 60px;
-  @apply rounded-full mt-4 flex;
-  display: flex;
+nav li > * {
+}
+
+.router-link-active {
+  @apply bg-white;
 }
 
 nav li a {
+  height: 60px;
+  @apply rounded-full mt-4 flex bg-raisin/10;
   list-style: none;
   background-color: transparent;
   display: flex;
@@ -114,9 +117,5 @@ nav ul {
 
 ul::-webkit-scrollbar {
   display: none;
-}
-
-.active-link {
-  @apply bg-white;
 }
 </style>

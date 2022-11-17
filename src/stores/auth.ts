@@ -34,11 +34,12 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
   async function register(username: string, email: string, password: string) {
     return await api.callApi(
       "register_user",
-      "POST",
+      "PUT",
       {
         username: username,
         email: email,
         password: password,
+        is_teacher: false,
       },
       false
     );

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AddTaskView from "../views/modals/AddTaskView.vue";
+import EditTaskView from "../views/modals/EditTaskView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -22,7 +22,7 @@ const router = createRouter({
         {
           path: "task/:id",
           name: "showTask",
-          component: AddTaskView,
+          component: EditTaskView,
           meta: { modalTitle: "Edit Task" },
           props: (route) => ({ id: Number(route.params.id) }),
         },

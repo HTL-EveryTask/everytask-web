@@ -96,7 +96,7 @@ async function onSubmit() {
       <button
         :class="{ 'text-raisin/70': !expanded }"
         :disabled="v$.$invalid"
-        class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-raisin hover:shadow-sm rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
+        class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-yonder/20 hover:shadow-lg transition-shadow rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
         type="submit"
         @click.stop
       >
