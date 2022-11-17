@@ -4,12 +4,19 @@ import { ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
-import { useAuthenticateStore } from "@/stores/auth";
-import router from "@/router";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
+import { useTaskStore } from "@/stores/task";
 
-const authenticateStore = useAuthenticateStore();
+defineProps<{
+  expanded: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
+const taskStore = useTaskStore();
 const loading = ref(false);
 
 const title = ref("Test");
@@ -38,7 +45,7 @@ const v$ = useVuelidate(
 async function onSubmit() {
   console.log("submit");
   const newTask: Task = {
-    id: "0",
+    id: 0,
     title: title.value,
     description: description.value,
     due_time: due.value,
@@ -46,17 +53,17 @@ async function onSubmit() {
   };
 
   loading.value = true;
-  await authenticateStore.createTask(newTask);
-  await authenticateStore.fetchTasks();
+  await taskStore.createTask(newTask);
+  await taskStore.getTasks();
   loading.value = false;
-  await router.push({ name: "tasks" });
+  emit("close");
 }
 </script>
 
 <template>
   <form class="w-full" @submit.prevent="onSubmit">
     <Transition name="expand">
-      <div v-if="$route.name === 'addTask'" class="h-96 overflow-auto">
+      <div v-if="expanded" class="h-96 overflow-auto">
         <div class="w-full p-4">
           <InputField
             id="description"
@@ -87,23 +94,23 @@ async function onSubmit() {
     </Transition>
     <div class="flex items-center">
       <button
-        :class="{ 'text-ghost/70': $route.name !== 'addTask' }"
+        :class="{ 'text-raisin/70': !expanded }"
         :disabled="v$.$invalid"
-        class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-ghost hover:shadow-sm rounded-md p-2 border-2 border-ghost/40 disabled:opacity-50 disabled:border-transparent"
+        class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-yonder/20 hover:shadow-lg transition-shadow rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
         type="submit"
+        @click.stop
       >
         <IconPlus v-if="!loading" />
         <IconSpinner v-else />
       </button>
       <input
         v-model="title"
-        class="w-full border-b-2 border-ghost/70 bg-transparent p-0 placeholder-ghost/70 caret-ghost/70 focus:outline-none focus:placeholder-ghost/100 focus:border-ghost/100 transition-colors duration-300"
+        class="w-full border-b-2 border-raisin/50 bg-transparent p-0 placeholder-raisin/70 caret-raisin/70 focus:outline-none focus:placeholder-raisin/100 focus:border-raisin/100 transition-colors duration-300"
         placeholder="Add a task"
         type="text"
-        @click="router.push({ name: 'addTask' })"
       />
       <select
-        class="mx-4 bg-transparent border-ghost/70 border-b-2 p-0 caret-ghost/70 focus:outline-none focus:border-ghost/100 transition-colors duration-300"
+        class="mx-4 bg-transparent border-raisin/70 border-b-2 p-0 caret-raisin/70 focus:outline-none focus:border-raisin/100 transition-colors duration-300"
       >
         <option value="1">Fach</option>
         <option value="2">2</option>

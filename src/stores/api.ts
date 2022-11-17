@@ -3,53 +3,50 @@ import { computed } from "vue";
 
 export const useApiStore = defineStore("api", () => {
   const BASE_URL = "https://localhost:8000/api";
-  let TOKEN = localStorage.getItem("token");
+  let TOKEN = localStorage.getItem("token") || null;
 
   const hasToken = computed(() => {
     return TOKEN !== null;
   });
 
-  function callApi(path: string, method: string, body: any) {
-    return fetch(`${BASE_URL}/${path}`, {
+  async function callApi(
+    endpoint: string,
+    method: string,
+    body: any = null,
+    authorized: boolean = true
+  ) {
+    if (authorized && !hasToken.value) {
+      throw new Error("Not authorized");
+    }
+
+    console.log("Calling API: " + endpoint + " with method " + method);
+    console.log(body);
+
+    return await fetch(`${BASE_URL}/${endpoint}`, {
       method: method,
       headers: {
-        Authorization: TOKEN ? `Bearer ${TOKEN}` : "",
         "Content-Type": "application/json",
+        Authorization: `${TOKEN}`,
       },
-      body: body,
+      body: body ? JSON.stringify(body) : null,
     });
   }
 
-  async function checkAuth(): Promise<boolean> {
-    if (!hasToken.value) {
-      return false;
-    }
-
-    const response = await fetch(`${BASE_URL}/token/${TOKEN}`);
-
-    return response.ok;
+  function setToken(token: string) {
+    localStorage.setItem("token", token);
+    TOKEN = token;
   }
 
-  async function login(email: string, password: string) {
-    const response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: {},
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    }).then((response) => response.json());
-
-    if (response.token) {
-      TOKEN = response.token;
-      localStorage.setItem("token", response.token);
-    }
+  function clearToken() {
+    localStorage.removeItem("token");
+    TOKEN = null;
   }
 
   return {
+    TOKEN,
     hasToken,
     callApi,
-    checkAuth,
-    login,
+    setToken,
+    clearToken,
   };
 });

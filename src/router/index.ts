@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AddTaskView from "../views/modals/AddTaskView.vue";
+import EditTaskView from "../views/modals/EditTaskView.vue";
+import CreateGroupView from "../views/modals/CreateGroupView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -22,15 +23,22 @@ const router = createRouter({
         {
           path: "task/:id",
           name: "showTask",
-          component: AddTaskView,
+          component: EditTaskView,
           meta: { modalTitle: "Edit Task" },
-          props: (route) => ({ id: route.params.id, mode: "edit" }),
+          props: (route) => ({ id: Number(route.params.id) }),
         },
+      ],
+    },
+    {
+      path: "/groups",
+      name: "groups",
+      component: () => import("../views/GroupOverView.vue"),
+      children: [
         {
-          path: "add-task",
-          name: "addTask",
-          meta: { modalTitle: "Add Task", mode: "add" },
-          component: AddTaskView,
+          path: "/create",
+          name: "createGroup",
+          component: CreateGroupView,
+          meta: { modalTitle: "Create Group" },
         },
       ],
     },

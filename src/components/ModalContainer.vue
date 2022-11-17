@@ -45,7 +45,7 @@ onMounted(() => {
       :class="{
         'overlay-shadow': effect === 'shadow',
       }"
-      class="fixed w-screen h-screen left-0 top-0"
+      class="fixed w-screen h-screen left-0 top-0 z-40"
       @click="$emit('close')"
     />
   </Transition>
@@ -53,9 +53,10 @@ onMounted(() => {
   <Transition appear name="modal">
     <div
       v-if="show"
-      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-ghost rounded-lg shadow-lg z-10 h-screen sm:h-auto"
+      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50 h-screen sm:h-auto"
+      v-bind="$attrs"
     >
-      <div v-if="!headless" class="flex justify-between items-center p-4">
+      <div v-if="!headless" class="flex justify-between items-center p-4 px-6">
         <h1 class="text-xl font-bold">{{ title }}</h1>
         <button class="text-2xl" @click="$emit('close')">×</button>
       </div>

@@ -7,10 +7,10 @@ import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
 import LoadingButton from "@/components/LoadingButton.vue";
 
-const currentErrors = ref<string[]>([]);
+const currentError = ref("");
 
-const emailInput = ref("nayonyx@gmail.com");
-const password = ref("MyPassword.");
+const emailInput = ref("htl.everytask@gmail.com");
+const password = ref("password123!");
 
 const loading = ref(false);
 
@@ -34,27 +34,36 @@ const v$ = useVuelidate(
 async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
   loading.value = true;
-  const response = await authenticateStore
-    .login(emailInput.value, password.value)
-    .catch(() => {
-      console.log("hi");
-      currentErrors.value = ["Connection error"];
-    });
-  loading.value = false;
-
-  if (response.type === "Success") {
-    await router.push({ name: "tasks" });
-  } else {
-    currentErrors.value = [response.message];
+  try {
+    const response = await authenticateStore.login(
+      emailInput.value,
+      password.value
+    );
+    if (response.ok) {
+      await router.push({ name: "tasks" });
+    } else {
+      currentError.value = await response.json().then((data) => data.message);
+    }
+  } catch (error: any) {
+    currentError.value = "Connection to the server could not be established";
+  } finally {
+    loading.value = false;
   }
 }
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full h-full">
     <div
-      class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg max-w-[36em] sm:w-full"
+      class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full"
     >
+      <div class="mb-12">
+        <img
+          alt="logo"
+          class="h-24 mx-auto"
+          src="@/assets/logo_symbol_light.svg"
+        />
+      </div>
       <h1 class="text-3xl text-center">Login to EveryTask</h1>
       <h2 class="text-center text-sm text-raisin/60">
         Don't have an account?
@@ -65,16 +74,16 @@ async function onSubmit() {
 
       <div class="min-h-[5em] flex">
         <ul
-          v-if="currentErrors.length > 0"
+          v-if="currentError"
           class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-lg list-disc"
         >
-          <li v-for="error in currentErrors" :key="error">
-            {{ error }}
+          <li>
+            {{ currentError }}
           </li>
         </ul>
       </div>
 
-      <form @submit.prevent="onSubmit">
+      <form class="px-8" @submit.prevent="onSubmit">
         <InputField id="email" :validation="v$.email" label="Email">
           <input id="email" v-model="emailInput" type="email" />
         </InputField>
@@ -90,9 +99,9 @@ async function onSubmit() {
 
         <LoadingButton
           :disabled="v$.$invalid"
+          :loading="loading"
           class="text-center bg-cerulean text-white font-bold py-2 px-4 rounded"
           type="submit"
-          :loading="loading"
         >
           Login
         </LoadingButton>
