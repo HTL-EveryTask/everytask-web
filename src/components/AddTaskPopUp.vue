@@ -4,9 +4,9 @@ import { ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
-import { useAuthenticateStore } from "@/stores/auth";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
+import { useTaskStore } from "@/stores/task";
 
 defineProps<{
   expanded: boolean;
@@ -16,7 +16,7 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const authenticateStore = useAuthenticateStore();
+const taskStore = useTaskStore();
 const loading = ref(false);
 
 const title = ref("Test");
@@ -53,8 +53,8 @@ async function onSubmit() {
   };
 
   loading.value = true;
-  await authenticateStore.createTask(newTask);
-  await authenticateStore.fetchTasks();
+  await taskStore.createTask(newTask);
+  await taskStore.getTasks();
   loading.value = false;
   emit("close");
 }

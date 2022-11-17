@@ -2,12 +2,11 @@
 import TaskCard from "@/components/TaskCard.vue";
 import { onMounted, ref } from "vue";
 import router from "@/router";
-import { useAuthenticateStore } from "@/stores/auth";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
-import { useClickOutside } from "@/composables/useClickOutside";
+import { useTaskStore } from "@/stores/task";
 
-const authenticateStore = useAuthenticateStore();
+const taskStore = useTaskStore();
 const mockGroups = [
   {
     id: 1,
@@ -92,8 +91,21 @@ const mockGroups = [
   },
 ];
 
+const loading = ref(false);
+const error = ref("");
+
 onMounted(async () => {
-  await authenticateStore.fetchTasks();
+  loading.value = true;
+  try {
+    const response = await taskStore.getTasks();
+    if (!response.ok) {
+      error.value = await response.json().then((data) => data.message);
+    }
+  } catch (error: any) {
+    error.value = "Connection to the server could not be established";
+  } finally {
+    loading.value = false;
+  }
 });
 
 const addPopUpExpanded = ref(false);
@@ -104,11 +116,9 @@ const addPopUpExpanded = ref(false);
 // });
 
 function deleteAllTasks() {
-  authenticateStore.tasks.forEach((task) =>
-    authenticateStore.deleteTask(task.id).then(() => {
-      authenticateStore.fetchTasks();
-    })
-  );
+  taskStore.tasks.forEach((task) => {
+    taskStore.deleteTask(task.id);
+  });
 }
 
 function beforeTaskLeave(el: any) {
@@ -164,7 +174,7 @@ function beforeTaskLeave(el: any) {
           <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
             <h1>All</h1>
             <div class="text-sm flex gap-2">
-              <span>{{ authenticateStore.tasks.length }}</span>
+              <span>{{ taskStore.tasks.length }}</span>
               <button class="text-red-500" @click="deleteAllTasks">
                 Delete all
               </button>
@@ -179,7 +189,7 @@ function beforeTaskLeave(el: any) {
               @before-leave="beforeTaskLeave"
             >
               <TaskCard
-                v-for="(task, index) in authenticateStore.tasks"
+                v-for="(task, index) in taskStore.tasks"
                 :key="task.id"
                 :class="{
                   'border-cerulean border-2':

@@ -7,16 +7,16 @@ import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
 import LoadingButton from "@/components/LoadingButton.vue";
 
-const username = ref("MyUserName");
-const emailInput = ref("nayonyx@gmail.com");
-const password = ref("MyPassword.");
-const confirmPassword = ref("MyPassword.");
+const username = ref("Mephisto");
+const emailInput = ref("htl.everytask@gmail.com");
+const password = ref("AugenbraueHoch2");
+const confirmPassword = ref("AugenbraueHoch2");
 
 const loading = ref(false);
 
 const emailInputElement = ref();
 
-const currentErrors = ref<string[]>([]);
+const currentError = ref("");
 
 const rules = {
   username: {
@@ -67,19 +67,23 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
-  loading.value = true;
-  const response = await authenticateStore
-    .register(username.value, emailInput.value, password.value)
-    .catch(() => {
-      currentErrors.value = ["Connection error"];
-    });
-  loading.value = false;
 
-  console.log(response);
-  if (response.type === "Success") {
-    await router.push({ name: "login" });
-  } else {
-    emailInputElement.value.createError("Email already in use");
+  loading.value = true;
+  try {
+    const response = await authenticateStore.register(
+      username.value,
+      emailInput.value,
+      password.value
+    );
+    if (response.ok) {
+      await router.push({ name: "tasks" });
+    } else {
+      currentError.value = await response.json().then((data) => data.message);
+    }
+  } catch (error: any) {
+    currentError.value = "Connection to the server could not be established";
+  } finally {
+    loading.value = false;
   }
 }
 </script>
@@ -99,16 +103,16 @@ async function onSubmit() {
 
       <div class="min-h-[5em] flex">
         <ul
-          v-if="currentErrors.length > 0"
+          v-if="currentError"
           class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-lg list-disc"
         >
-          <li v-for="error in currentErrors" :key="error">
-            {{ error }}
+          <li>
+            {{ currentError }}
           </li>
         </ul>
       </div>
 
-      <form @submit.prevent="onSubmit" class="pr-12">
+      <form class="pr-12" @submit.prevent="onSubmit">
         <InputField id="username" :validation="v$.username" label="Username">
           <input id="username" v-model="username" type="text" />
         </InputField>
@@ -140,9 +144,9 @@ async function onSubmit() {
         </InputField>
         <LoadingButton
           :disabled="v$.$invalid"
+          :loading="loading"
           class="bg-yonder text-white font-bold py-2 px-4 rounded"
           type="submit"
-          :loading="loading"
         >
           Register
         </LoadingButton>

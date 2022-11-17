@@ -1,0 +1,54 @@
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { useApiStore } from "@/stores/api";
+import type { Task } from "@/models/Task";
+
+export const useTaskStore = defineStore("task", () => {
+  const api = useApiStore();
+
+  const tasks = ref<Task[]>([]);
+
+  async function getTasks() {
+    const response = await api.callApi("tasks", "GET");
+    if (response.ok) {
+      tasks.value = await response.json();
+    }
+    return response;
+  }
+
+  async function createTask(task: Task) {
+    const response = await api.callApi("tasks", "PUT", task);
+    if (response.ok) {
+      tasks.value.push(await response.json());
+    }
+    return response;
+  }
+
+  async function updateTask(task: Task) {
+    const response = await api.callApi("tasks", "PATCH", task);
+    if (response.ok) {
+      const updatedTask = await response.json();
+      const index = tasks.value.findIndex((t) => t.id === updatedTask.id);
+      tasks.value[index] = updatedTask;
+    }
+    return response;
+  }
+
+  async function deleteTask(id: string) {
+    // provide id as slug
+    const response = await api.callApi(`tasks/${id}`, "DELETE");
+    if (response.ok) {
+      const index = tasks.value.findIndex((t) => t.id === id);
+      tasks.value.splice(index, 1);
+    }
+    return response;
+  }
+
+  return {
+    tasks,
+    getTasks,
+    createTask,
+    updateTask,
+    deleteTask,
+  };
+});

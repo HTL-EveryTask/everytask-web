@@ -8,12 +8,8 @@ import router from "@/router";
 const authenticateStore = useAuthenticateStore();
 
 onMounted(async () => {
-  authenticateStore.token = localStorage.getItem("token") ?? "";
-  let loggedIn = await authenticateStore.authenticate().catch(() => {
-    router.push({ name: "login" });
-  });
+  const loggedIn = await authenticateStore.checkAuth();
   if (!loggedIn) {
-    localStorage.removeItem("token");
     await router.push({ name: "login" });
   }
 });
