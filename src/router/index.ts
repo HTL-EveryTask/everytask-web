@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import EditTaskView from "../views/modals/EditTaskView.vue";
+import CreateGroupView from "../views/modals/CreateGroupView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -32,6 +33,14 @@ const router = createRouter({
       path: "/groups",
       name: "groups",
       component: () => import("../views/GroupOverView.vue"),
+      children: [
+        {
+          path: "/create",
+          name: "createGroup",
+          component: CreateGroupView,
+          meta: { modalTitle: "Create Group" },
+        },
+      ],
     },
     {
       path: "/register",

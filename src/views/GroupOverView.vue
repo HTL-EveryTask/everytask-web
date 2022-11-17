@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 import { useAuthenticateStore } from "@/stores/auth";
-import type { Group } from "@/models/Group";
 import { onMounted } from "vue";
 import GroupCard from "@/components/GroupCard.vue";
-import CreateGroupView from "@/views/modals/CreateGroupView.vue";
+import IconPlus from "@/components/icons/IconPlus.vue";
+import ModalContainer from "@/components/ModalContainer.vue";
 
-const authenticateStore = useAuthenticateStore();
-const mockGroups: Group[] = [
+const mockGroups = [
   {
     id: "1",
     name: "Group 1",
@@ -109,18 +108,32 @@ onMounted(async () => {
 <template>
   <div class="flex h-full">
     <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
-      <div class="flex flex-col gap-4 overflow-y-auto p-4">
+      <div class="flex flex-col gap-4 overflow-y-auto p-4 w-[40vw] mx-auto">
         <GroupCard
           v-for="group in mockGroups"
           :key="group.id"
           :group="group"
           class="bg-white"
         />
+        <button
+          class="sticky bottom-0 m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-lg shadow-lg font-bold text-xl"
+          @click="$router.push({ name: 'createGroup' })"
+        >
+          <IconPlus class="w-[2rem] h-[2rem] mr-2" />
+          Create Group
+        </button>
       </div>
     </div>
-    <div class="w-[40vw] p-8 bg-white z-0">
-      <CreateGroupView class="m-4 mx-auto" />
-    </div>
+
+    <ModalContainer
+      :show="$route.name === 'createGroup'"
+      class="bg-white w-[40vw] h-[40em]"
+      title="Create Group"
+      effect="shadow"
+      @close="$router.push({ name: 'groups' })"
+    >
+      <RouterView class="px-8" @close="$router.push({ name: 'groups' })" />
+    </ModalContainer>
   </div>
 </template>
 
