@@ -42,8 +42,8 @@ const dateDayEnding = computed(() => {
       "
       @click.stop="toggleCompleted"
     ></div>
-    <div class="flex flex-1 items-baseline">
-      <span class="w-1/4 text-md font-bold">{{ task.title }}</span>
+    <div class="flex flex-1 items-baseline gap-8">
+      <span class="max-w-[50%] text-md font-bold">{{ task.title }}</span>
       <span class="flex-1 text-xs text-gray-500"
         >{{ formatDateTimeString }}
         <span class="text-[0.8em] relative top-[-0.2em] left-[-0.2em]">

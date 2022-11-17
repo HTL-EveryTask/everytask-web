@@ -9,8 +9,8 @@ import LoadingButton from "@/components/LoadingButton.vue";
 
 const username = ref("Mephisto");
 const emailInput = ref("htl.everytask@gmail.com");
-const password = ref("AugenbraueHoch2");
-const confirmPassword = ref("AugenbraueHoch2");
+const password = ref("AugenbraueHoch2!");
+const confirmPassword = ref("AugenbraueHoch2!");
 
 const loading = ref(false);
 

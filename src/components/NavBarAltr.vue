@@ -3,8 +3,17 @@ import HomeIcon from "@/components/icons/HomeIcon.vue";
 import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
 import UserIcon from "@/components/icons/UserIcon.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useApiStore } from "@/stores/api";
 import { useAuthenticateStore } from "@/stores/auth";
+import { useUserStore } from "@/stores/user";
+
+const apiStore = useApiStore();
+const userStore = useUserStore();
+
+onMounted(async () => {
+  await userStore.getMe();
+});
 
 const authenticateStore = useAuthenticateStore();
 
@@ -13,53 +22,37 @@ const mouseOver = ref(false);
 
 <template>
   <nav
-    :class="
-      'w-[250px] bg-ghost shadow-lg p-[22px] py-[20px] transition-all rounded-r-2xl' +
-      (!mouseOver ? ' collapsed' : '')
-    "
+    class="w-[240px] bg-ghost shadow-lg p-[22px] py-[20px] transition-all text-raisin"
     @mouseleave="mouseOver = false"
     @mouseover="mouseOver = true"
   >
-    <header class="w-14 mx-auto mb-2">
-      <img alt="logo" src="@/assets/logo_light.svg" />
-    </header>
     <ul class="">
-      <li>
+      <li :class="{ 'active-link': $route.name === 'tasks' }">
         <router-link class="nav-link" to="/">
           <HomeIcon />
           <span class="condensed-hidden">Home</span>
         </router-link>
       </li>
-      <li>
+      <li :class="{ 'active-link': $route.name === 'groups' }">
         <router-link class="nav-link" to="/groups">
           <IconGroup />
           <span class="">Groups</span>
         </router-link>
       </li>
-      <li>
+      <li :class="{ 'active-link': $route.name === 'connections' }">
         <router-link class="nav-link" to="/">
           <IconConnections />
           <span class="">Connections</span>
         </router-link>
       </li>
-      <li>
-        <router-link class="nav-link" to="/">
-          <HomeIcon />
-          <span class="">Settings</span>
-        </router-link>
-      </li>
 
-      <li :class="!authenticateStore.token ? 'bg-opacity-20 bg-red-500' : ''">
+      <li :class="!userStore.ME ? 'bg-opacity-20 bg-red-500' : ''">
         <router-link :to="{ name: 'login' }" class="nav-link">
           <UserIcon />
           <span
-            >{{
-              authenticateStore.token
-                ? authenticateStore.token
-                : "Not Logged In"
-            }}
+            >{{ userStore.ME ? userStore.ME.username : "Not Logged In" }}
             <span
-              v-if="authenticateStore.token"
+              v-if="apiStore.TOKEN"
               class="text-xs text-raisin/60 block"
               @click="authenticateStore.logout()"
             >
@@ -85,6 +78,7 @@ nav.collapsed {
   min-width: 53px;
   height: 28px;
   margin-right: 8px;
+  @apply text-raisin/90;
 }
 
 .nav-link span {
@@ -97,8 +91,8 @@ nav.collapsed span {
 }
 
 nav li {
-  height: 50px;
-  @apply rounded-xl border-2 border-indigo-200 mt-4 flex;
+  height: 60px;
+  @apply rounded-full mt-4 flex;
   display: flex;
 }
 
@@ -120,5 +114,9 @@ nav ul {
 
 ul::-webkit-scrollbar {
   display: none;
+}
+
+.active-link {
+  @apply bg-white;
 }
 </style>

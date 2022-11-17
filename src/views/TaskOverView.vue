@@ -106,6 +106,7 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+  console.log(taskStore.tasks);
 });
 
 const addPopUpExpanded = ref(false);
@@ -193,13 +194,13 @@ function beforeTaskLeave(el: any) {
                 :key="task.id"
                 :class="{
                   'border-cerulean border-2':
-                    router.currentRoute.value.params.id === task.id,
+                    Number(router.currentRoute.value.params.id) === task.id,
                 }"
                 :data-index="index"
                 :task="task"
                 class="bg-white shadow-md shadow-yonder/10"
                 @click="
-                  router.currentRoute.value.params.id === task.id
+                  Number(router.currentRoute.value.params.id) === task.id
                     ? router.push({ name: 'tasks' })
                     : router.replace({
                         name: 'showTask',

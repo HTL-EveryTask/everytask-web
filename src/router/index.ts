@@ -24,7 +24,7 @@ const router = createRouter({
           name: "showTask",
           component: AddTaskView,
           meta: { modalTitle: "Edit Task" },
-          props: (route) => ({ id: route.params.id, mode: "edit" }),
+          props: (route) => ({ id: Number(route.params.id) }),
         },
       ],
     },

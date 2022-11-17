@@ -12,14 +12,11 @@ export const useApiStore = defineStore("api", () => {
   async function callApi(
     endpoint: string,
     method: string,
-    body: any = {},
+    body: any = null,
     authorized: boolean = true
   ) {
     if (authorized && !hasToken.value) {
       throw new Error("Not authorized");
-    } else {
-      // TODO: Authorization header
-      body["token"] = TOKEN;
     }
 
     console.log("Calling API: " + endpoint + " with method " + method);
@@ -29,9 +26,9 @@ export const useApiStore = defineStore("api", () => {
       method: method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${TOKEN}`,
+        Authorization: `${TOKEN}`,
       },
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : null,
     });
   }
 

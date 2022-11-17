@@ -5,7 +5,7 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
   const api = useApiStore();
 
   async function checkAuth() {
-    const response = await api.callApi("token", "GET", {}, false);
+    const response = await api.callApi("token", "POST", null, false);
     return response.ok;
   }
 

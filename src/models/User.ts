@@ -1,4 +1,5 @@
 export interface User {
   id: number;
-  name: string;
+  username: string;
+  is_teacher: boolean;
 }

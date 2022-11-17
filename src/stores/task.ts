@@ -11,15 +11,23 @@ export const useTaskStore = defineStore("task", () => {
   async function getTasks() {
     const response = await api.callApi("tasks", "GET");
     if (response.ok) {
-      tasks.value = await response.json();
+      tasks.value = await response.json().then((data) => data.tasks);
     }
     return response;
   }
 
-  async function createTask(task: Task) {
-    const response = await api.callApi("tasks", "PUT", task);
+  async function getTask(id: number) {
+    const response = await api.callApi(`task/${id}`, "GET");
     if (response.ok) {
-      tasks.value.push(await response.json());
+      return await response.json().then((data) => data.task);
+    }
+    return null;
+  }
+
+  async function createTask(task: Task) {
+    const response = await api.callApi("task", "PUT", task);
+    if (response.ok) {
+      // tasks.value.push(await response.json());
     }
     return response;
   }
@@ -34,8 +42,7 @@ export const useTaskStore = defineStore("task", () => {
     return response;
   }
 
-  async function deleteTask(id: string) {
-    // provide id as slug
+  async function deleteTask(id: number) {
     const response = await api.callApi(`tasks/${id}`, "DELETE");
     if (response.ok) {
       const index = tasks.value.findIndex((t) => t.id === id);
@@ -47,6 +54,7 @@ export const useTaskStore = defineStore("task", () => {
   return {
     tasks,
     getTasks,
+    getTask,
     createTask,
     updateTask,
     deleteTask,
