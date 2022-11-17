@@ -91,8 +91,15 @@ async function onSubmit() {
 <template>
   <div class="w-full">
     <div
-      class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg max-w-[36em] sm:w-full"
+      class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full"
     >
+      <div class="mb-12">
+        <img
+          alt="logo"
+          class="h-24 mx-auto"
+          src="@/assets/logo_symbol_light.svg"
+        />
+      </div>
       <h1 class="text-3xl text-center">Register to EveryTask</h1>
       <h2 class="text-center text-sm text-raisin/60">
         Already have an account?
@@ -112,7 +119,7 @@ async function onSubmit() {
         </ul>
       </div>
 
-      <form class="pr-12" @submit.prevent="onSubmit">
+      <form class="px-8" @submit.prevent="onSubmit">
         <InputField id="username" :validation="v$.username" label="Username">
           <input id="username" v-model="username" type="text" />
         </InputField>
