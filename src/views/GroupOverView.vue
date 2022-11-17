@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useAuthenticateStore } from "@/stores/auth";
 import { onMounted } from "vue";
 import GroupCard from "@/components/GroupCard.vue";
 import IconPlus from "@/components/icons/IconPlus.vue";
