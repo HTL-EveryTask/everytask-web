@@ -39,7 +39,7 @@ const links = [
     <div class="m-3 flex-col items-center">
       <div class="my-8 font-bold flex flex-col items-center">
         <IconUser
-          class="h-[7rem] w-[7rem] mx-auto text-raisin/50 bg-yonder/10 rounded-full"
+          class="h-[7em] w-[7em] mx-auto text-raisin/50 bg-yonder/10 rounded-full"
         />
         <div class="w-[7rem] flex justify-between m-2">
           <span

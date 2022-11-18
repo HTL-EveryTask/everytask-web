@@ -135,7 +135,7 @@ function beforeTaskLeave(el: any) {
   <div
     class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50 h-full relative"
   >
-    <nav class="w-44 h-full shadow-lg text-sm bg-ghost">
+    <nav class="w-44 h-full shadow-lg text-sm bg-ghost text-raisin/50">
       <ul class="py-4">
         <li>
           <div class="flex gap-2 px-4 py-2">
@@ -161,7 +161,7 @@ function beforeTaskLeave(el: any) {
 
       <ul class="py-4">
         <li v-for="group in mockGroups" :key="group.id">
-          <div class="flex gap-2 px-4 py-2">
+          <div class="flex gap-2 px-4 py-2 items-center">
             <HomeIcon />
             <span>{{ group.name }}</span>
           </div>
