@@ -4,11 +4,9 @@ import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
 import UserIcon from "@/components/icons/UserIcon.vue";
 import { onMounted, ref } from "vue";
-import { useApiStore } from "@/stores/api";
 import { useAuthenticateStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 
-const apiStore = useApiStore();
 const userStore = useUserStore();
 
 onMounted(async () => {
@@ -46,18 +44,28 @@ const mouseOver = ref(false);
         </router-link>
       </li>
 
-      <li :class="!userStore.ME ? 'bg-opacity-20 bg-red-500' : ''">
-        <router-link :to="{ name: 'login' }" class="nav-link">
+      <li>
+        <router-link
+          :class="!userStore.ME ? 'bg-opacity-20 bg-red-500' : ''"
+          :to="{ name: 'login' }"
+          class="nav-link"
+        >
           <UserIcon />
           <span
             >{{ userStore.ME ? userStore.ME.username : "Not Logged In" }}
             <span
-              v-if="apiStore.TOKEN"
+              v-if="userStore.ME"
               class="text-xs text-raisin/60 block"
               @click="authenticateStore.logout()"
             >
               Logout
             </span>
+            <span
+              v-else
+              class="text-xs text-raisin/60 block"
+              @click="$router.push({ name: 'login' })"
+              >Login</span
+            >
           </span>
           <br />
         </router-link>
@@ -99,9 +107,8 @@ nav li > * {
 
 nav li a {
   height: 60px;
-  @apply rounded-full mt-4 flex bg-raisin/10;
+  @apply rounded-full mt-4 flex;
   list-style: none;
-  background-color: transparent;
   display: flex;
   align-items: center;
   text-decoration: none;
