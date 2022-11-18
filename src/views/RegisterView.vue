@@ -4,7 +4,6 @@ import { ref } from "vue";
 import { email, helpers, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
-import router from "@/router";
 import LoadingButton from "@/components/LoadingButton.vue";
 
 const username = ref("Mephisto");
@@ -12,6 +11,7 @@ const emailInput = ref("htl.everytask@gmail.com");
 const password = ref("AugenbraueHoch2!");
 const confirmPassword = ref("AugenbraueHoch2!");
 
+const showForm = ref(true);
 const loading = ref(false);
 
 const emailInputElement = ref();
@@ -76,7 +76,7 @@ async function onSubmit() {
       password.value
     );
     if (response.ok) {
-      await router.push({ name: "tasks" });
+      showForm.value = false;
     } else {
       currentError.value = await response.json().then((data) => data.message);
     }
@@ -86,12 +86,17 @@ async function onSubmit() {
     loading.value = false;
   }
 }
+
+function resendVerificationMail() {
+  const authenticateStore = useAuthenticateStore();
+  authenticateStore.resendVerificationEmail(emailInput.value);
+}
 </script>
 
 <template>
   <div class="w-full h-full">
     <div
-      class="p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none flex flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full sm:h-full bg-white"
+      class="p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none flex flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full sm:h-full bg-white mt-16"
     >
       <div class="mb-6 mt-2">
         <img
@@ -119,7 +124,7 @@ async function onSubmit() {
         </ul>
       </div>
 
-      <form class="px-8" @submit.prevent="onSubmit">
+      <form v-if="showForm" class="px-8" @submit.prevent="onSubmit">
         <InputField id="username" :validation="v$.username" label="Username">
           <input id="username" v-model="username" type="text" />
         </InputField>
@@ -158,6 +163,20 @@ async function onSubmit() {
           Register
         </LoadingButton>
       </form>
+      <div v-else class="px-8 mb-4 flex flex-col items-center text-center">
+        <h2 class="text-center text-xl m-4">Verification Mail sent</h2>
+        <p class="text-raisin/80 m-2">
+          Please check your inbox and click on the link in the verification mail
+          to verify your account.
+        </p>
+        <button
+          class="text-center bg-cerulean text-white font-bold py-2 px-4 rounded"
+          type="submit"
+          @click="resendVerificationMail"
+        >
+          Resend Verification Mail
+        </button>
+      </div>
     </div>
   </div>
 </template>

@@ -39,32 +39,36 @@ onMounted(() => {
 </script>
 
 <template>
-  <Transition name="overlay">
-    <div
-      v-if="show"
-      :class="{
-        'overlay-shadow': effect === 'shadow',
-      }"
-      class="fixed w-screen h-screen left-0 top-0 z-40"
-      @click="$emit('close')"
-    />
-  </Transition>
-
-  <Transition appear name="modal">
-    <div
-      v-if="show"
-      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50 h-screen"
-      v-bind="$attrs"
-    >
-      <div v-if="!headless" class="flex justify-between items-center p-4 px-6">
-        <h1 class="text-xl font-bold">{{ title }}</h1>
-        <button class="text-2xl" @click="$emit('close')">×</button>
+  <div class="absolute">
+    <Transition name="overlay">
+      <div
+        v-if="show"
+        :class="{
+          'overlay-shadow': effect === 'shadow',
+        }"
+        class="fixed w-screen h-screen left-0 top-0 z-40"
+        @click="$emit('close')"
+      />
+    </Transition>
+    <Transition appear name="modal">
+      <div
+        v-if="show"
+        :class="$attrs.class"
+        class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50 sm:h-screen sm:w-screen"
+      >
+        <div
+          v-if="!headless"
+          class="flex justify-between items-center p-4 px-6"
+        >
+          <h1 class="text-xl font-bold">{{ title }}</h1>
+          <button class="text-2xl" @click="$emit('close')">×</button>
+        </div>
+        <div class="p-4 max-h-[75vh] overflow-auto">
+          <slot></slot>
+        </div>
       </div>
-      <div class="p-4 md:max-h-[75vh] w-screen sm:w-full overflow-auto">
-        <slot></slot>
-      </div>
-    </div>
-  </Transition>
+    </Transition>
+  </div>
 </template>
 
 <!--suppress CssUnusedSymbol -->

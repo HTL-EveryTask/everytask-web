@@ -5,94 +5,18 @@ import router from "@/router";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
 import { useTaskStore } from "@/stores/task";
+import { useGroupStore } from "@/stores/group";
+import IconSpinner from "@/components/icons/IconSpinner.vue";
+import IconSun from "@/components/icons/IconSun.vue";
+import IconDot from "@/components/icons/IconDot.vue";
 
 const taskStore = useTaskStore();
-const mockGroups = [
-  {
-    id: 1,
-    name: "Group 1",
-    tasks: [
-      {
-        id: 1,
-        name: "Task 1",
-        description: "Description 1",
-        dueDate: "2021-05-01",
-        completed: false,
-      },
-      {
-        id: 2,
-        name: "Task 2",
-        description: "Description 2",
-        dueDate: "2021-05-02",
-        completed: false,
-      },
-      {
-        id: 3,
-        name: "Task 3",
-        description: "Description 3",
-        dueDate: "2021-05-03",
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Group 2",
-    tasks: [
-      {
-        id: 4,
-        name: "Task 4",
-        description: "Description 4",
-        dueDate: "2021-05-04",
-        completed: false,
-      },
-      {
-        id: 5,
-        name: "Task 5",
-        description: "Description 5",
-        dueDate: "2021-05-05",
-        completed: false,
-      },
-      {
-        id: 6,
-        name: "Task 6",
-        description: "Description 6",
-        dueDate: "2021-05-06",
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Group 3",
-    tasks: [
-      {
-        id: 7,
-        name: "Task 7",
-        description: "Description 7",
-        dueDate: "2021-05-07",
-        completed: false,
-      },
-      {
-        id: 8,
-        name: "Task 8",
-        description: "Description 8",
-        dueDate: "2021-05-08",
-        completed: false,
-      },
-      {
-        id: 9,
-        name: "Task 9",
-        description: "Description 9",
-        dueDate: "2021-05-09",
-        completed: false,
-      },
-    ],
-  },
-];
+const groupStore = useGroupStore();
 
 const loading = ref(false);
 const error = ref("");
+
+const selectedGroupId = ref();
 
 onMounted(async () => {
   loading.value = true;
@@ -101,6 +25,7 @@ onMounted(async () => {
     if (!response.ok) {
       error.value = await response.json().then((data) => data.message);
     }
+    await groupStore.getGroups();
   } catch (error: any) {
     error.value = "Connection to the server could not be established";
   } finally {
@@ -110,11 +35,6 @@ onMounted(async () => {
 });
 
 const addPopUpExpanded = ref(false);
-
-// const addTaskPopUp = ref();
-// useClickOutside(addTaskPopUp, () => {
-//   addPopUpExpanded.value = false;
-// });
 
 function deleteAllTasks() {
   taskStore.tasks.forEach((task) => {
@@ -135,22 +55,43 @@ function beforeTaskLeave(el: any) {
   <div
     class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50 h-full relative"
   >
-    <nav class="w-44 h-full shadow-lg text-sm bg-ghost text-raisin/50">
+    <nav class="w-44 h-full shadow-lg text-sm bg-ghost">
       <ul class="py-4">
-        <li>
-          <div class="flex gap-2 px-4 py-2">
-            <HomeIcon />
+        <li
+          :class="{
+            'bg-rebecca/10 text-rebecca': selectedGroupId === 'all',
+            'bg-ghost': selectedGroupId !== 'all',
+          }"
+          class="transition-colors duration-300 hover:bg-rebecca/5"
+          @click="selectedGroupId = 'all'"
+        >
+          <div class="flex gap-2 px-4 py-2 items-center">
+            <IconDot />
             <span>All</span>
           </div>
         </li>
-        <li>
-          <div class="flex gap-2 px-4 py-2">
-            <HomeIcon />
+        <li
+          :class="{
+            'bg-rebecca/10 text-rebecca': selectedGroupId === 'today',
+            'bg-ghost': selectedGroupId !== 'today',
+          }"
+          class="transition-colors duration-300 hover:bg-rebecca/5"
+          @click="selectedGroupId = 'today'"
+        >
+          <div class="flex gap-2 px-4 py-2 items-center">
+            <IconSun />
             <span>Today</span>
           </div>
         </li>
-        <li>
-          <div class="flex gap-2 px-4 py-2">
+        <li
+          :class="{
+            'bg-rebecca/10 text-rebecca': selectedGroupId === 'private',
+            'bg-ghost': selectedGroupId !== 'private',
+          }"
+          class="transition-colors duration-300 hover:bg-rebecca/5"
+          @click="selectedGroupId = 'private'"
+        >
+          <div class="flex gap-2 px-4 py-2 items-center">
             <HomeIcon />
             <span>Private</span>
           </div>
@@ -160,10 +101,21 @@ function beforeTaskLeave(el: any) {
       <div class="border-t-2 border-yonder" />
 
       <ul class="py-4">
-        <li v-for="group in mockGroups" :key="group.id">
+        <li
+          v-for="group in groupStore.groups"
+          :key="group.id"
+          :class="{
+            'bg-rebecca/10 text-rebecca': selectedGroupId === group.id,
+            'bg-ghost': selectedGroupId !== group.id,
+          }"
+          class="transition-colors duration-300 hover:bg-rebecca/5"
+          @click="selectedGroupId = group.id"
+        >
           <div class="flex gap-2 px-4 py-2 items-center">
-            <HomeIcon />
-            <span>{{ group.name }}</span>
+            <IconDot class="flex-none" />
+            <span class="overflow-ellipsis overflow-hidden">{{
+              group.name
+            }}</span>
           </div>
         </li>
       </ul>
@@ -182,51 +134,57 @@ function beforeTaskLeave(el: any) {
             </div>
           </header>
           <div class="p-8 overflow-y-auto w-full bg-ghost h-full">
-            <TransitionGroup
-              appear
-              class="flex flex-col gap-4"
-              name="list"
-              tag="div"
-              @before-leave="beforeTaskLeave"
-            >
-              <TaskCard
-                v-for="(task, index) in taskStore.tasks"
-                :key="task.id"
-                :class="{
-                  'border-cerulean border-2':
-                    Number(router.currentRoute.value.params.id) === task.id,
-                }"
-                :data-index="index"
-                :task="task"
-                class="bg-white shadow-md shadow-yonder/10"
-                @click="
-                  Number(router.currentRoute.value.params.id) === task.id
-                    ? router.push({ name: 'tasks' })
-                    : router.replace({
-                        name: 'showTask',
-                        params: { id: task.id },
-                      })
-                "
-              />
-            </TransitionGroup>
+            <Transition appear mode="out-in" name="fade">
+              <div
+                v-if="loading"
+                class="flex justify-center items-center h-full"
+              >
+                <IconSpinner />
+              </div>
+              <div
+                v-else-if="error"
+                class="flex justify-center items-center h-full"
+              >
+                <span>{{ error }}</span>
+              </div>
+              <div
+                v-else-if="taskStore.tasks.length === 0"
+                class="flex justify-center items-center h-full"
+              >
+                <span>No tasks</span>
+              </div>
+              <TransitionGroup
+                v-else
+                appear
+                class="flex flex-col gap-4"
+                name="list"
+                tag="div"
+                @before-leave="beforeTaskLeave"
+              >
+                <TaskCard
+                  v-for="(task, index) in taskStore.tasks"
+                  :key="task.id"
+                  :class="{
+                    'border-cerulean border-2':
+                      Number(router.currentRoute.value.params.id) === task.id,
+                  }"
+                  :data-index="index"
+                  :task="task"
+                  class="bg-white shadow-md shadow-yonder/10"
+                  @click="
+                    Number(router.currentRoute.value.params.id) === task.id
+                      ? router.push({ name: 'tasks' })
+                      : router.replace({
+                          name: 'showTask',
+                          params: { id: task.id },
+                        })
+                  "
+                />
+              </TransitionGroup>
+            </Transition>
           </div>
         </div>
       </div>
-
-      <!--    <ModalContainer-->
-      <!--      :show="$route.name === 'showTask'"-->
-      <!--      :title="$route.meta.modalTitle"-->
-      <!--      effect="shadow"-->
-      <!--      @close="router.push({ name: 'tasks' })"-->
-      <!--    >-->
-      <!--      <RouterView @close="router.push({ name: 'tasks' })" />-->
-      <!--    </ModalContainer>-->
-
-      <!--    <div-->
-      <!--      v-if="$route.name === 'addTask'"-->
-      <!--      class="absolute h-full w-full left-0 top-0 backdrop-blur-sm"-->
-      <!--      @click="$router.push({ name: 'tasks' })"-->
-      <!--    />-->
 
       <Transition name="overlay">
         <div
@@ -262,7 +220,10 @@ function beforeTaskLeave(el: any) {
           @close="router.push({ name: 'tasks' })"
         >
           <div class="p-8">
-            <RouterView @close="router.push({ name: 'tasks' })" />
+            <RouterView
+              @close="router.push({ name: 'tasks' })"
+              class="min-w-[20vw]"
+            />
           </div>
         </div>
       </Transition>
@@ -320,6 +281,16 @@ function beforeTaskLeave(el: any) {
 
 .overlay-enter-from,
 .overlay-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.4s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

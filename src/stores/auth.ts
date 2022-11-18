@@ -50,10 +50,15 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     );
   }
 
+  async function resendVerificationEmail() {
+    return await api.callApi("verification/send", "POST");
+  }
+
   return {
     checkAuth,
     register,
     login,
     logout,
+    resendVerificationEmail,
   };
 });

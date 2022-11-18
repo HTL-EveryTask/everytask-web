@@ -30,11 +30,12 @@ function stepBackward() {
 
 const loading = ref(false);
 
-function createGroup() {
+async function createGroup() {
   loading.value = true;
-  groupStore.createGroup(name.value, description.value).then(() => {
+  await groupStore.createGroup(name.value, description.value).then(async () => {
     loading.value = false;
     stepForward();
+    await groupStore.getGroups();
   });
 }
 
@@ -136,14 +137,16 @@ function onSectionLeave(element: any, done: any) {
               type="button"
               @click="createGroup"
             >
-              Next
+              Create Group
             </LoadingButton>
           </div>
         </div>
       </section>
 
       <section v-else-if="stepCounter === 2">
-        <button type="button" @click="stepBackward">Back</button>
+        <button class="btn-primary block ml-auto mt-4" type="button">
+          Invite Members
+        </button>
 
         <LoadingButton
           :loading="loading"
@@ -151,7 +154,7 @@ function onSectionLeave(element: any, done: any) {
           type="button"
           @click="emit('close')"
         >
-          Create Group
+          Finish
         </LoadingButton>
       </section>
     </Transition>

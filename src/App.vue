@@ -8,9 +8,11 @@ import NavBar from "@/components/NavBar.vue";
 const authenticateStore = useAuthenticateStore();
 
 onMounted(async () => {
-  const loggedIn = await authenticateStore.checkAuth();
-  if (!loggedIn) {
-    // await router.push({ name: "login" });
+  if (localStorage.getItem("token")) {
+    const loggedIn = await authenticateStore.checkAuth();
+    if (!loggedIn) {
+      // await router.push({ name: "login" });
+    }
   }
 });
 </script>

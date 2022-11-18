@@ -12,6 +12,7 @@ export const useGroupStore = defineStore("group", () => {
     const response = await api.callApi("groups", "GET");
     if (response.ok) {
       groups.value = await response.json().then((data) => data.groups);
+      console.log(groups.value);
     }
     return response;
   }
