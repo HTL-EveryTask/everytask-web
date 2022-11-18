@@ -53,7 +53,7 @@ onMounted(() => {
   <Transition appear name="modal">
     <div
       v-if="show"
-      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50 h-screen sm:h-auto"
+      class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50 h-screen"
       v-bind="$attrs"
     >
       <div v-if="!headless" class="flex justify-between items-center p-4 px-6">

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { RouterView } from "vue-router";
-import NavBarAltr from "@/components/NavBarAltr.vue";
 import { onMounted } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import IconSettings from "@/components/icons/IconSettings.vue";
+import NavBar from "@/components/NavBar.vue";
 
 const authenticateStore = useAuthenticateStore();
 
@@ -23,15 +23,15 @@ onMounted(async () => {
       <header class="h-full w-full p-3 ml-2">
         <img alt="logo" class="h-full" src="@/assets/logo_light.svg" />
       </header>
-      <div class="h-full p-4 mr-16">
+      <div class="h-full p-4 mr-[5vw]">
         <IconSettings class="h-full" />
       </div>
     </div>
     <div
-      class="flex-1 flex sm:flex-row flex-col-reverse h-full overflow-hidden"
+      class="flex-1 flex flex-row sm:flex-col-reverse h-full overflow-hidden"
     >
-      <NavBarAltr v-if="!$route.meta.hideNavBar" class="z-10" />
-      <div class="w-full overflow-auto">
+      <NavBar v-if="!$route.meta.hideNavBar" class="z-10" />
+      <div class="w-full h-full overflow-auto">
         <RouterView />
       </div>
     </div>

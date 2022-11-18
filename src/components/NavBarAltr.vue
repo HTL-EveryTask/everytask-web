@@ -2,7 +2,7 @@
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
-import UserIcon from "@/components/icons/UserIcon.vue";
+import IconUser from "@/components/icons/IconUser.vue";
 import { onMounted, ref } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
@@ -20,11 +20,13 @@ const mouseOver = ref(false);
 
 <template>
   <nav
-    class="w-[240px] bg-ghost shadow-lg shadow-yonder/10 p-[22px] py-[20px] transition-all text-raisin"
+    class="w-[240px] sm:w-full bg-ghost shadow-lg shadow-yonder/10 p-[22px] py-[20px] transition-all text-raisin"
     @mouseleave="mouseOver = false"
     @mouseover="mouseOver = true"
   >
-    <ul class="">
+    <ul
+      class="sm:w-full flex sm:flex-row flex-col overflow-y-scroll overflow-x-scroll justify-center"
+    >
       <li>
         <router-link :to="{ name: 'tasks' }" class="nav-link">
           <HomeIcon />
@@ -50,7 +52,7 @@ const mouseOver = ref(false);
           :to="{ name: 'login' }"
           class="nav-link"
         >
-          <UserIcon />
+          <IconUser />
           <span
             >{{ userStore.ME ? userStore.ME.username : "Not Logged In" }}
             <span
@@ -112,14 +114,6 @@ nav li a {
   display: flex;
   align-items: center;
   text-decoration: none;
-}
-
-nav ul {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 ul::-webkit-scrollbar {

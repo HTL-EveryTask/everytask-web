@@ -89,11 +89,11 @@ async function onSubmit() {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full h-full">
     <div
-      class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full"
+      class="p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none flex flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full sm:h-full bg-white"
     >
-      <div class="mb-12">
+      <div class="mb-6 mt-2">
         <img
           alt="logo"
           class="h-24 mx-auto"

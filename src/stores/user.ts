@@ -16,8 +16,13 @@ export const useUserStore = defineStore("user", () => {
     return response;
   }
 
+  async function setMe(user: User) {
+    ME.value = user;
+  }
+
   return {
     ME,
     getMe,
+    setMe,
   };
 });

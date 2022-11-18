@@ -107,7 +107,7 @@ onMounted(async () => {
 <template>
   <div class="flex h-full">
     <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
-      <div class="flex flex-col gap-4 overflow-y-auto p-4 w-[40vw] mx-auto">
+      <div class="flex flex-col gap-4 overflow-y-auto p-4 w-[60vw]">
         <GroupCard
           v-for="group in mockGroups"
           :key="group.id"

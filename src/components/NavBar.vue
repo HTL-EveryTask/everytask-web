@@ -2,101 +2,86 @@
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
-import UserIcon from "@/components/icons/UserIcon.vue";
+import IconUser from "@/components/icons/IconUser.vue";
+import { useUserStore } from "@/stores/user";
+import { onMounted } from "vue";
 import LogoutIcon from "@/components/icons/LogoutIcon.vue";
-import { ref } from "vue";
+import { useAuthenticateStore } from "@/stores/auth";
 
-const mouseOver = ref(false);
+const userStore = useUserStore();
+const authenticateStore = useAuthenticateStore();
+
+onMounted(async () => {
+  await userStore.getMe();
+});
+
+const links = [
+  {
+    name: "tasks",
+    icon: HomeIcon,
+    text: "Home",
+  },
+  {
+    name: "groups",
+    icon: IconGroup,
+    text: "Groups",
+  },
+  {
+    name: "not-found",
+    icon: IconConnections,
+    text: "Connections",
+  },
+];
 </script>
 
 <template>
-  <div
-    :class="
-      'w-24 bg-red-500 rounded-tr-xl rounded-br-xl' +
-      (mouseOver ? ' w-64' : '') +
-      (!mouseOver ? ' condensed' : '')
-    "
-    @mouseleave="mouseOver = false"
-    @mouseover="mouseOver = true"
-  >
-    <div class="pt-8 pb-4 px-4 h-full flex flex-col items-center">
-      <div class="w-12">
-        <img alt="logo" src="@/assets/logo.svg" />
+  <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost">
+    <div class="m-3 flex-col items-center">
+      <div class="my-8 font-bold flex flex-col items-center">
+        <IconUser
+          class="h-[7rem] w-[7rem] mx-auto text-raisin/50 bg-yonder/10 rounded-full"
+        />
+        <div class="w-[7rem] flex justify-between m-2">
+          <span
+            v-if="userStore.ME"
+            class="block text-raisin flex-1 overflow-ellipsis overflow-hidden"
+          >
+            {{ userStore.ME.username }}
+          </span>
+          <span v-else class="text-center block text-raisin/60">
+            Not Logged In
+            <span class="text-xs text-raisin/60 block underline">
+              <router-link :to="{ name: 'login' }">Login</router-link>
+            </span>
+          </span>
+          <LogoutIcon
+            v-if="userStore.ME"
+            class="h-6 w-6 text-raisin/60 hover:text-red-500/80 cursor-pointer transition-colors"
+            @click="authenticateStore.logout()"
+          />
+        </div>
       </div>
-
-      <ul class="w-full h-full mt-12 mb-8 flex flex-col gap-4">
-        <li>
-          <router-link class="nav-link" to="/">
-            <HomeIcon />
-            <span class="condensed-hidden">Home</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link class="nav-link" to="/">
-            <IconGroup />
-            <span class="condensed-hidden">Groups</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link class="nav-link" to="/">
-            <IconConnections />
-            <span class="condensed-hidden">Connections</span>
-          </router-link>
-        </li>
-        <li class="mt-auto">
-          <router-link class="nav-link" to="/">
-            <HomeIcon />
-            <span class="condensed-hidden">Settings</span>
+      <ul class="flex flex-col font-bold gap-2">
+        <li v-for="link in links" :key="link.name">
+          <router-link
+            :to="{ name: link.name }"
+            class="flex gap-4 p-4 rounded-full transition-all items-center"
+          >
+            <component
+              :is="link.icon"
+              class="w-[26px] h-[26px] font-bold transition-all"
+            />
+            <span class="condensed-hidden">{{ link.text }}</span>
           </router-link>
         </li>
       </ul>
-
-      <!-- Profile -->
-      <div class="mt-auto w-full flex items-center h-16">
-        <div>
-          <UserIcon class="w-10 h-10" />
-        </div>
-        <div class="ml-4 whitespace-nowrap condensed-hidden">
-          <p class="text-white">John Doe</p>
-          <p class="text-white text-xs">
-            <span class="text-amber-500">●</span> Online
-          </p>
-        </div>
-        <div class="ml-auto condensed-hidden">
-          <LogoutIcon />
-        </div>
-      </div>
     </div>
-  </div>
+  </nav>
 </template>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
-* {
-  transition: width 0.4s ease-in-out;
-}
-
-.nav-link {
-  @apply flex items-center gap-4 h-16 text-lg font-bold bg-yellow-500 px-4 py-4;
-}
-
-.condensed .nav-link {
-}
-
-.nav-link svg {
-  width: 2rem;
-  height: 2rem;
-  min-width: 2rem;
-}
-
-.nav-link:hover {
-  @apply bg-yellow-600;
-}
-
-.nav-link span {
-  @apply pr-6;
-}
-
-.condensed .condensed-hidden {
-  display: none;
+.router-link-active {
+  @apply bg-yonder/10 text-yonder shadow-inner shadow-yonder/10 gap-6;
 }
 </style>
