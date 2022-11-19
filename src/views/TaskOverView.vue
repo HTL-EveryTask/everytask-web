@@ -206,52 +206,35 @@ function beforeTaskLeave(el: any) {
         </div>
       </div>
 
-      <Transition name="overlay">
-        <div
-          v-if="addPopUpExpanded"
-          class="fixed w-screen h-screen left-0 top-0 backdrop-blur-sm bg-raisin/5 z-20"
-          @click="addPopUpExpanded = false"
-        />
-      </Transition>
-
       <div class="absolute bottom-0 left-0 right-0 px-8">
-        <div
-          ref="addTaskPopUp"
-          :class="{
-            'bg-ghost': !addPopUpExpanded,
-            'bg-white': addPopUpExpanded,
-          }"
-          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 z-30 relative transition-colors"
-          @click="
+        <AddTaskPopUp
+          :expanded="addPopUpExpanded"
+          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
+          expandedClass="bg-white"
+          @expandFull="
             addPopUpExpanded = true;
             router.push({ name: 'tasks' });
           "
-        >
-          <AddTaskPopUp
-            :expanded="addPopUpExpanded"
-            @close="addPopUpExpanded = false"
-          />
-        </div>
+          @close="addPopUpExpanded = false"
+        />
       </div>
     </main>
 
     <!--    <div class="w-[30vw]" />-->
-    <aside class="h-full right-0 overflow-hidden">
-      <Transition name="side">
-        <div
-          v-if="$route.name === 'showTask'"
-          class="w-[30vw] h-full effect-glass bg-ghost/70 rounded-l-xl"
-          @close="router.push({ name: 'tasks' })"
-        >
-          <div class="p-8">
-            <RouterView
-              class="min-w-[300px]"
-              @close="router.push({ name: 'tasks' })"
-            />
-          </div>
+    <Transition name="side">
+      <aside
+        v-if="$route.name === 'showTask'"
+        class="h-full right-0 overflow-hidden w-[30vw] sm:w-screen sm:fixed effect-glass bg-ghost/70 rounded-l-xl"
+        @close="router.push({ name: 'tasks' })"
+      >
+        <div class="p-8">
+          <RouterView
+            class="min-w-[300px]"
+            @close="router.push({ name: 'tasks' })"
+          />
         </div>
-      </Transition>
-    </aside>
+      </aside>
+    </Transition>
   </div>
 </template>
 
@@ -296,16 +279,6 @@ function beforeTaskLeave(el: any) {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-}
-
-.overlay-enter-active,
-.overlay-leave-active {
-  transition: all 0.4s ease-in-out;
-}
-
-.overlay-enter-from,
-.overlay-leave-to {
-  opacity: 0;
 }
 
 .fade-enter-active,

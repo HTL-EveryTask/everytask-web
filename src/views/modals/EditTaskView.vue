@@ -32,10 +32,7 @@ onMounted(async () => {
         title.value = task.value?.title || "";
         description.value = task.value?.description || "";
 
-        // TODO: fix this
-        const dueString = task.value?.due_time.date;
-        console.log(dueString);
-        due.value = dueString.substring(0, dueString.length - 3);
+        due.value = task.value?.due_time || "";
         loading.value = false;
       }
     },
