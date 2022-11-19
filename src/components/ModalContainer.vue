@@ -26,6 +26,11 @@ defineProps({
     type: Boolean,
     default: false,
   },
+
+  mobileFull: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 onMounted(() => {
@@ -39,7 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="absolute">
+  <div>
     <Transition name="overlay">
       <div
         v-if="show"
@@ -53,8 +58,8 @@ onMounted(() => {
     <Transition appear name="modal">
       <div
         v-if="show"
-        :class="$attrs.class"
-        class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50 sm:h-screen sm:w-screen"
+        :class="[$attrs.class, mobileFull ? 'sm:h-screen sm:w-screen' : '']"
+        class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg shadow-yonder/10 z-50"
       >
         <div
           v-if="!headless"

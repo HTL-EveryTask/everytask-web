@@ -105,7 +105,7 @@ async function deleteTask() {
 
 <template>
   <Transition name="fade">
-    <div v-if="!loading">
+    <div v-if="!loading" class="relative h-full">
       <form class="w-full" @submit.prevent="onSubmit">
         <InputField id="title" :validation="v$.title" label="Title">
           <input id="title" v-model="title" class="w-full" type="text" />
@@ -174,10 +174,9 @@ async function deleteTask() {
         </div>
       </ModalContainer>
     </div>
-    <IconSpinner
-      v-else
-      class="w-16 h-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-raisin/50"
-    />
+    <div v-else class="h-full flex items-center justify-center">
+      <IconSpinner class="w-16 h-16 text-raisin/50" />
+    </div>
   </Transition>
 </template>
 

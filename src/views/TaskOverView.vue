@@ -48,8 +48,6 @@ onMounted(async () => {
   console.log(taskStore.tasks);
 });
 
-const addPopUpExpanded = ref(false);
-
 function deleteAllTasks() {
   taskStore.tasks.forEach((task) => {
     taskStore.deleteTask(task.id);
@@ -204,26 +202,20 @@ function beforeTaskLeave(el: any) {
 
       <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2 z-10">
         <AddTaskPopUp
-          :expanded="addPopUpExpanded"
-          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
+          class="my-4 max-w-[48em] sm:w-full p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
           expandedClass="bg-white"
-          @close="addPopUpExpanded = false"
-          @expandFull="
-            addPopUpExpanded = true;
-            router.push({ name: 'tasks' });
-          "
+          @expandFull="router.push({ name: 'tasks' })"
         />
       </div>
     </main>
 
-    <!--    <div class="w-[30vw]" />-->
     <Transition name="side">
       <aside
         v-if="$route.name === 'showTask'"
         class="h-full right-0 overflow-hidden w-[30vw] min-w sm:w-screen sm:fixed bg-ghost sm:rounded-none z-[15]"
         @close="router.push({ name: 'tasks' })"
       >
-        <div class="min-w-[300px]">
+        <div class="min-w-[300px] h-full flex flex-col">
           <header class="flex items-center border-yonder border-b-2 p-4">
             <button
               class="text-2xl text-rebecca p-2 mr-4"
@@ -235,7 +227,7 @@ function beforeTaskLeave(el: any) {
             </button>
             <h1 class="text-2xl font-bold">Edit Task</h1>
           </header>
-          <div class="p-8">
+          <div class="p-8 flex-1">
             <RouterView @close="router.push({ name: 'tasks' })" />
           </div>
         </div>
@@ -246,7 +238,7 @@ function beforeTaskLeave(el: any) {
 
 <!--suppress CssUnusedSymbol -->
 <style scoped>
-.list-move, /* apply transition to moving elements */
+.list-move,
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;

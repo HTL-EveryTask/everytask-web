@@ -52,9 +52,9 @@ const dateDayEnding = computed(() => {
         <IconCheck v-if="task.is_done" class="w-6 h-6 text-white" />
       </div>
     </div>
-    <div class="flex flex-1 items-baseline gap-8 min-w-0">
+    <div class="flex flex-1 items-baseline flex-wrap gap-x-4 min-w-0">
       <span
-        class="max-w-[50%] text-md font-bold whitespace-nowrap overflow-hidden overflow-ellipsis"
+        class="w-[50%] text-md font-bold whitespace-nowrap overflow-hidden overflow-ellipsis"
         >{{ task.title }}</span
       >
       <span class="flex-1 text-xs text-gray-500"

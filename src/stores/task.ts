@@ -43,7 +43,7 @@ export const useTaskStore = defineStore("task", () => {
   }
 
   async function deleteTask(id: number) {
-    const response = await api.callApi(`task`, "DELETE", { id: id });
+    const response = await api.callApi(`task/${id}`, "DELETE");
     if (response.ok) {
       const index = tasks.value.findIndex((t) => t.id === id);
       tasks.value.splice(index, 1);

@@ -29,7 +29,7 @@ onMounted(async () => {
 <template>
   <div class="flex h-full">
     <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
-      <div class="flex flex-col gap-4 overflow-y-auto p-4 w-[60vw]">
+      <div class="flex flex-col gap-4 overflow-y-auto p-8 w-[60vw]">
         <TransitionGroup name="list">
           <GroupCard
             v-for="group in groupStore.groups"
@@ -61,6 +61,7 @@ onMounted(async () => {
       effect="shadow"
       title="Create Group"
       @close="$router.push({ name: 'groups' })"
+      mobile-full
     >
       <RouterView class="px-8" @close="$router.push({ name: 'groups' })" />
     </ModalContainer>
