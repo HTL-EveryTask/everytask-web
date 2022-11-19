@@ -117,7 +117,7 @@ function resendVerificationMail() {
       <div class="min-h-[5em] flex">
         <ul
           v-if="currentError"
-          class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-lg list-disc"
+          class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-xl list-disc"
         >
           <li>
             {{ currentError }}

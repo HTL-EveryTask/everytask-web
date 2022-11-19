@@ -202,7 +202,7 @@ function beforeTaskLeave(el: any) {
 
       <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2 z-10">
         <AddTaskPopUp
-          class="my-4 max-w-[48em] sm:w-full p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
+          class="my-4 max-w-[48em] sm:w-full p-2 rounded-xl text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
           expandedClass="bg-white"
           @expandFull="router.push({ name: 'tasks' })"
         />
