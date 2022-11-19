@@ -19,9 +19,10 @@ const emit = defineEmits<{
 const taskStore = useTaskStore();
 const loading = ref(false);
 
-const title = ref("Test");
+const title = ref("");
 const description = ref("test");
-const due = ref("2022-09-27 23:02:00");
+//
+const due = ref(new Date().toJSON().slice(0, 16));
 
 const rules = {
   title: {
@@ -56,6 +57,9 @@ async function onSubmit() {
   await taskStore.createTask(newTask);
   await taskStore.getTasks();
   loading.value = false;
+  title.value = "";
+  description.value = "";
+  due.value = new Date().toJSON().slice(0, 16);
   emit("close");
 }
 </script>
@@ -95,7 +99,7 @@ async function onSubmit() {
     <div class="flex items-center">
       <button
         :class="{ 'text-raisin/70': !expanded }"
-        :disabled="v$.$invalid"
+        :disabled="v$.$invalid || loading"
         class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-yonder/20 hover:shadow-lg transition-shadow rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
         type="submit"
         @click.stop
@@ -105,12 +109,12 @@ async function onSubmit() {
       </button>
       <input
         v-model="title"
-        class="w-full border-b-2 border-raisin/50 bg-transparent p-0 placeholder-raisin/70 caret-raisin/70 focus:outline-none focus:placeholder-raisin/100 focus:border-raisin/100 transition-colors duration-300"
+        class="w-full border-b-2 border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/70 focus:outline-none focus:placeholder-raisin/100 focus:border-raisin/100 transition-colors duration-300"
         placeholder="Add a task"
         type="text"
       />
       <select
-        class="mx-4 bg-transparent border-raisin/70 border-b-2 p-0 caret-raisin/70 focus:outline-none focus:border-raisin/100 transition-colors duration-300"
+        class="box-content h-6 mx-4 bg-transparent border-raisin/50 border-b-2 caret-raisin/70 focus:outline-none focus:border-raisin/100 transition-colors duration-300"
       >
         <option value="1">Fach</option>
         <option value="2">2</option>

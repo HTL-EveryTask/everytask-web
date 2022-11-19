@@ -50,8 +50,22 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     );
   }
 
-  async function resendVerificationEmail() {
-    return await api.callApi("verification/send", "POST");
+  async function resendVerificationEmail(email: string) {
+    return await api.callApi(
+      "verification/send",
+      "POST",
+      { email: email },
+      false
+    );
+  }
+
+  async function activateAccount(code: string) {
+    return await api.callApi(
+      "verification/activate",
+      "POST",
+      { code: code },
+      false
+    );
   }
 
   return {
@@ -60,5 +74,6 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     login,
     logout,
     resendVerificationEmail,
+    activateAccount,
   };
 });

@@ -7,7 +7,6 @@ import type { Task } from "@/models/Task";
 import InputField from "@/components/InputField.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 import { useTaskStore } from "@/stores/task";
-import router from "@/router";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 
 const emit = defineEmits(["close"]);
@@ -32,24 +31,16 @@ onMounted(async () => {
         task.value = await taskStore.getTask(id);
         title.value = task.value?.title || "";
         description.value = task.value?.description || "";
-        due.value = task.value?.due_time || "";
+
+        // TODO: fix this
+        const dueString = task.value?.due_time.date;
+        console.log(dueString);
+        due.value = dueString.substring(0, dueString.length - 3);
         loading.value = false;
       }
-    }
+    },
+    { immediate: true }
   );
-
-  loading.value = true;
-  if (props.id) {
-    task.value = await taskStore.getTask(props.id);
-  }
-  if (task.value) {
-    title.value = task.value?.title;
-    description.value = task.value?.description;
-    due.value = task.value?.due_time;
-  } else {
-    await router.push({ name: "tasks" });
-  }
-  loading.value = false;
 });
 
 const loading = ref(false);
@@ -158,9 +149,9 @@ async function deleteTask() {
 
       <ModalContainer
         :show="showDeleteModal"
+        class="bg-ghost"
         headless
         @close="showDeleteModal = false"
-        class="bg-ghost"
       >
         <div class="flex flex-col items-center">
           <p class="whitespace-nowrap text-center my-2 font-bold px-4">

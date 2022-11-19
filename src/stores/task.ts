@@ -27,13 +27,13 @@ export const useTaskStore = defineStore("task", () => {
   async function createTask(task: Task) {
     const response = await api.callApi("task", "PUT", task);
     if (response.ok) {
-      // tasks.value.push(await response.json());
+      // tasks.value.push(await response.json().then((data) => data.task));
     }
     return response;
   }
 
   async function updateTask(task: Task) {
-    const response = await api.callApi("tasks", "PATCH", task);
+    const response = await api.callApi("task", "PATCH", task);
     if (response.ok) {
       const updatedTask = await response.json();
       const index = tasks.value.findIndex((t) => t.id === updatedTask.id);

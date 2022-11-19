@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import TaskCard from "@/components/TaskCard.vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import router from "@/router";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
@@ -13,12 +13,32 @@ import IconDot from "@/components/icons/IconDot.vue";
 const taskStore = useTaskStore();
 const groupStore = useGroupStore();
 
+const orderedTasks = computed(() => {
+  const taskCopy = [...taskStore.tasks];
+  return taskCopy.sort((a, b) => {
+    if (a.is_done && !b.is_done) {
+      return 1;
+    } else if (!a.is_done && b.is_done) {
+      return -1;
+    } else {
+      return a.due_time.localeCompare(b.due_time);
+    }
+  });
+});
+
 const loading = ref(false);
 const error = ref("");
 
 const selectedGroupId = ref();
 
 onMounted(async () => {
+  watch(
+    () => taskStore.tasks,
+    () => {
+      error.value = "";
+    }
+  );
+
   loading.value = true;
   try {
     const response = await taskStore.getTasks();
@@ -148,7 +168,7 @@ function beforeTaskLeave(el: any) {
                 <span>{{ error }}</span>
               </div>
               <div
-                v-else-if="taskStore.tasks.length === 0"
+                v-else-if="orderedTasks.length === 0"
                 class="flex justify-center items-center h-full"
               >
                 <span>No tasks</span>
@@ -162,7 +182,7 @@ function beforeTaskLeave(el: any) {
                 @before-leave="beforeTaskLeave"
               >
                 <TaskCard
-                  v-for="(task, index) in taskStore.tasks"
+                  v-for="(task, index) in orderedTasks"
                   :key="task.id"
                   :class="{
                     'border-cerulean border-2':
@@ -197,7 +217,11 @@ function beforeTaskLeave(el: any) {
       <div class="absolute bottom-0 left-0 right-0 px-8">
         <div
           ref="addTaskPopUp"
-          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto bg-ghost shadow-lg shadow-yonder/50 z-30 relative"
+          :class="{
+            'bg-ghost': !addPopUpExpanded,
+            'bg-white': addPopUpExpanded,
+          }"
+          class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 z-30 relative transition-colors"
           @click="
             addPopUpExpanded = true;
             router.push({ name: 'tasks' });
@@ -221,8 +245,8 @@ function beforeTaskLeave(el: any) {
         >
           <div class="p-8">
             <RouterView
+              class="min-w-[300px]"
               @close="router.push({ name: 'tasks' })"
-              class="min-w-[20vw]"
             />
           </div>
         </div>

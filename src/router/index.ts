@@ -57,6 +57,13 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/LoginView.vue"),
     },
+    {
+      path: "/activate",
+      name: "activate",
+      meta: { hideNavBar: true },
+      component: () => import("../views/ActivateView.vue"),
+      props: (route) => ({ code: route.query.activation_code }),
+    },
   ],
 });
 

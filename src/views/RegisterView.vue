@@ -69,6 +69,7 @@ async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
 
   loading.value = true;
+  currentError.value = "";
   try {
     const response = await authenticateStore.register(
       username.value,
