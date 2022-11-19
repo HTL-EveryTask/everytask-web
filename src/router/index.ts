@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import EditTaskView from "../views/modals/EditTaskView.vue";
 import CreateGroupView from "../views/modals/CreateGroupView.vue";
+import GroupOverView from "../views/GroupOverView.vue";
+import TaskOverView from "../views/TaskOverView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -18,7 +20,7 @@ const router = createRouter({
     {
       path: "/tasks",
       name: "tasks",
-      component: () => import("../views/TaskOverView.vue"),
+      component: TaskOverView,
       children: [
         {
           path: "task/:id",
@@ -32,7 +34,7 @@ const router = createRouter({
     {
       path: "/groups",
       name: "groups",
-      component: () => import("../views/GroupOverView.vue"),
+      component: GroupOverView,
       children: [
         {
           path: "/create",

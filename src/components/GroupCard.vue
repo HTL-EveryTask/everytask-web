@@ -11,7 +11,7 @@ const props = defineProps<{
 <template>
   <div class="min-w-[12em] p-4 flex items-center rounded-xl">
     <div class="flex items-center rounded-full bg-ghost p-2">
-      <IconGroup class="w-8 h-8" />
+      <IconGroup class="w-6 h-6" />
     </div>
     <div class="flex flex-col ml-4 flex-1 min-w-0">
       <div class="text-lg font-bold">{{ props.group.name }}</div>

@@ -85,7 +85,10 @@ function onSectionLeave(element: any, done: any) {
 </script>
 
 <template>
-  <form class="w-full min-h-[20em]" @submit.prevent="onSubmit">
+  <form
+    class="w-full min-h-[20em] min-w-[600px] sm:min-w-0"
+    @submit.prevent="onSubmit"
+  >
     <Transition
       mode="out-in"
       name="slide"
@@ -94,13 +97,13 @@ function onSectionLeave(element: any, done: any) {
     >
       <section v-if="stepCounter === 1">
         <div class="flex flex-col">
-          <div class="flex items-center gap-8">
+          <div class="flex sm:flex-col items-center gap-8">
             <div
               class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost"
             >
               <IconPlus class="w-1/2 h-1/2 text-raisin/50" />
             </div>
-            <div class="flex-1 flex flex-col">
+            <div class="flex-1 flex flex-col w-full">
               <InputField id="name" :validation="v$.name" label="Name">
                 <input id="name" v-model="name" type="text" />
                 <template v-slot:right>

@@ -35,7 +35,7 @@ const links = [
 </script>
 
 <template>
-  <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost">
+  <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost sm:hidden">
     <div class="m-3 flex-col items-center">
       <div class="my-8 font-bold flex flex-col items-center">
         <IconUser

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import TaskCard from "@/components/TaskCard.vue";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import router from "@/router";
 import HomeIcon from "@/components/icons/HomeIcon.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
@@ -9,6 +9,7 @@ import { useGroupStore } from "@/stores/group";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import IconSun from "@/components/icons/IconSun.vue";
 import IconDot from "@/components/icons/IconDot.vue";
+import IconArrow from "@/components/icons/IconArrow.vue";
 
 const taskStore = useTaskStore();
 const groupStore = useGroupStore();
@@ -32,13 +33,6 @@ const error = ref("");
 const selectedGroupId = ref();
 
 onMounted(async () => {
-  watch(
-    () => taskStore.tasks,
-    () => {
-      error.value = "";
-    }
-  );
-
   loading.value = true;
   try {
     const response = await taskStore.getTasks();
@@ -75,7 +69,7 @@ function beforeTaskLeave(el: any) {
   <div
     class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50 h-full relative"
   >
-    <nav class="w-44 h-full shadow-lg text-sm bg-ghost">
+    <nav class="w-44 h-full shadow-lg text-sm bg-ghost sm:hidden">
       <ul class="py-4">
         <li
           :class="{
@@ -143,7 +137,9 @@ function beforeTaskLeave(el: any) {
 
     <main class="flex-1 flex flex-col relative">
       <div class="flex-1">
-        <div class="mx-16 my-8 p-4 flex flex-col bg-white rounded-xl h-[80vh]">
+        <div
+          class="mx-8 my-8 p-4 sm:m-2 sm:p-0 flex flex-col bg-white rounded-xl h-[80vh]"
+        >
           <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
             <h1>All</h1>
             <div class="text-sm flex gap-2">
@@ -153,7 +149,7 @@ function beforeTaskLeave(el: any) {
               </button>
             </div>
           </header>
-          <div class="p-8 overflow-y-auto w-full bg-ghost h-full">
+          <div class="p-8 sm:p-4 overflow-y-auto w-full bg-ghost h-full">
             <Transition appear mode="out-in" name="fade">
               <div
                 v-if="loading"
@@ -206,16 +202,16 @@ function beforeTaskLeave(el: any) {
         </div>
       </div>
 
-      <div class="absolute bottom-0 left-0 right-0 px-8">
+      <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2 z-10">
         <AddTaskPopUp
           :expanded="addPopUpExpanded"
           class="my-4 max-w-[48em] p-2 rounded-lg text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
           expandedClass="bg-white"
+          @close="addPopUpExpanded = false"
           @expandFull="
             addPopUpExpanded = true;
             router.push({ name: 'tasks' });
           "
-          @close="addPopUpExpanded = false"
         />
       </div>
     </main>
@@ -224,14 +220,24 @@ function beforeTaskLeave(el: any) {
     <Transition name="side">
       <aside
         v-if="$route.name === 'showTask'"
-        class="h-full right-0 overflow-hidden w-[30vw] sm:w-screen sm:fixed effect-glass bg-ghost/70 rounded-l-xl"
+        class="h-full right-0 overflow-hidden w-[30vw] min-w sm:w-screen sm:fixed bg-ghost sm:rounded-none z-[15]"
         @close="router.push({ name: 'tasks' })"
       >
-        <div class="p-8">
-          <RouterView
-            class="min-w-[300px]"
-            @close="router.push({ name: 'tasks' })"
-          />
+        <div class="min-w-[300px]">
+          <header class="flex items-center border-yonder border-b-2 p-4">
+            <button
+              class="text-2xl text-rebecca p-2 mr-4"
+              @click="router.push({ name: 'tasks' })"
+            >
+              <IconArrow
+                class="h-6 w-6 transform rotate-180 hover:font-bold transition-colors duration-300"
+              />
+            </button>
+            <h1 class="text-2xl font-bold">Edit Task</h1>
+          </header>
+          <div class="p-8">
+            <RouterView @close="router.push({ name: 'tasks' })" />
+          </div>
         </div>
       </aside>
     </Transition>

@@ -28,7 +28,7 @@ onMounted(async () => {
   <div class="flex h-full">
     <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
       <div class="flex flex-col gap-4 overflow-y-auto p-4 w-[60vw]">
-        <TransitionGroup class="list">
+        <TransitionGroup name="list">
           <GroupCard
             v-for="group in groupStore.groups"
             :key="group.id"
@@ -37,7 +37,7 @@ onMounted(async () => {
           />
         </TransitionGroup>
         <button
-          class="sticky bottom-0 m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-lg shadow-lg font-bold text-xl"
+          class="sticky bottom-0 m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
           @click="$router.push({ name: 'createGroup' })"
         >
           <IconPlus class="w-[2rem] h-[2rem] mr-2" />
@@ -45,10 +45,11 @@ onMounted(async () => {
         </button>
       </div>
     </div>
+    <div></div>
 
     <ModalContainer
       :show="$route.name === 'createGroup'"
-      class="bg-white w-[40vw]"
+      class="bg-white"
       effect="shadow"
       title="Create Group"
       @close="$router.push({ name: 'groups' })"

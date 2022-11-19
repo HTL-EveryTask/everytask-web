@@ -103,7 +103,7 @@ async function onSubmit() {
 
   <div
     :class="[$attrs.class, expandedFull ? expandedClass : '']"
-    class="relative z-30"
+    class="relative z-20"
     @click="expanded = true"
   >
     <Transition name="expand">
