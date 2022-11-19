@@ -212,7 +212,7 @@ function beforeTaskLeave(el: any) {
     <Transition name="side">
       <aside
         v-if="$route.name === 'showTask'"
-        class="h-full right-0 overflow-hidden w-[30vw] min-w sm:w-screen sm:fixed bg-ghost sm:rounded-none z-[15]"
+        class="h-full right-0 overflow-hidden w-[30vw] min-w sm:w-screen sm:fixed top-0 right-0 bg-ghost sm:rounded-none z-[15]"
         @close="router.push({ name: 'tasks' })"
       >
         <div class="min-w-[300px] h-full flex flex-col">
@@ -227,7 +227,7 @@ function beforeTaskLeave(el: any) {
             </button>
             <h1 class="text-2xl font-bold">Edit Task</h1>
           </header>
-          <div class="p-8 flex-1">
+          <div class="p-8 flex-1 overflow-y-auto">
             <RouterView @close="router.push({ name: 'tasks' })" />
           </div>
         </div>
