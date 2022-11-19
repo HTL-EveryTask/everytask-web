@@ -3,6 +3,7 @@ import EditTaskView from "../views/modals/EditTaskView.vue";
 import CreateGroupView from "../views/modals/CreateGroupView.vue";
 import GroupOverView from "../views/GroupOverView.vue";
 import TaskOverView from "../views/TaskOverView.vue";
+import EditGroupView from "../views/modals/EditGroupView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -41,6 +42,13 @@ const router = createRouter({
           name: "createGroup",
           component: CreateGroupView,
           meta: { modalTitle: "Create Group" },
+        },
+        {
+          path: "group/:id",
+          name: "showGroup",
+          component: EditGroupView,
+          meta: { modalTitle: "Edit Group" },
+          props: (route) => ({ id: Number(route.params.id) }),
         },
       ],
     },

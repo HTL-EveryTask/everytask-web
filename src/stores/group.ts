@@ -37,10 +37,45 @@ export const useGroupStore = defineStore("group", () => {
     return response;
   }
 
+  async function updateGroup(group: Group) {
+    const response = await api.callApi("group", "PATCH", group);
+    if (response.ok) {
+      const updatedGroup = await response.json();
+      const index = groups.value.findIndex((g) => g.id === updatedGroup.id);
+      groups.value[index] = updatedGroup;
+    }
+    return response;
+  }
+
+  async function deleteGroup(id: number) {
+    const response = await api.callApi(`group`, "DELETE", { id: id });
+    if (response.ok) {
+      const index = groups.value.findIndex((g) => g.id === id);
+      groups.value.splice(index, 1);
+    }
+    return response;
+  }
+
+  async function addUserToGroup(groupId: number, userId: number) {
+    const response = await api.callApi(
+      `group/${groupId}/user/${userId}`,
+      "PUT"
+    );
+    if (response.ok) {
+      const group = await response.json();
+      const index = groups.value.findIndex((g) => g.id === group.id);
+      groups.value[index] = group;
+    }
+    return response;
+  }
+
   return {
     groups,
     getGroups,
     getGroup,
     createGroup,
+    updateGroup,
+    deleteGroup,
+    addUserToGroup,
   };
 });

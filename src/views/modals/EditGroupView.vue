@@ -3,24 +3,23 @@ import { maxLength, required } from "@vuelidate/validators";
 import { onMounted, ref, watch } from "vue";
 import useVuelidate from "@vuelidate/core";
 import ModalContainer from "@/components/ModalContainer.vue";
-import type { Task } from "@/models/Task";
+import type { Group } from "@/models/Group";
 import InputField from "@/components/InputField.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
-import { useTaskStore } from "@/stores/task";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
+import { useGroupStore } from "@/stores/group";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
   id?: number;
 }>();
 
-const taskStore = useTaskStore();
+const groupStore = useGroupStore();
 
-const task = ref<Task | undefined>();
+const group = ref<Group | undefined>();
 
-const title = ref("");
+const name = ref("");
 const description = ref("");
-const due = ref("");
 
 onMounted(async () => {
   watch(
@@ -28,20 +27,10 @@ onMounted(async () => {
     async (id) => {
       if (id) {
         loading.value = true;
-        task.value = await taskStore.getTask(id);
-
-        if (!task.value) {
-          emit("close");
-          return;
-        }
-
-        title.value = task.value?.title || "";
-        description.value = task.value?.description || "";
-
-        due.value = task.value?.due_time || "";
+        group.value = await groupStore.getGroup(id);
+        name.value = group.value?.name || "";
+        description.value = group.value?.description || "";
         loading.value = false;
-      } else {
-        emit("close");
       }
     },
     { immediate: true }
@@ -54,48 +43,42 @@ const loadingDelete = ref(false);
 let showDeleteModal = ref(false);
 
 const rules = {
-  title: {
+  name: {
     required,
     maxLength: maxLength(32),
   },
   description: {
     maxLength: maxLength(300),
   },
-  due: {
-    required,
-  },
 };
 
 const v$ = useVuelidate(
   rules,
-  { title, description, due },
+  { name: name, description },
   { $autoDirty: true }
 );
 
 async function onSubmit() {
-  const newTask: Task = {
-    id: task.value?.id ?? 0,
-    title: title.value,
-    description: description.value,
-    due_time: due.value,
-    is_done: false,
-  };
-
   loading.value = true;
-  if (task.value) {
-    await taskStore.updateTask(newTask);
+  const newGroup: Group = {
+    id: group.value?.id || 0,
+    name: name.value,
+    description: description.value,
+  };
+  if (group.value) {
+    await groupStore.updateGroup(newGroup);
   }
   loading.value = false;
-  await taskStore.getTasks();
+  await groupStore.getGroups();
 
   emit("close");
 }
 
-async function deleteTask() {
+async function deleteGroup() {
   loadingDelete.value = true;
-  if (task.value) {
-    await taskStore.deleteTask(task.value.id);
-    await taskStore.getTasks;
+  if (group.value) {
+    await groupStore.deleteGroup(group.value.id);
+    await groupStore.getGroups;
   }
   loadingDelete.value = false;
   showDeleteModal.value = false;
@@ -107,10 +90,10 @@ async function deleteTask() {
   <Transition name="fade">
     <div v-if="!loading">
       <form class="w-full" @submit.prevent="onSubmit">
-        <InputField id="title" :validation="v$.title" label="Title">
-          <input id="title" v-model="title" class="w-full" type="text" />
+        <InputField id="name" :validation="v$.name" label="Name">
+          <input id="name" v-model="name" class="w-full" type="text" />
           <template v-slot:right>
-            <span class="text-gray-500 text-sm"> {{ title.length }}/32 </span>
+            <span class="text-gray-500 text-sm"> {{ name.length }}/32 </span>
           </template>
         </InputField>
 
@@ -132,10 +115,6 @@ async function deleteTask() {
           </template>
         </InputField>
 
-        <InputField id="due" :validation="v$.due" label="Due">
-          <input id="due" v-model="due" class="w-full" type="datetime-local" />
-        </InputField>
-
         <LoadingButton
           :disabled="v$.$invalid"
           :loading="loading"
@@ -146,8 +125,8 @@ async function deleteTask() {
         </LoadingButton>
       </form>
 
-      <button v-if="task" class="btn-red" @click="showDeleteModal = true">
-        Delete Task
+      <button v-if="group" class="btn-red" @click="showDeleteModal = true">
+        Delete Group
       </button>
 
       <ModalContainer
@@ -158,14 +137,42 @@ async function deleteTask() {
       >
         <div class="flex flex-col items-center">
           <p class="whitespace-nowrap text-center my-2 font-bold px-4">
-            Are you sure you want to delete this task?
+            Are you sure you want to delete this group?
           </p>
           <div class="flex w-full gap-4 justify-center">
             <LoadingButton
               :loading="loadingDelete"
               class="btn-red"
-              @click="deleteTask"
+              @click="deleteGroup"
               >Delete
+            </LoadingButton>
+            <button class="btn-primary" @click="showDeleteModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </ModalContainer>
+
+      <button class="btn-red" @click="showDeleteModal = true">
+        Leave Group
+      </button>
+
+      <ModalContainer
+        :show="showDeleteModal"
+        class="bg-ghost"
+        headless
+        @close="showDeleteModal = false"
+      >
+        <div class="flex flex-col items-center">
+          <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+            Are you sure you want to leave this group?
+          </p>
+          <div class="flex w-full gap-4 justify-center">
+            <LoadingButton
+              :loading="loadingDelete"
+              class="btn-red"
+              @click="deleteGroup"
+              >Leave
             </LoadingButton>
             <button class="btn-primary" @click="showDeleteModal = false">
               Cancel
