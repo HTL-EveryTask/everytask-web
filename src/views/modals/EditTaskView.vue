@@ -78,7 +78,7 @@ async function onSubmit() {
     title: title.value,
     description: description.value,
     due_time: due.value,
-    is_done: false,
+    is_done: task.value?.is_done ?? false,
   };
 
   loading.value = true;
