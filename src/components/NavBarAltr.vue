@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import HomeIcon from "@/components/icons/HomeIcon.vue";
+import IconHome from "@/components/icons/IconHome.vue";
 import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
 import IconUser from "@/components/icons/IconUser.vue";
@@ -29,7 +29,7 @@ const mouseOver = ref(false);
     >
       <li>
         <router-link :to="{ name: 'tasks' }" class="nav-link">
-          <HomeIcon />
+          <IconHome />
           <span class="condensed-hidden">Home</span>
         </router-link>
       </li>

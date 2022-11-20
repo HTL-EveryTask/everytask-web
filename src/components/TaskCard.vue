@@ -54,10 +54,10 @@ const dateDayEnding = computed(() => {
     </div>
     <div class="flex flex-1 items-baseline flex-wrap gap-x-4 min-w-0">
       <span
-        class="w-[50%] text-md font-bold whitespace-nowrap overflow-hidden overflow-ellipsis"
+        class="min-w-[180px] text-md font-bold whitespace-nowrap overflow-hidden overflow-ellipsis"
         >{{ task.title }}</span
       >
-      <span class="flex-1 text-xs text-gray-500"
+      <span class="flex-1 text-xs text-gray-500 whitespace-nowrap"
         >{{ formatDateTimeString }}
         <span class="text-[0.8em] relative top-[-0.3em] left-[-0.3em]">
           {{ dateDayEnding }}</span

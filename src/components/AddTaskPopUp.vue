@@ -119,7 +119,7 @@ async function onSubmit() {
         </div>
       </div>
     </Transition>
-    <form class="w-full" @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit">
       <Transition name="expand">
         <div v-if="expanded && expandedFull" class="h-96 overflow-auto">
           <div class="w-full p-4">
@@ -131,7 +131,6 @@ async function onSubmit() {
               <textarea
                 id="description"
                 v-model="description"
-                class="w-full"
                 rows="3"
               ></textarea>
               <template v-slot:right>
@@ -140,37 +139,42 @@ async function onSubmit() {
             </InputField>
 
             <InputField id="due" :validation="v$.due" label="Due">
-              <input
-                id="due"
-                v-model="due"
-                class="w-full"
-                type="datetime-local"
-              />
+              <input id="due" v-model="due" type="datetime-local" />
             </InputField>
           </div>
         </div>
       </Transition>
       <div class="flex items-center">
         <button
-          :class="{ 'text-raisin/70': !expanded }"
           :disabled="v$.$invalid || loading"
-          class="flex items-center justify-center grow mr-4 transition-colors duration-300 hover:shadow-yonder/20 hover:shadow-lg transition-shadow rounded-md p-2 border-2 border-raisin/40 disabled:opacity-50 disabled:border-transparent"
+          class="flex items-center justify-center mr-4 p-2 rounded-lg disabled:opacity-50 text-yonder disabled:text-raisin border-2 border-yonder/50 disabled:border-transparent transition-all duration-200"
           type="submit"
           @click.stop
         >
           <IconPlus v-if="!loading" />
           <IconSpinner v-else />
         </button>
-        <input
-          v-model="title"
-          class="w-full border-b-2 border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/70 focus:outline-none focus:placeholder-raisin/100 focus:border-raisin/100 transition-colors duration-300"
-          placeholder="Add a task"
-          type="text"
-        />
+        <div class="flex-1 flex items-center relative">
+          <input
+            v-model="title"
+            class="w-full border-b-2 border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/50 focus:outline-none focus:placeholder-raisin/80 focus:border-raisin/70 transition-colors duration-300"
+            placeholder="Add a task"
+            type="text"
+          />
+          <span
+            :class="[
+              { 'opacity-0': title.length === 0 },
+              { 'text-red-500': v$.title.$error },
+            ]"
+            class="text-raisin/50 text-sm absolute right-0 m-2 transition-opacity"
+          >
+            {{ title.length }}/32
+          </span>
+        </div>
         <select
-          class="box-content h-6 mx-4 bg-transparent border-raisin/50 border-b-2 caret-raisin/70 focus:outline-none focus:border-raisin/100 transition-colors duration-300"
+          class="mx-4 bg-transparent border-b-2 border-raisin/50 caret-raisin/70 disabled:opacity-50 text-raisin/50 transition-colors duration-300"
         >
-          <option value="1">Fach</option>
+          <option value="1" disabled selected>Subject</option>
           <option value="2">2</option>
           <option value="3">3</option>
         </select>

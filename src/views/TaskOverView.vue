@@ -2,7 +2,7 @@
 import TaskCard from "@/components/TaskCard.vue";
 import { computed, onMounted, ref } from "vue";
 import router from "@/router";
-import HomeIcon from "@/components/icons/HomeIcon.vue";
+import IconHome from "@/components/icons/IconHome.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
 import { useTaskStore } from "@/stores/task";
 import { useGroupStore } from "@/stores/group";
@@ -104,7 +104,7 @@ function beforeTaskLeave(el: any) {
           @click="selectedGroupId = 'private'"
         >
           <div class="flex gap-2 px-4 py-2 items-center">
-            <HomeIcon />
+            <IconHome />
             <span>Private</span>
           </div>
         </li>
@@ -212,7 +212,7 @@ function beforeTaskLeave(el: any) {
     <Transition name="side">
       <aside
         v-if="$route.name === 'showTask'"
-        class="h-full right-0 overflow-hidden w-[30vw] min-w sm:w-screen sm:fixed top-0 right-0 bg-ghost sm:rounded-none z-[15]"
+        class="xl:absolute h-full right-0 overflow-hidden w-[30vw] min-w-[500px] sm:min-w-0 sm:w-screen sm:fixed top-0 right-0 bg-ghost sm:rounded-none shadow-md shadow-yonder/10 z-[15]"
         @close="router.push({ name: 'tasks' })"
       >
         <div class="min-w-[300px] h-full flex flex-col">

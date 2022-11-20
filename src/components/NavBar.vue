@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import HomeIcon from "@/components/icons/HomeIcon.vue";
+import IconHome from "@/components/icons/IconHome.vue";
 import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
 import IconUser from "@/components/icons/IconUser.vue";
 import { useUserStore } from "@/stores/user";
 import { onMounted } from "vue";
-import LogoutIcon from "@/components/icons/LogoutIcon.vue";
+import IconLogout from "@/components/icons/IconLogout.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 
 const userStore = useUserStore();
@@ -18,7 +18,7 @@ onMounted(async () => {
 const links = [
   {
     name: "tasks",
-    icon: HomeIcon,
+    icon: IconHome,
     text: "Home",
   },
   {
@@ -54,7 +54,7 @@ const links = [
               <router-link :to="{ name: 'login' }">Login</router-link>
             </span>
           </span>
-          <LogoutIcon
+          <IconLogout
             v-if="userStore.ME"
             class="h-6 w-6 text-raisin/60 hover:text-red-500/80 cursor-pointer transition-colors"
             @click="authenticateStore.logout()"
