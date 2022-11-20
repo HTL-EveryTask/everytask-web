@@ -4,6 +4,7 @@ import { onMounted } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import IconSettings from "@/components/icons/IconSettings.vue";
 import NavBar from "@/components/NavBar.vue";
+import ToastList from "@/components/ToastList.vue";
 
 const authenticateStore = useAuthenticateStore();
 
@@ -37,6 +38,8 @@ onMounted(async () => {
         <RouterView />
       </div>
     </div>
+
+    <ToastList class="fixed top-0 right-0 z-30" />
   </div>
 </template>
 

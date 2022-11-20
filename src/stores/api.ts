@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import { computed } from "vue";
+import { useToastStore } from "@/stores/toast";
 
 export const useApiStore = defineStore("api", () => {
   const BASE_URL = "https://localhost:8000/api";
   let TOKEN = localStorage.getItem("token") || null;
+
+  const toastStore = useToastStore();
 
   const hasToken = computed(() => {
     return TOKEN !== null;
@@ -22,14 +25,23 @@ export const useApiStore = defineStore("api", () => {
     console.log("Calling API: " + endpoint + " with method " + method);
     console.log(body);
 
-    return await fetch(`${BASE_URL}/${endpoint}`, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${TOKEN}`,
-      },
-      body: body ? JSON.stringify(body) : null,
-    });
+    try {
+      return await fetch(`${BASE_URL}/${endpoint}`, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${TOKEN}`,
+        },
+        body: body ? JSON.stringify(body) : null,
+      });
+    } catch (error: any) {
+      toastStore.addToast({
+        title: "Error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      throw new Error(error);
+    }
   }
 
   function setToken(token: string) {
