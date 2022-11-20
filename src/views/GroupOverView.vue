@@ -5,7 +5,7 @@ import IconPlus from "@/components/icons/IconPlus.vue";
 import ModalContainer from "@/components/ModalContainer.vue";
 import { useGroupStore } from "@/stores/group";
 import router from "@/router";
-import IconArrow from "@/components/icons/IconArrow.vue";
+import SideViewContainer from "@/components/SideViewContainer.vue";
 
 const groupStore = useGroupStore();
 const error = ref("");
@@ -27,7 +27,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex h-full">
+  <div class="flex h-full relative">
     <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
       <div class="flex flex-col gap-4 overflow-y-auto p-8 w-[60vw]">
         <TransitionGroup name="list">
@@ -59,37 +59,20 @@ onMounted(async () => {
       :show="$route.name === 'createGroup'"
       class="bg-white"
       effect="shadow"
+      mobile-full
       title="Create Group"
       @close="$router.push({ name: 'groups' })"
-      mobile-full
     >
       <RouterView class="px-8" @close="$router.push({ name: 'groups' })" />
     </ModalContainer>
 
-    <Transition name="side">
-      <aside
-        v-if="$route.name === 'showGroup'"
-        class="h-full right-0 overflow-hidden w-[30vw] min-w sm:w-screen sm:fixed bg-ghost sm:rounded-none z-[15] shadow-yonder/10 shadow-md"
-        @close="router.push({ name: 'groups' })"
-      >
-        <div class="min-w-[300px]">
-          <header class="flex items-center border-yonder border-b-2 p-4">
-            <button
-              class="text-2xl text-rebecca p-2 mr-4"
-              @click="router.push({ name: 'groups' })"
-            >
-              <IconArrow
-                class="h-6 w-6 transform rotate-180 hover:font-bold transition-colors duration-300"
-              />
-            </button>
-            <h1 class="text-2xl font-bold">Edit Group</h1>
-          </header>
-          <div class="p-8">
-            <RouterView @close="router.push({ name: 'groups' })" />
-          </div>
-        </div>
-      </aside>
-    </Transition>
+    <SideViewContainer
+      :show="$route.name === 'showGroup'"
+      title="Group"
+      @close="$router.push({ name: 'groups' })"
+    >
+      <RouterView @close="$router.push({ name: 'groups' })" />
+    </SideViewContainer>
   </div>
 </template>
 
@@ -108,20 +91,5 @@ onMounted(async () => {
 
 .list-leave-to {
   opacity: 0;
-}
-
-.side-enter-active,
-.side-leave-active {
-  transition: all 0.4s ease-in-out;
-}
-
-.side-enter-from,
-.side-leave-to {
-  opacity: 0;
-  width: 0;
-}
-
-.side-leave-active {
-  overflow: hidden;
 }
 </style>

@@ -7,6 +7,7 @@ import gsap from "gsap";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 import { useGroupStore } from "@/stores/group";
+import type { Group } from "@/models/Group";
 
 const emit = defineEmits(["close"]);
 
@@ -17,6 +18,10 @@ const change = ref(0);
 
 const name = ref("");
 const description = ref("");
+
+const createdGroup = ref<Group | undefined>();
+
+const inviteLink = ref("");
 
 function stepForward() {
   change.value = 1;
@@ -32,11 +37,14 @@ const loading = ref(false);
 
 async function createGroup() {
   loading.value = true;
-  await groupStore.createGroup(name.value, description.value).then(async () => {
-    loading.value = false;
-    stepForward();
-    await groupStore.getGroups();
-  });
+  const response = await groupStore.createGroup(name.value, description.value);
+  // get json object from response and set it to createdGroup
+  const data = await response.json();
+  createdGroup.value = data.id;
+  console.log(createdGroup.value);
+
+  loading.value = false;
+  stepForward();
 }
 
 const rules = {
@@ -55,7 +63,19 @@ const v$ = useVuelidate(
   { $autoDirty: true }
 );
 
-async function onSubmit() {}
+async function requestInviteLink() {
+  loading.value = true;
+  if (createdGroup.value) {
+    const response = await groupStore.requestInvite(createdGroup.value.id);
+    inviteLink.value = await response.json().then((data) => data.key);
+    inviteLink.value = `${window.location.origin}/invite/${inviteLink.value}`;
+  }
+  loading.value = false;
+}
+
+function copyInviteLink() {
+  navigator.clipboard.writeText(inviteLink.value);
+}
 
 function onSectionEnter(element: any, done: any) {
   gsap.fromTo(
@@ -147,9 +167,19 @@ function onSectionLeave(element: any, done: any) {
       </section>
 
       <section v-else-if="stepCounter === 2">
-        <button class="btn-primary block ml-auto mt-4" type="button">
-          Invite Members
+        <h2>Invite your Colleagues to join {{ name }}</h2>
+        <button
+          class="btn-primary block mt-4"
+          type="button"
+          @click="requestInviteLink"
+        >
+          Generate Invite Link
         </button>
+
+        <div class="flex w-full input-field my-4">
+          <input :value="inviteLink" class="flex-1" readonly type="text" />
+          <button class="btn-primary ml-2" @click="copyInviteLink">Copy</button>
+        </div>
 
         <LoadingButton
           :loading="loading"

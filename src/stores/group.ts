@@ -26,15 +26,10 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function createGroup(name: string, description: string) {
-    const response = await api.callApi("group", "PUT", {
+    return await api.callApi("group", "PUT", {
       name: name,
       description: description,
     });
-    if (response.ok) {
-      groups.value.push(await response.json().then((data) => data.group));
-      console.log(response);
-    }
-    return response;
   }
 
   async function updateGroup(group: Group) {
@@ -48,7 +43,16 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function deleteGroup(id: number) {
-    const response = await api.callApi(`group`, "DELETE", { id: id });
+    const response = await api.callApi(`group/${id}`, "DELETE");
+    if (response.ok) {
+      const index = groups.value.findIndex((g) => g.id === id);
+      groups.value.splice(index, 1);
+    }
+    return response;
+  }
+
+  async function leaveGroup(id: number) {
+    const response = await api.callApi(`group/${id}/leave`, "PATCH");
     if (response.ok) {
       const index = groups.value.findIndex((g) => g.id === id);
       groups.value.splice(index, 1);
@@ -69,6 +73,10 @@ export const useGroupStore = defineStore("group", () => {
     return response;
   }
 
+  async function requestInvite(groupId: number) {
+    return await api.callApi(`group/${groupId}/invite`, "POST");
+  }
+
   return {
     groups,
     getGroups,
@@ -76,6 +84,8 @@ export const useGroupStore = defineStore("group", () => {
     createGroup,
     updateGroup,
     deleteGroup,
+    leaveGroup,
     addUserToGroup,
+    requestInvite,
   };
 });

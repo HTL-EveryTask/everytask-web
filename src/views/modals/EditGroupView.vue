@@ -39,8 +39,10 @@ onMounted(async () => {
 
 const loading = ref(false);
 const loadingDelete = ref(false);
+const loadingLeave = ref(false);
 
 let showDeleteModal = ref(false);
+let showLeaveModal = ref(false);
 
 const rules = {
   name: {
@@ -84,11 +86,22 @@ async function deleteGroup() {
   showDeleteModal.value = false;
   emit("close");
 }
+
+async function leaveGroup() {
+  loadingLeave.value = true;
+  if (group.value) {
+    await groupStore.leaveGroup(group.value.id);
+    await groupStore.getGroups;
+  }
+  loadingLeave.value = false;
+  showLeaveModal.value = false;
+  emit("close");
+}
 </script>
 
 <template>
   <Transition name="fade">
-    <div v-if="!loading">
+    <div v-if="!loading" class="relative h-full">
       <form class="w-full" @submit.prevent="onSubmit">
         <InputField id="name" :validation="v$.name" label="Name">
           <input id="name" v-model="name" class="w-full" type="text" />
@@ -158,10 +171,10 @@ async function deleteGroup() {
       </button>
 
       <ModalContainer
-        :show="showDeleteModal"
+        :show="showLeaveModal"
         class="bg-ghost"
         headless
-        @close="showDeleteModal = false"
+        @close="showLeaveModal = false"
       >
         <div class="flex flex-col items-center">
           <p class="whitespace-nowrap text-center my-2 font-bold px-4">
@@ -169,9 +182,9 @@ async function deleteGroup() {
           </p>
           <div class="flex w-full gap-4 justify-center">
             <LoadingButton
-              :loading="loadingDelete"
+              :loading="loadingLeave"
               class="btn-red"
-              @click="deleteGroup"
+              @click="leaveGroup"
               >Leave
             </LoadingButton>
             <button class="btn-primary" @click="showDeleteModal = false">
@@ -181,10 +194,9 @@ async function deleteGroup() {
         </div>
       </ModalContainer>
     </div>
-    <IconSpinner
-      v-else
-      class="w-16 h-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-raisin/50"
-    />
+    <div v-else class="h-full flex items-center justify-center">
+      <IconSpinner class="w-16 h-16 text-raisin/50" />
+    </div>
   </Transition>
 </template>
 

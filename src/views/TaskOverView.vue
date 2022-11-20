@@ -9,7 +9,7 @@ import { useGroupStore } from "@/stores/group";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import IconSun from "@/components/icons/IconSun.vue";
 import IconDot from "@/components/icons/IconDot.vue";
-import IconArrow from "@/components/icons/IconArrow.vue";
+import SideViewContainer from "@/components/SideViewContainer.vue";
 
 const taskStore = useTaskStore();
 const groupStore = useGroupStore();
@@ -209,30 +209,13 @@ function beforeTaskLeave(el: any) {
       </div>
     </main>
 
-    <Transition name="side">
-      <aside
-        v-if="$route.name === 'showTask'"
-        class="xl:absolute h-full right-0 overflow-hidden w-[30vw] min-w-[500px] sm:min-w-0 sm:w-screen sm:fixed top-0 right-0 bg-ghost sm:rounded-none shadow-md shadow-yonder/10 z-[15]"
-        @close="router.push({ name: 'tasks' })"
-      >
-        <div class="min-w-[300px] h-full flex flex-col">
-          <header class="flex items-center border-yonder border-b-2 p-4">
-            <button
-              class="text-2xl text-rebecca p-2 mr-4"
-              @click="router.push({ name: 'tasks' })"
-            >
-              <IconArrow
-                class="h-6 w-6 transform rotate-180 hover:font-bold transition-colors duration-300"
-              />
-            </button>
-            <h1 class="text-2xl font-bold">Edit Task</h1>
-          </header>
-          <div class="p-8 flex-1 overflow-y-auto">
-            <RouterView @close="router.push({ name: 'tasks' })" />
-          </div>
-        </div>
-      </aside>
-    </Transition>
+    <SideViewContainer
+      :show="$route.name === 'showTask'"
+      title="Edit task"
+      @close="router.push({ name: 'tasks' })"
+    >
+      <RouterView @close="router.push({ name: 'tasks' })" />
+    </SideViewContainer>
   </div>
 </template>
 
@@ -266,6 +249,7 @@ function beforeTaskLeave(el: any) {
 .side-enter-from,
 .side-leave-to {
   opacity: 0;
+  min-width: 0;
   width: 0;
 }
 

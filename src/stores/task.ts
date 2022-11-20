@@ -11,7 +11,7 @@ export const useTaskStore = defineStore("task", () => {
   async function getTasks() {
     const response = await api.callApi("tasks", "GET");
     if (response.ok) {
-      tasks.value = await response.json().then((data) => data.tasks);
+      tasks.value = await response.json().then((data) => data.tasks ?? []);
     }
     return response;
   }
