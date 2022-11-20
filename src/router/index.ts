@@ -38,7 +38,7 @@ const router = createRouter({
       component: GroupOverView,
       children: [
         {
-          path: "/create",
+          path: "create",
           name: "createGroup",
           component: CreateGroupView,
           meta: { modalTitle: "Create Group" },
@@ -73,6 +73,13 @@ const router = createRouter({
       meta: { hideNavBar: true },
       component: () => import("../views/ActivateView.vue"),
       props: (route) => ({ code: route.query.activation_code }),
+    },
+    {
+      path: "/invite",
+      name: "invite",
+      meta: { hideNavBar: true },
+      component: () => import("../views/InviteView.vue"),
+      props: (route) => ({ code: route.query.code }),
     },
   ],
 });

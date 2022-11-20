@@ -68,7 +68,7 @@ async function requestInviteLink() {
   if (createdGroup.value) {
     const response = await groupStore.requestInvite(createdGroup.value.id);
     inviteLink.value = await response.json().then((data) => data.key);
-    inviteLink.value = `${window.location.origin}/invite/${inviteLink.value}`;
+    inviteLink.value = `${window.location.origin}/invite/?code=${inviteLink.value}`;
   }
   loading.value = false;
 }

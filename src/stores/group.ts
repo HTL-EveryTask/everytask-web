@@ -52,7 +52,7 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function leaveGroup(id: number) {
-    const response = await api.callApi(`group/${id}/leave`, "PATCH");
+    const response = await api.callApi(`group/${id}/leave`, "POST");
     if (response.ok) {
       const index = groups.value.findIndex((g) => g.id === id);
       groups.value.splice(index, 1);
@@ -77,6 +77,10 @@ export const useGroupStore = defineStore("group", () => {
     return await api.callApi(`group/${groupId}/invite`, "POST");
   }
 
+  async function acceptInvite(code: string) {
+    return await api.callApi(`group/invite/${code}`, "POST");
+  }
+
   return {
     groups,
     getGroups,
@@ -87,5 +91,6 @@ export const useGroupStore = defineStore("group", () => {
     leaveGroup,
     addUserToGroup,
     requestInvite,
+    acceptInvite,
   };
 });

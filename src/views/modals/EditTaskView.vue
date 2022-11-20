@@ -154,6 +154,7 @@ async function deleteTask() {
         :show="showDeleteModal"
         class="bg-ghost"
         headless
+        relative
         @close="showDeleteModal = false"
       >
         <div class="flex flex-col items-center">

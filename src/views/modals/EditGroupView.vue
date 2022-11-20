@@ -146,6 +146,7 @@ async function leaveGroup() {
         :show="showDeleteModal"
         class="bg-ghost"
         headless
+        relative
         @close="showDeleteModal = false"
       >
         <div class="flex flex-col items-center">
@@ -166,7 +167,7 @@ async function leaveGroup() {
         </div>
       </ModalContainer>
 
-      <button class="btn-red" @click="showDeleteModal = true">
+      <button class="btn-red" @click="showLeaveModal = true">
         Leave Group
       </button>
 
@@ -174,6 +175,7 @@ async function leaveGroup() {
         :show="showLeaveModal"
         class="bg-ghost"
         headless
+        relative
         @close="showLeaveModal = false"
       >
         <div class="flex flex-col items-center">

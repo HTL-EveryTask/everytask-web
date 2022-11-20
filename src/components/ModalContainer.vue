@@ -31,6 +31,11 @@ defineProps({
     type: Boolean,
     default: false,
   },
+
+  relative: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 onMounted(() => {
@@ -58,8 +63,12 @@ onMounted(() => {
     <Transition appear name="modal">
       <div
         v-if="show"
-        :class="[$attrs.class, mobileFull ? 'sm:h-screen sm:w-screen' : '']"
-        class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-lg shadow-yonder/10 z-50"
+        :class="[
+          $attrs.class,
+          mobileFull ? 'sm:h-screen sm:w-screen' : '',
+          relative ? 'absolute' : 'fixed',
+        ]"
+        class="left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-lg shadow-yonder/10 z-50"
       >
         <div
           v-if="!headless"
