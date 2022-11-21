@@ -78,7 +78,7 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function acceptInvite(code: string) {
-    return await api.callApi(`group/invite/${code}`, "POST");
+    return await api.callApi(`group/invite/accept`, "POST", { key: code });
   }
 
   return {

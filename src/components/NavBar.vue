@@ -44,7 +44,7 @@ const links = [
         <div class="w-[7rem] flex justify-between m-2">
           <span
             v-if="userStore.ME"
-            class="block text-raisin flex-1 overflow-ellipsis overflow-hidden"
+            class="block text-raisin flex-1 overflow-ellipsis overflow-hidden text-center"
           >
             {{ userStore.ME.username }}
           </span>

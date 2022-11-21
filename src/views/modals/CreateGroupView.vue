@@ -40,7 +40,7 @@ async function createGroup() {
   const response = await groupStore.createGroup(name.value, description.value);
   // get json object from response and set it to createdGroup
   const data = await response.json();
-  createdGroup.value = data.id;
+  createdGroup.value = data.group;
   console.log(createdGroup.value);
 
   loading.value = false;

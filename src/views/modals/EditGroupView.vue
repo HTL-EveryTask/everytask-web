@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { maxLength, required } from "@vuelidate/validators";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import useVuelidate from "@vuelidate/core";
 import ModalContainer from "@/components/ModalContainer.vue";
 import type { Group } from "@/models/Group";
@@ -8,6 +8,8 @@ import InputField from "@/components/InputField.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import { useGroupStore } from "@/stores/group";
+import IconUser from "@/components/icons/IconUser.vue";
+import { useUserStore } from "@/stores/user";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -17,6 +19,21 @@ const props = defineProps<{
 const groupStore = useGroupStore();
 
 const group = ref<Group | undefined>();
+
+const orderedUsers = computed(() => {
+  const groupCopy = group.value;
+  const me = useUserStore().ME;
+  if (groupCopy && groupCopy.users && me) {
+    const users = groupCopy.users;
+    const index = users.findIndex((user) => user.id === me?.id);
+    if (index !== -1) {
+      users.splice(index, 1);
+    }
+    users.unshift(me);
+    return users;
+  }
+  return [];
+});
 
 const name = ref("");
 const description = ref("");
@@ -127,6 +144,18 @@ async function leaveGroup() {
             </span>
           </template>
         </InputField>
+
+        <h2 class="text-lg font-bold mt-4 mb-2">Members</h2>
+        <div class="flex flex-col gap-2">
+          <div
+            v-for="user in orderedUsers"
+            :key="user.id"
+            class="flex gap-2 items-center"
+          >
+            <IconUser class="w-8 h-8" />
+            <span class="text-gray-500">{{ user.username }}</span>
+          </div>
+        </div>
 
         <LoadingButton
           :disabled="v$.$invalid"

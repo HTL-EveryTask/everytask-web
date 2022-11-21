@@ -33,6 +33,8 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
 
   async function logout() {
     api.clearToken();
+    // TODO: clear stores
+    router.go(0);
     await router.push({ name: "login" });
   }
 

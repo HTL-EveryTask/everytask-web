@@ -37,6 +37,9 @@ onMounted(async () => {
       </div>
       <div v-else class="text-center">
         <p class="text-raisin/50">You have successfully joined the group!</p>
+        <a class="text-raisin/50 underline hover:text-raisin/100" href="/"
+          >Return to home</a
+        >
       </div>
     </div>
   </div>
