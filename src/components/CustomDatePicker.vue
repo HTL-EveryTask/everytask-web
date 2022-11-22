@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
+import IconCalender from "@/components/icons/IconCalender.vue";
 
 const WEEK_DAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 const MONTHS = [
@@ -28,24 +29,21 @@ function dateToString(date: Date): string {
 }
 
 function stringToDate(date: string): Date {
-  return new Date(date);
+  return new Date(date + "T00:00:00.000Z");
 }
+
+const today = new Date();
 
 const selectedDate = computed({
   get() {
     return stringToDate(props.modelValue);
   },
   set(value) {
-    console.log("set", value);
-    console.log("to string: ", dateToString(value));
     emit("update:modelValue", dateToString(value));
   },
 });
 
-const viewedDate = ref(new Date());
-
-// const selectedDate = ref(new Date());
-// convert date object to string
+const viewedDate = ref(selectedDate.value);
 
 const daysInSelectedMonth = computed(() => {
   // if the first day is not a monday, we need to get the previous monday
@@ -73,9 +71,7 @@ const daysInSelectedMonth = computed(() => {
   const lastDayOfMonthDay =
     lastDayOfMonth.getDay() === 0 ? 7 : lastDayOfMonth.getDay();
   if (lastDayOfMonthDay !== 7) {
-    console.log(lastDayOfMonth);
     lastDayOfMonth.setDate(lastDayOfMonth.getDate() + 7 - lastDayOfMonthDay);
-    console.log(lastDayOfMonth);
   } else {
     lastDayOfMonth.setDate(lastDayOfMonth.getDate() + 7);
   }
@@ -100,6 +96,14 @@ function swipeMonth(n: number = 1) {
   );
 }
 
+function selectDaysFromToday(n: number) {
+  selectedDate.value = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + n
+  );
+}
+
 function isSameDay(date1: Date, date2: Date) {
   return (
     date1.getFullYear() === date2.getFullYear() &&
@@ -109,7 +113,7 @@ function isSameDay(date1: Date, date2: Date) {
 }
 
 function isToday(date: Date) {
-  return isSameDay(date, new Date());
+  return isSameDay(date, today);
 }
 
 function isBetweenDates(date: Date, date1: Date, date2: Date) {
@@ -120,14 +124,6 @@ function isBetweenDates(date: Date, date1: Date, date2: Date) {
 }
 
 const editing = ref(true);
-
-function select(date: Date) {
-  console.log("clicked day: ", date);
-  // const dateCopy = new Date(date);
-  // decrement the copy by one day
-  selectedDate.value = date;
-  console.log("set date: ", selectedDate.value);
-}
 </script>
 <template>
   <div class="relative">
@@ -138,12 +134,23 @@ function select(date: Date) {
     <div
       v-if="editing"
       :class="{ 'h-0 w-0': !editing, 'w-96': editing }"
-      class="absolute bg-ghost shadow-lg transition-all duration-300 flex rounded-xl"
+      class="absolute bg-white shadow-lg transition-all duration-300 flex rounded-xl"
     >
-      <div class="flex flex-col mt-12">
-        <button class="bg-blue-100 p-4 m-2">Hi</button>
-        <button class="bg-blue-100 p-4 m-2">Hi</button>
-        <button class="bg-blue-100 p-4 m-2">Hi</button>
+      <div class="flex flex-col mt-12 text-sm text-raisin/70">
+        <div
+          class="p-2 m-1 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-lg"
+          @click="selectDaysFromToday(10)"
+        >
+          <IconCalender class="w-5 h-5" />
+          <span class="ml-1">Next Week</span>
+        </div>
+        <div
+          class="p-2 m-1 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-lg"
+          @click="selectDaysFromToday(1)"
+        >
+          <IconCalender class="w-5 h-5" />
+          <span class="ml-1">Tomorrow</span>
+        </div>
       </div>
 
       <div class="calender grow rounded-xl">
@@ -159,7 +166,9 @@ function select(date: Date) {
           </button>
         </div>
         <div class="p-2 pt-0">
-          <div class="grid grid-cols-7 text-center uppercase">
+          <div
+            class="grid grid-cols-7 text-center uppercase text-raisin/60 text-sm"
+          >
             <span v-for="day in WEEK_DAYS" :key="day">
               {{ day }}
             </span>
@@ -171,8 +180,8 @@ function select(date: Date) {
               :class="{
                 'opacity-50': day.getMonth() !== viewedDate.getMonth(),
               }"
-              class="relative hover:cursor-pointer text-sm hover:bg-blue-100 aspect-square flex items-center justify-center"
-              @click="select(day)"
+              class="relative hover:cursor-pointer text-sm hover:bg-blue-100 rounded-lg aspect-square flex items-center justify-center transition-colors duration-300"
+              @click="selectedDate = day"
             >
               <span>
                 {{ day.getDate() }}
@@ -187,15 +196,20 @@ function select(date: Date) {
               ></div>
               <div
                 v-if="
-                  (isBetweenDates(day, selectedDate, new Date()) &&
-                    selectedDate >= new Date()) ||
-                  (isSameDay(day, selectedDate) &&
-                    !isToday(selectedDate) &&
-                    selectedDate > viewedDate)
+                  (isBetweenDates(day, selectedDate, today) ||
+                    isToday(day) ||
+                    isSameDay(day, selectedDate)) &&
+                  !isSameDay(today, selectedDate)
                 "
                 class="absolute w-full h-full flex items-center justify-center"
               >
-                <div class="bg-green-500/20 p-4 rounded-md"></div>
+                <div
+                  :class="{
+                    'bg-green-500/20': selectedDate > new Date(),
+                    'bg-red-500/20': selectedDate < new Date(),
+                  }"
+                  class="p-4 rounded-md"
+                />
               </div>
             </div>
           </div>

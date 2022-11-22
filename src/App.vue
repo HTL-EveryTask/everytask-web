@@ -42,6 +42,8 @@ const date = ref("2022-11-11");
         <CustomDatePicker v-model="date">
           <IconSun class="h-12 w-12" />
         </CustomDatePicker>
+
+        <input type="date" v-model="date" />
       </div>
     </div>
 
