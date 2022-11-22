@@ -53,11 +53,10 @@ async function onSubmit() {
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full overflow-y-hidden">
     <div
       class="p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none flex flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full sm:h-full bg-white mt-16"
     >
-      <section></section>
       <div class="mb-6 mt-2">
         <img
           alt="logo"
