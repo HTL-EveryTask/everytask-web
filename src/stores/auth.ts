@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { useApiStore } from "@/stores/api";
 import { useUserStore } from "@/stores/user";
 import router from "@/router";
+import { useGroupStore } from "@/stores/group";
+import { useTaskStore } from "@/stores/task";
 
 export const useAuthenticateStore = defineStore("authenticate", () => {
   const api = useApiStore();
@@ -33,9 +35,9 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
 
   async function logout() {
     api.clearToken();
-    // TODO: clear stores
-    router.go(0);
     await router.push({ name: "login" });
+    useGroupStore().groups = [];
+    useTaskStore().tasks = [];
   }
 
   async function register(username: string, email: string, password: string) {
