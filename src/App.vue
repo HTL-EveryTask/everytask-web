@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { RouterView } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import IconSettings from "@/components/icons/IconSettings.vue";
 import NavBar from "@/components/NavBar.vue";
 import ToastList from "@/components/ToastList.vue";
+import CustomDatePicker from "@/components/CustomDatePicker.vue";
+import IconSun from "@/components/icons/IconSun.vue";
 
 const authenticateStore = useAuthenticateStore();
 
@@ -16,6 +17,8 @@ onMounted(async () => {
     }
   }
 });
+
+const date = ref("2022-11-11");
 </script>
 
 <template>
@@ -35,7 +38,10 @@ onMounted(async () => {
     >
       <NavBar v-if="!$route.meta.hideNavBar" class="z-10" />
       <div class="w-full h-full overflow-auto">
-        <RouterView />
+        <!--        <RouterView />-->
+        <CustomDatePicker v-model="date">
+          <IconSun class="h-12 w-12" />
+        </CustomDatePicker>
       </div>
     </div>
 
