@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { RouterView } from "vue-router";
 import NavBarAltr from "@/components/NavBarAltr.vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
 import GroupUserSelector from "@/components/GroupUserSelector.vue";
@@ -18,6 +17,8 @@ onMounted(async () => {
     await router.push({ name: "login" });
   }
 });
+
+const selectedItems = ref<string[]>([]);
 </script>
 
 <template>
@@ -26,7 +27,7 @@ onMounted(async () => {
     <div class="p-3 w-full flex overflow-auto">
       <!--      <RouterView class="" />-->
       <div>
-        <GroupUserSelector />
+        <GroupUserSelector v-model="selectedItems" />
       </div>
     </div>
   </div>
