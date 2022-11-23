@@ -1,65 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import IconX from "@/components/icons/IconX.vue";
+import { useGroupStore } from "@/stores/group";
+import type { Group } from "@/models/Group";
 
 const query = ref("");
 
-const mockGroups = [
-  {
-    id: "1",
-    name: "Group 1",
-    users: [
-      {
-        id: "1",
-        name: "User 1",
-      },
-      {
-        id: "2",
-        name: "User 2",
-      },
-      {
-        id: "3",
-        name: "User 3",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Group 2",
-    users: [
-      {
-        id: "4",
-        name: "User 4",
-      },
-      {
-        id: "5",
-        name: "User 5",
-      },
-      {
-        id: "6",
-        name: "User 6",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Group 3",
-    users: [
-      {
-        id: "7",
-        name: "User 7",
-      },
-      {
-        id: "8",
-        name: "User 8",
-      },
-      {
-        id: "9",
-        name: "User 9",
-      },
-    ],
-  },
-];
+const groupStore = useGroupStore();
+const groups = computed<Group[]>(() => groupStore.groups);
 
 const props = defineProps(["modelValue"]);
 const emit = defineEmits(["update:modelValue"]);
@@ -74,7 +22,7 @@ const selectedItems = computed({
 });
 
 const filteredGroups = computed(() => {
-  return mockGroups.filter((group) => {
+  return groups.value.filter((group) => {
     return (
       group.name.toLowerCase().includes(query.value.toLowerCase()) &&
       !selectedItems.value.find(
@@ -86,18 +34,27 @@ const filteredGroups = computed(() => {
 });
 
 const filteredUsers = computed(() => {
-  if (!mockGroups) return [];
-  return mockGroups
+  if (!groups.value) return [];
+  const users = groups.value
     .flatMap((group: any) => group.users)
     .filter((user: any) => {
       return (
-        user.name.toLowerCase().includes(query.value.toLowerCase()) &&
+        user.username.toLowerCase().includes(query.value.toLowerCase()) &&
         !selectedItems.value.find(
           (selectedUser: any) =>
             selectedUser.id === user.id && selectedUser.type === "user"
         )
       );
     });
+
+  return users.filter((user: any, index: number) => {
+    return (
+      index ===
+      users.findIndex((u: any) => {
+        return u.id === user.id;
+      })
+    );
+  });
 });
 
 function select(item: any, type: string) {
@@ -118,7 +75,7 @@ function beforeLeave(el: any) {
 
 <template>
   <TransitionGroup
-    class="flex items-center flex-wrap border-2 border-indigo-200 w-[60em]"
+    class="flex items-center flex-wrap border-b-2 border-raisin/40 w-full h-12"
     name="list"
     tag="div"
     @before-leave="beforeLeave"
@@ -128,7 +85,7 @@ function beforeLeave(el: any) {
       :key="item.id + item.type"
       class="m-1 bg-gray-200 py-1 px-2 rounded-full flex items-center"
     >
-      <div>{{ item.name }}</div>
+      <div>{{ item.type === "group" ? item.name : item.username }}</div>
       <div class="ml-2">
         <IconX
           class="font-bold text-gray-500 cursor-pointer rounded-full w-5 h-5 font-bold flex items-center justify-center hover:bg-gray-300"
@@ -140,11 +97,22 @@ function beforeLeave(el: any) {
         />
       </div>
     </div>
-    <div class="relative flex-1 min-w-[7em]">
-      <input v-model="query" />
+    <div class="relative flex-1 min-w-[7em] h-full">
+      <input
+        v-model="query"
+        class="w-full h-full"
+        @keydown.enter="
+          filteredGroups.length > 0
+            ? select(filteredGroups[0], 'group')
+            : filteredUsers.length > 0
+            ? select(filteredUsers[0], 'user')
+            : null
+        "
+      />
 
       <div
-        class="suggestions absolute w-96 bg-ghost overflow-scroll max-h-32 rounded-b-md shadow-yonder/10 shadow-lg"
+        v-if="filteredGroups.length > 0 || filteredUsers.length > 0"
+        class="suggestions absolute w-96 overflow-scroll max-h-32 rounded-b-md shadow-yonder/10 shadow-lg border-raisin/10 border-2"
       >
         <div
           v-for="group in filteredGroups"
@@ -161,7 +129,7 @@ function beforeLeave(el: any) {
           @click="select(user, 'user')"
         >
           <div class="flex items-center">
-            <div class="ml-2">{{ user.name }}</div>
+            <div class="ml-2">{{ user.username }}</div>
           </div>
         </div>
       </div>

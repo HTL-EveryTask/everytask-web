@@ -8,6 +8,7 @@ import IconPlus from "@/components/icons/IconPlus.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import { useTaskStore } from "@/stores/task";
 import IconChevron from "@/components/icons/IconChevron.vue";
+import GroupUserSelector from "@/components/GroupUserSelector.vue";
 
 defineProps<{
   expandedClass: string;
@@ -48,8 +49,8 @@ const loading = ref(false);
 
 const title = ref("");
 const description = ref("test");
-
 const due = ref(new Date().toJSON().slice(0, 16));
+const assigned = ref([]);
 
 const rules = {
   title: {
@@ -62,11 +63,14 @@ const rules = {
   due: {
     required,
   },
+  assigned: {
+    required,
+  },
 };
 
 const v$ = useVuelidate(
   rules,
-  { title, description, due },
+  { title, description, due, assigned },
   { $autoDirty: true }
 );
 
@@ -121,7 +125,7 @@ async function onSubmit() {
     </Transition>
     <form @submit.prevent="onSubmit">
       <Transition name="expand">
-        <div v-if="expanded && expandedFull" class="h-96 overflow-auto">
+        <div v-if="expanded && expandedFull" class="h-[36rem] overflow-auto">
           <div class="w-full p-4">
             <InputField
               id="description"
@@ -140,6 +144,14 @@ async function onSubmit() {
 
             <InputField id="due" :validation="v$.due" label="Due">
               <input id="due" v-model="due" type="datetime-local" />
+            </InputField>
+
+            <InputField
+              id="assigned"
+              :validation="v$.assigned"
+              label="Assigned"
+            >
+              <GroupUserSelector id="assigned" v-model="assigned" />
             </InputField>
           </div>
         </div>
@@ -174,7 +186,7 @@ async function onSubmit() {
         <select
           class="mx-4 bg-transparent border-b-2 border-raisin/50 caret-raisin/70 disabled:opacity-50 text-raisin/50 transition-colors duration-300"
         >
-          <option value="1" disabled selected>Subject</option>
+          <option disabled selected value="1">Subject</option>
           <option value="2">2</option>
           <option value="3">3</option>
         </select>
