@@ -139,7 +139,7 @@ const editing = ref(true);
       <div class="flex flex-col mt-12 text-sm text-raisin/70">
         <div
           class="p-2 m-1 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-lg"
-          @click="selectDaysFromToday(10)"
+          @click="selectDaysFromToday(7)"
         >
           <IconCalender class="w-5 h-5" />
           <span class="ml-1">Next Week</span>
@@ -190,7 +190,8 @@ const editing = ref(true);
                 v-if="isSameDay(day, selectedDate) || isToday(day)"
                 :class="{
                   'bg-blue-400': isSameDay(day, selectedDate),
-                  'bg-rebecca/50': isToday(day),
+                  'bg-rebecca/50':
+                    isToday(day) && !isSameDay(day, selectedDate),
                 }"
                 class="absolute w-5 h-[0.20rem] bottom-2 left-1/2 transform -translate-x-1/2"
               ></div>

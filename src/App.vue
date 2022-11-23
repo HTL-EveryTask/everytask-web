@@ -39,11 +39,9 @@ const date = ref("2022-11-11");
       <NavBar v-if="!$route.meta.hideNavBar" class="z-10" />
       <div class="w-full h-full overflow-auto">
         <!--        <RouterView />-->
-        <CustomDatePicker v-model="date">
+        <CustomDatePicker class="m-4" v-model="date">
           <IconSun class="h-12 w-12" />
         </CustomDatePicker>
-
-        <input type="date" v-model="date" />
       </div>
     </div>
 
