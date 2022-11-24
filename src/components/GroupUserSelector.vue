@@ -12,6 +12,14 @@ const groups = computed<Group[]>(() => groupStore.groups);
 const props = defineProps(["modelValue"]);
 const emit = defineEmits(["update:modelValue"]);
 
+const highLightedIndex = ref(0);
+
+const input = ref(null);
+const groupSuggestions = ref<any[]>([]);
+const userSuggestions = ref<any[]>([]);
+
+const isFocused = ref(false);
+
 const selectedItems = computed({
   get() {
     return props.modelValue;
@@ -64,6 +72,26 @@ function select(item: any, type: string) {
   selectedItems.value.push(itemCopy);
 }
 
+function scrollToSuggestion(index = 0) {
+  if (index < groupSuggestions.value.length) {
+    if (groupSuggestions.value[index]) {
+      groupSuggestions.value[index].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  } else {
+    if (userSuggestions.value[index - groupSuggestions.value.length]) {
+      userSuggestions.value[
+        index - groupSuggestions.value.length
+      ].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }
+}
+
 function beforeLeave(el: any) {
   const { marginLeft, marginTop, width, height } = window.getComputedStyle(el);
   el.style.left = `${el.offsetLeft - parseFloat(marginLeft)}px`;
@@ -75,7 +103,7 @@ function beforeLeave(el: any) {
 
 <template>
   <TransitionGroup
-    class="flex items-center flex-wrap border-b-2 border-raisin/40 w-full h-12"
+    class="flex items-center flex-wrap border-b-2 border-raisin/40 w-full min-h-[3rem]"
     name="list"
     tag="div"
     @before-leave="beforeLeave"
@@ -97,27 +125,67 @@ function beforeLeave(el: any) {
         />
       </div>
     </div>
-    <div class="relative flex-1 min-w-[7em] h-full">
+    <div id="input" key="query" class="relative flex-1 min-w-[7em] h-full">
       <input
+        ref="input"
         v-model="query"
-        class="w-full h-full"
+        class="w-full h-full focus:outline-none"
+        @blur="isFocused = false"
+        @click="isFocused = true"
+        @focus="isFocused = true"
+        @input="
+          isFocused = true;
+          highLightedIndex = 0;
+          scrollToSuggestion(highLightedIndex);
+        "
+        @keydown.esc="isFocused = false"
         @keydown.enter="
-          filteredGroups.length > 0
-            ? select(filteredGroups[0], 'group')
-            : filteredUsers.length > 0
-            ? select(filteredUsers[0], 'user')
-            : null
+          select(
+            highLightedIndex < groupSuggestions.length
+              ? filteredGroups[highLightedIndex]
+              : filteredUsers[highLightedIndex - groupSuggestions.length],
+            highLightedIndex < groupSuggestions.length ? 'group' : 'user'
+          );
+          highLightedIndex = 0;
+          query = '';
+        "
+        @keydown.up="
+          highLightedIndex =
+            highLightedIndex === 0
+              ? filteredGroups.length + filteredUsers.length - 1
+              : highLightedIndex - 1;
+          scrollToSuggestion(highLightedIndex);
+        "
+        @keydown.down="
+          highLightedIndex =
+            highLightedIndex ===
+            filteredGroups.length + filteredUsers.length - 1
+              ? 0
+              : highLightedIndex + 1;
+          scrollToSuggestion(highLightedIndex);
         "
       />
 
       <div
-        v-if="filteredGroups.length > 0 || filteredUsers.length > 0"
-        class="suggestions absolute w-96 overflow-scroll max-h-32 rounded-b-md shadow-yonder/10 shadow-lg border-raisin/10 border-2"
+        v-if="
+          (filteredGroups.length > 0 || filteredUsers.length > 0) && isFocused
+        "
+        class="suggestions absolute max-w-[24rem] w-full overflow-scroll max-h-32 rounded-b-md shadow-yonder/10 shadow-lg border-raisin/10 border-2 bg-white"
       >
         <div
           v-for="group in filteredGroups"
           :key="group.id"
-          @click="select(group, 'group')"
+          ref="groupSuggestions"
+          :class="{
+            'bg-gray-200': highLightedIndex === filteredGroups.indexOf(group),
+          }"
+          class="hover:bg-raisin/10 hover:cursor-pointer"
+          @click="
+            select(group, 'group');
+            highLightedIndex = 0;
+            query = '';
+          "
+          @mousedown.prevent
         >
           <div class="flex items-center">
             <div class="ml-2">{{ group.name }}</div>
@@ -126,7 +194,19 @@ function beforeLeave(el: any) {
         <div
           v-for="user in filteredUsers"
           :key="user.id"
-          @click="select(user, 'user')"
+          ref="userSuggestions"
+          :class="{
+            'bg-gray-200':
+              highLightedIndex ===
+              filteredGroups.length + filteredUsers.indexOf(user),
+          }"
+          class="hover:bg-raisin/10 hover:cursor-pointer"
+          @click="
+            select(user, 'user');
+            highLightedIndex = 0;
+            query = '';
+          "
+          @mousedown.prevent
         >
           <div class="flex items-center">
             <div class="ml-2">{{ user.username }}</div>
@@ -157,7 +237,7 @@ function beforeLeave(el: any) {
 
 /* ensure leaving items are taken out of layout flow so that moving
    animations can be calculated correctly. */
-.list-leave-active {
+.list-leave-active:not(#input) {
   position: absolute;
 }
 </style>

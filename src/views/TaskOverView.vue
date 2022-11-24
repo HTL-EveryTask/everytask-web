@@ -178,13 +178,14 @@ function beforeTaskLeave(el: any) {
                 <TaskCard
                   v-for="(task, index) in orderedTasks"
                   :key="task.id"
-                  :class="{
-                    'border-cerulean border-2':
-                      Number(router.currentRoute.value.params.id) === task.id,
-                  }"
+                  :class="[
+                    Number(router.currentRoute.value.params.id) === task.id
+                      ? 'border-cerulean/50 border-2'
+                      : 'border-transparent border-2',
+                  ]"
                   :data-index="index"
                   :task="task"
-                  class="bg-white shadow-md shadow-yonder/10"
+                  class="bg-white shadow-md shadow-yonder/10 hover:bg-cerulean/5 hover:shadow-yonder/20 transition-colors duration-300"
                   @click="
                     Number(router.currentRoute.value.params.id) === task.id
                       ? router.push({ name: 'tasks' })

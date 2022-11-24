@@ -64,7 +64,7 @@ const rules = {
     required,
   },
   assigned: {
-    required,
+    maxArrayLength: maxLength(5),
   },
 };
 

@@ -157,7 +157,7 @@ function onSectionLeave(element: any, done: any) {
               :disabled="v$.$invalid"
               :loading="loading"
               class="btn-primary block ml-auto mt-4"
-              type="button"
+              type="submit"
               @click="createGroup"
             >
               Create Group
@@ -167,7 +167,9 @@ function onSectionLeave(element: any, done: any) {
       </section>
 
       <section v-else-if="stepCounter === 2">
-        <h2>Invite your Colleagues to join {{ name }}</h2>
+        <h2 class="text-xl text-center">
+          Invite your Colleagues to join {{ name }}
+        </h2>
         <button
           class="btn-primary block mt-4"
           type="button"
