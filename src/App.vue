@@ -1,35 +1,49 @@
 <script lang="ts" setup>
-import NavBarAltr from "@/components/NavBarAltr.vue";
-import { onMounted, ref } from "vue";
+import { RouterView } from "vue-router";
+import { onMounted } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
-import router from "@/router";
-import GroupUserSelector from "@/components/GroupUserSelector.vue";
+import IconSettings from "@/components/icons/IconSettings.vue";
+import NavBar from "@/components/NavBar.vue";
+import ToastList from "@/components/ToastList.vue";
 
 const authenticateStore = useAuthenticateStore();
 
 onMounted(async () => {
-  authenticateStore.token = localStorage.getItem("token") ?? "";
-  let loggedIn = await authenticateStore.authenticate().catch(() => {
-    router.push({ name: "login" });
-  });
-  if (!loggedIn) {
-    localStorage.removeItem("token");
-    await router.push({ name: "login" });
+  if (localStorage.getItem("token")) {
+    const loggedIn = await authenticateStore.checkAuth();
+    if (!loggedIn) {
+      // await router.push({ name: "login" });
+    }
   }
 });
-
-const selectedItems = ref<string[]>([]);
 </script>
 
 <template>
-  <div class="flex min-h-screen">
-    <NavBarAltr v-if="!$route.meta.hideNavBar" />
-    <div class="p-3 w-full flex overflow-auto">
-      <!--      <RouterView class="" />-->
-      <div>
-        <GroupUserSelector v-model="selectedItems" />
+  <div class="h-screen w-screen flex flex-col">
+    <div
+      class="h-16 w-full z-20 shadow-md shadow-yonder/10 flex justify-between items-center"
+    >
+      <header class="h-full w-full p-3 ml-2">
+        <img alt="logo" class="h-full" src="@/assets/logo_light.svg" />
+      </header>
+      <router-link :to="{ name: 'settings' }" class="h-full p-2 mr-[5vw]">
+        <div
+          class="h-full hover:bg-raisin/5 text-raisin/70 hover:text-raisin rounded-full p-2"
+        >
+          <IconSettings class="h-full" />
+        </div>
+      </router-link>
+    </div>
+    <div
+      class="flex-1 flex flex-row sm:flex-col-reverse h-full overflow-hidden"
+    >
+      <NavBar v-if="!$route.meta.hideNavBar" class="z-10" />
+      <div class="w-full h-full overflow-auto">
+        <RouterView />
       </div>
     </div>
+
+    <ToastList class="fixed top-0 right-0 z-30" />
   </div>
 </template>
 

@@ -45,5 +45,8 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped></style>
-class=" btn-primary mt-4 "
+<style scoped>
+.router-link-active {
+  @apply bg-yonder/10 text-yonder shadow-inner shadow-yonder/10 gap-6;
+}
+</style>
