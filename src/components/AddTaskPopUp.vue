@@ -127,6 +127,7 @@ async function onSubmit() {
       <Transition name="expand">
         <div v-if="expanded && expandedFull" class="h-[36rem] overflow-auto">
           <div class="w-full p-4">
+            <h1 class="text-2xl mb-4">{{ title ? title : "New Task" }}</h1>
             <InputField
               id="description"
               :validation="v$.description"

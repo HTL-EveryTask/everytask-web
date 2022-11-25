@@ -20,9 +20,20 @@ export const useUserStore = defineStore("user", () => {
     ME.value = user;
   }
 
+  async function changeUsername(username: string) {
+    const response = await api.callApi("user", "PATCH", {
+      username,
+    });
+    if (response.ok) {
+      ME.value.username = username;
+    }
+    return response;
+  }
+
   return {
     ME,
     getMe,
     setMe,
+    changeUsername,
   };
 });

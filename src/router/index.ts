@@ -53,6 +53,23 @@ const router = createRouter({
       ],
     },
     {
+      path: "/settings",
+      name: "settings",
+      component: () => import("../views/SettingsView.vue"),
+      children: [
+        {
+          path: "",
+          name: "settings",
+          redirect: { name: "profileSettings" },
+        },
+        {
+          path: "profile",
+          name: "profileSettings",
+          component: () => import("../views/ProfileSettingsView.vue"),
+        },
+      ],
+    },
+    {
       path: "/register",
       name: "register",
       meta: { hideNavBar: true },
