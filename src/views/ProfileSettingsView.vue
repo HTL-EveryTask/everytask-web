@@ -68,7 +68,7 @@ function updateProfile() {
           <InputField id="email" label="Email">
             <input
               :value="userStore.ME?.email"
-              class="w-full"
+              class="w-full text-raisin/50"
               disabled
               type="text"
             />
@@ -79,6 +79,7 @@ function updateProfile() {
         :loading="loadingEditProfile"
         class="mt-4 btn-primary"
         type="submit"
+        :disabled="v$.$invalid"
       >
         Update Profile
       </LoadingButton>
