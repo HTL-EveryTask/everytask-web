@@ -25,7 +25,7 @@ export const useUserStore = defineStore("user", () => {
       username,
     });
     if (response.ok) {
-      ME.value.username = username;
+      ME.value = await response.json().then((data) => data.user);
     }
     return response;
   }
