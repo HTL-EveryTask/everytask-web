@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import EditTaskView from "../views/modals/EditTaskView.vue";
-import CreateGroupView from "../views/modals/CreateGroupView.vue";
-import GroupOverView from "../views/GroupOverView.vue";
-import TaskOverView from "../views/TaskOverView.vue";
-import EditGroupView from "../views/modals/EditGroupView.vue";
+import EditTaskView from "../views/task/EditTaskView.vue";
+import CreateGroupView from "../views/group/CreateGroupView.vue";
+import GroupOverView from "../views/group/GroupOverView.vue";
+import TaskOverView from "../views/task/TaskOverView.vue";
+import EditGroupView from "../views/group/EditGroupView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -55,7 +55,7 @@ const router = createRouter({
     {
       path: "/settings",
       name: "settings",
-      component: () => import("../views/SettingsView.vue"),
+      component: () => import("../views/settings/SettingsView.vue"),
       children: [
         {
           path: "",
@@ -65,7 +65,7 @@ const router = createRouter({
         {
           path: "profile",
           name: "profileSettings",
-          component: () => import("../views/ProfileSettingsView.vue"),
+          component: () => import("../views/settings/ProfileSettingsView.vue"),
         },
       ],
     },
@@ -73,7 +73,7 @@ const router = createRouter({
       path: "/register",
       name: "register",
       meta: { hideNavBar: true },
-      component: () => import("../views/RegisterView.vue"),
+      component: () => import("../views/auth/RegisterView.vue"),
     },
     {
       path: "/login",
@@ -82,20 +82,20 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import("../views/LoginView.vue"),
+      component: () => import("../views/auth/LoginView.vue"),
     },
     {
       path: "/activate",
       name: "activate",
       meta: { hideNavBar: true },
-      component: () => import("../views/ActivateView.vue"),
+      component: () => import("../views/ext/ActivateView.vue"),
       props: (route) => ({ code: route.query.activation_code }),
     },
     {
       path: "/invite",
       name: "invite",
       meta: { hideNavBar: true },
-      component: () => import("../views/InviteView.vue"),
+      component: () => import("../views/ext/InviteView.vue"),
       props: (route) => ({ code: route.query.code }),
     },
   ],
