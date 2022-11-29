@@ -33,7 +33,7 @@ export const useTaskStore = defineStore("task", () => {
   }
 
   async function updateTask(task: Task) {
-    const response = await api.callApi("task", "PATCH", task);
+    const response = await api.callApi(`task/${task.id}`, "PATCH", task);
     if (response.ok) {
       const updatedTask = await response.json();
       const index = tasks.value.findIndex((t) => t.id === updatedTask.id);
