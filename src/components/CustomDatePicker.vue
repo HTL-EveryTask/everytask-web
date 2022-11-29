@@ -139,124 +139,128 @@ const isSmallScreen = computed(() => {
 });
 </script>
 <template>
-  <input
-    ref="hiddenInput"
-    :value="modelValue"
-    class="sm:small-screen"
-    hidden
-    type="date"
-  />
-  <div @click="editing = !editing">
-    <slot />
-  </div>
-  <component
-    :is="isSmallScreen ? ModalContainer : 'div'"
-    :show="editing"
-    class="bg-white"
-    title="Pick a Date"
-    @close="editing = false"
-  >
-    <div
-      v-if="editing"
-      :class="[$attrs.class, !editing ? 'h-0 w-0' : 'w-[20rem]']"
-      class="absolute sm:static bg-white shadow-lg sm:shadow-none transition-all duration-300 flex sm:flex-col rounded-xl"
+  <div class="relative">
+    <input
+      ref="hiddenInput"
+      :value="modelValue"
+      class="sm:small-screen"
+      hidden
+      type="date"
+    />
+    <div @click="editing = !editing">
+      <slot />
+    </div>
+    <component
+      :is="isSmallScreen ? ModalContainer : 'div'"
+      :show="editing"
+      class="bg-white"
+      title="Pick a Date"
+      @close="editing = false"
     >
-      <div class="flex flex-col mt-12 sm:m-0 text-sm sm:text-md text-raisin/70">
+      <div
+        v-if="editing"
+        :class="{ 'h-0 w-0': !editing, 'w-[20rem]': editing }"
+        class="absolute sm:static bg-white shadow-lg sm:shadow-none transition-all duration-300 flex sm:flex-col rounded-xl"
+      >
         <div
-          class="p-2 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-r-lg cursor-pointer"
-          @click="selectDaysFromToday(7)"
+          class="flex flex-col mt-12 sm:m-0 text-sm sm:text-md text-raisin/70"
         >
-          <IconCalender class="w-5 h-5" />
-          <span class="ml-1">Next Week</span>
-        </div>
-        <div
-          class="p-2 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-r-lg cursor-pointer"
-          @click="selectDaysFromToday(1)"
-        >
-          <IconCalender class="w-5 h-5" />
-          <span class="ml-1">Tomorrow</span>
-        </div>
-      </div>
-
-      <div class="calender grow rounded-xl">
-        <div class="flex justify-center gap-2 h-12 items-center">
-          <button class="ml-2" @click="swipeMonth(-1)">
-            <IconChevron class="h-4 w-4 transform -rotate-90" />
-          </button>
-          <span class="text-sm font-bold w-36 text-center">
-            {{ MONTHS[viewedDate.getMonth()] }} {{ viewedDate.getFullYear() }}
-          </span>
-          <button class="mr-2" @click="swipeMonth(1)">
-            <IconChevron class="h-4 w-4 transform rotate-90" />
-          </button>
-        </div>
-        <div class="p-2 pt-0">
           <div
-            class="grid grid-cols-7 text-center uppercase text-raisin/60 text-xs"
+            class="p-2 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-r-lg cursor-pointer"
+            @click="selectDaysFromToday(7)"
           >
-            <span v-for="day in WEEK_DAYS" :key="day">
-              {{ day }}
-            </span>
+            <IconCalender class="w-5 h-5" />
+            <span class="ml-1">Next Week</span>
           </div>
-          <div class="grid grid-cols-7 grid-rows-6">
+          <div
+            class="p-2 flex items-center hover:text-raisin hover:bg-yonder/10 rounded-r-lg cursor-pointer"
+            @click="selectDaysFromToday(1)"
+          >
+            <IconCalender class="w-5 h-5" />
+            <span class="ml-1">Tomorrow</span>
+          </div>
+        </div>
+
+        <div class="calender grow rounded-xl">
+          <div class="flex justify-center gap-2 h-12 items-center">
+            <button class="ml-2" @click="swipeMonth(-1)">
+              <IconChevron class="h-4 w-4 transform -rotate-90" />
+            </button>
+            <span class="text-sm font-bold w-36 text-center">
+              {{ MONTHS[viewedDate.getMonth()] }} {{ viewedDate.getFullYear() }}
+            </span>
+            <button class="mr-2" @click="swipeMonth(1)">
+              <IconChevron class="h-4 w-4 transform rotate-90" />
+            </button>
+          </div>
+          <div class="p-2 pt-0">
             <div
-              v-for="day in daysInSelectedMonth"
-              :key="day"
-              :class="{
-                'opacity-50': day.getMonth() !== viewedDate.getMonth(),
-                'text-blue-500 font-bold': isSameDay(day, selectedDate),
-              }"
-              class="relative hover:cursor-pointer text-sm hover:bg-blue-100 rounded-lg aspect-square flex items-center justify-center transition-colors duration-300"
-              @click="selectedDate = day"
+              class="grid grid-cols-7 text-center uppercase text-raisin/60 text-xs"
             >
-              <span class="z-20 relative">
-                {{ day.getDate() }}
+              <span v-for="day in WEEK_DAYS" :key="day">
+                {{ day }}
               </span>
+            </div>
+            <div class="grid grid-cols-7 grid-rows-6">
               <div
-                v-if="
-                  (isBetweenDates(day, selectedDate, today) ||
-                    isToday(day) ||
-                    isSameDay(day, selectedDate)) &&
-                  !isSameDay(today, selectedDate)
-                "
-                class="z-10 absolute w-full h-full flex items-center justify-center"
-              >
-                <div
-                  :class="{
-                    'bg-green-500/20': selectedDate > new Date(),
-                    'bg-red-500/20': selectedDate < new Date(),
-                  }"
-                  class="w-[85%] h-[85%] rounded-md"
-                />
-              </div>
-              <div
-                v-if="isSameDay(day, selectedDate) || isToday(day)"
+                v-for="day in daysInSelectedMonth"
+                :key="day"
                 :class="{
-                  'bg-blue-400': isSameDay(day, selectedDate),
-                  'bg-rebecca': isToday(day) && !isSameDay(day, selectedDate),
+                  'opacity-50': day.getMonth() !== viewedDate.getMonth(),
+                  'text-blue-500 font-bold': isSameDay(day, selectedDate),
                 }"
-                class="absolute rounded-full w-[50%] h-[0.20rem] bottom-1 left-1/2 transform -translate-x-1/2"
-              ></div>
+                class="relative hover:cursor-pointer text-sm hover:bg-blue-100 rounded-lg aspect-square flex items-center justify-center transition-colors duration-300"
+                @click="selectedDate = day"
+              >
+                <span class="z-20 relative">
+                  {{ day.getDate() }}
+                </span>
+                <div
+                  v-if="
+                    (isBetweenDates(day, selectedDate, today) ||
+                      isToday(day) ||
+                      isSameDay(day, selectedDate)) &&
+                    !isSameDay(today, selectedDate)
+                  "
+                  class="z-10 absolute w-full h-full flex items-center justify-center"
+                >
+                  <div
+                    :class="{
+                      'bg-green-500/20': selectedDate > new Date(),
+                      'bg-red-500/20': selectedDate < new Date(),
+                    }"
+                    class="w-[85%] h-[85%] rounded-md"
+                  />
+                </div>
+                <div
+                  v-if="isSameDay(day, selectedDate) || isToday(day)"
+                  :class="{
+                    'bg-blue-400': isSameDay(day, selectedDate),
+                    'bg-rebecca': isToday(day) && !isSameDay(day, selectedDate),
+                  }"
+                  class="absolute rounded-full w-[50%] h-[0.20rem] bottom-1 left-1/2 transform -translate-x-1/2"
+                ></div>
+              </div>
+            </div>
+            <div class="flex justify-between">
+              <button
+                class="text-sm hover:text-red-500 transition-colors duration-200"
+                @click="selectedDate = today"
+              >
+                Clear
+              </button>
+              <button
+                class="text-sm hover:text-blue-400 transition-colors duration-200"
+                @click="editing = false"
+              >
+                Done
+              </button>
             </div>
           </div>
-          <div class="flex justify-between">
-            <button
-              class="text-sm hover:text-red-500 transition-colors duration-200"
-              @click="selectedDate = today"
-            >
-              Clear
-            </button>
-            <button
-              class="text-sm hover:text-blue-400 transition-colors duration-200"
-              @click="editing = false"
-            >
-              Done
-            </button>
-          </div>
         </div>
       </div>
-    </div>
-  </component>
+    </component>
+  </div>
 </template>
 
 <style scoped></style>
