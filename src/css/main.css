@@ -21,7 +21,7 @@
         @apply text-current opacity-80;
     }
 
-    .input-field > input, .input-field > textarea, .input-field > select {
+    .input-field > input, .input-field > textarea, .input-field > select, .input-field > .input-wrapper {
         @apply block w-full p-2 border-2 border-yonder/30 rounded-md focus:outline-none focus:border-indigo-500/30 focus:bg-cerulean/5 bg-inherit;
     }
 

@@ -6,6 +6,7 @@ import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
 import LoadingButton from "@/components/LoadingButton.vue";
+import PasswordInput from "@/components/PasswordInput.vue";
 
 const currentError = ref("");
 
@@ -89,12 +90,7 @@ async function onSubmit() {
         </InputField>
 
         <InputField id="password" :validation="v$.password" label="Password">
-          <input
-            id="password"
-            v-model="password"
-            class="w-full"
-            type="password"
-          />
+          <PasswordInput id="password" v-model="password" class="w-full" />
         </InputField>
 
         <LoadingButton
