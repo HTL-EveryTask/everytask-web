@@ -154,6 +154,9 @@ async function leaveGroup() {
           >
             <IconUser class="w-8 h-8" />
             <span class="text-gray-500">{{ user.username }}</span>
+            <span v-if="group?.admins.map((a) => a.id).includes(user.id)">
+              (Admin)
+            </span>
           </div>
         </div>
 
