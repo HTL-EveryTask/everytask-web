@@ -38,10 +38,10 @@ const loading = ref(false);
 async function createGroup() {
   loading.value = true;
   const response = await groupStore.createGroup(name.value, description.value);
-  // get json object from response and set it to createdGroup
   const data = await response.json();
   createdGroup.value = data.group;
   console.log(createdGroup.value);
+  await groupStore.getGroups();
 
   loading.value = false;
   stepForward();
