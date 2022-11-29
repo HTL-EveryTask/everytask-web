@@ -5,11 +5,15 @@ import { email, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import router from "@/router";
+import LoadingButton from "@/components/LoadingButton.vue";
+import PasswordInput from "@/components/PasswordInput.vue";
 
-const currentErrors = ref<string[]>([]);
+const currentError = ref("");
 
-const emailInput = ref("nayonyx@gmail.com");
-const password = ref("MyPassword.");
+const emailInput = ref("htl.everytask@gmail.com");
+const password = ref("password123!");
+
+const loading = ref(false);
 
 const rules = {
   email: {
@@ -30,26 +34,37 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   const authenticateStore = useAuthenticateStore();
-  const response = await authenticateStore
-    .login(emailInput.value, password.value)
-    .catch(() => {
-      console.log("hi");
-      currentErrors.value = ["Connection error"];
-    });
-
-  if (response.type === "Success") {
-    await router.push({ name: "home" });
-  } else {
-    currentErrors.value = [response.message];
+  loading.value = true;
+  try {
+    const response = await authenticateStore.login(
+      emailInput.value,
+      password.value
+    );
+    if (response.ok) {
+      await router.push({ name: "tasks" });
+    } else {
+      currentError.value = await response.json().then((data) => data.message);
+    }
+  } catch (error: any) {
+    currentError.value = "Connection to the server could not be established";
+  } finally {
+    loading.value = false;
   }
 }
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full h-full overflow-y-hidden">
     <div
-      class="p-8 mt-12 mx-auto rounded-3xl flex justify-center content-center flex-col shadow-lg max-w-[36em] sm:w-full"
+      class="p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none flex flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full sm:h-full bg-white mt-16"
     >
+      <div class="mb-6 mt-2">
+        <img
+          alt="logo"
+          class="h-24 mx-auto"
+          src="@/assets/logo_symbol_light.svg"
+        />
+      </div>
       <h1 class="text-3xl text-center">Login to EveryTask</h1>
       <h2 class="text-center text-sm text-raisin/60">
         Don't have an account?
@@ -60,38 +75,32 @@ async function onSubmit() {
 
       <div class="min-h-[5em] flex">
         <ul
-          v-if="currentErrors.length > 0"
-          class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-lg list-disc"
+          v-if="currentError"
+          class="m-4 bg-red-500 bg-opacity-10 border-2 border-red-500 text-red-500 flex flex-col items-center justify-center w-full rounded-xl list-disc"
         >
-          <li v-for="error in currentErrors" :key="error">
-            {{ error }}
+          <li>
+            {{ currentError }}
           </li>
         </ul>
       </div>
 
-      <form @submit.prevent="onSubmit">
+      <form class="px-8" @submit.prevent="onSubmit">
         <InputField id="email" :validation="v$.email" label="Email">
           <input id="email" v-model="emailInput" type="email" />
         </InputField>
 
         <InputField id="password" :validation="v$.password" label="Password">
-          <input
-            id="password"
-            v-model="password"
-            class="w-full"
-            type="password"
-          />
+          <PasswordInput id="password" v-model="password" class="w-full" />
         </InputField>
 
-        <div class="flex justify-center">
-          <button
-            class="bg-cerulean hover:bg-gradient-to-r hover:from-cerulean hover:to-cerulean-dark text-white font-bold py-2 px-4 rounded"
-            type="submit"
-            :disabled="v$.$invalid"
-          >
-            Login
-          </button>
-        </div>
+        <LoadingButton
+          :disabled="v$.$invalid"
+          :loading="loading"
+          class="text-center bg-cerulean text-white font-bold py-2 px-4 rounded"
+          type="submit"
+        >
+          Login
+        </LoadingButton>
       </form>
     </div>
   </div>

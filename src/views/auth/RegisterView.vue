@@ -5,6 +5,7 @@ import { email, helpers, minLength, required } from "@vuelidate/validators";
 import InputField from "@/components/InputField.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import LoadingButton from "@/components/LoadingButton.vue";
+import PasswordInput from "@/components/PasswordInput.vue";
 
 const username = ref("Mephisto");
 const emailInput = ref("htl.everytask@gmail.com");
@@ -141,7 +142,7 @@ function resendVerificationMail() {
         </InputField>
 
         <InputField id="password" :validation="v$.password" label="Password">
-          <input id="password" v-model="password" type="password" />
+          <PasswordInput id="password" v-model="password" />
         </InputField>
 
         <InputField
@@ -149,11 +150,7 @@ function resendVerificationMail() {
           :validation="v$.confirmPassword"
           label="Confirm Password"
         >
-          <input
-            id="confirmPassword"
-            v-model="confirmPassword"
-            type="password"
-          />
+          <PasswordInput id="confirmPassword" v-model="confirmPassword" />
         </InputField>
         <LoadingButton
           :disabled="v$.$invalid"
