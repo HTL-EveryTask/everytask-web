@@ -50,9 +50,11 @@ const links = [
   <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost sm:hidden">
     <div class="flex-col items-center">
       <div class="my-8 flex flex-col items-center">
-        <IconUser
-          class="h-[7em] w-[7em] mx-auto text-raisin/50 bg-yonder/10 rounded-full"
-        />
+        <router-link :to="{ name: 'profileSettings' }">
+          <IconUser
+            class="h-[7em] w-[7em] mx-auto text-raisin/50 bg-yonder/10 rounded-full cursor-pointer hover:text-raisin/70 transition-colors duration-300"
+          />
+        </router-link>
         <div class="w-[7rem] flex justify-between m-2">
           <span
             v-if="userStore.ME"
@@ -77,7 +79,7 @@ const links = [
         <li v-for="link in links" :key="link.name" class="main-links">
           <router-link
             :to="{ name: link.name }"
-            class="flex gap-4 p-4 rounded-r-full mr-4 pl-12 transition-all items-center hover:bg-yonder/5"
+            class="flex gap-4 p-4 rounded-r-full mr-4 pl-8 transition-all items-center hover:bg-yonder/5"
           >
             <component
               :is="link.icon"

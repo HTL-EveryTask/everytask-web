@@ -28,7 +28,7 @@ onMounted(async () => {
       </header>
       <router-link :to="{ name: 'settings' }" class="h-full p-2 mr-[5vw]">
         <div
-          class="h-full hover:bg-raisin/5 text-raisin/70 hover:text-raisin rounded-full p-2"
+          class="h-full hover:bg-raisin/5 text-raisin hover:text-raisin rounded-full p-2"
         >
           <IconSettings class="h-full" />
         </div>
