@@ -65,7 +65,7 @@ function beforeTaskLeave(el: any) {
 
 <template>
   <div
-    class="flex bg-gradient-to-tr from-cerulean/50 to-rebecca/50 h-full relative"
+    class="flex bg-gradient-to-tr from-cerulean/30 to-rebecca/30 h-full relative"
   >
     <nav class="w-44 h-full shadow-lg text-sm bg-ghost sm:hidden">
       <ul class="py-4">
@@ -136,7 +136,7 @@ function beforeTaskLeave(el: any) {
     <main class="flex-1 flex flex-col relative">
       <div class="flex-1">
         <div
-          class="mx-8 my-8 p-4 sm:m-2 sm:p-0 flex flex-col bg-white rounded-xl h-[80vh]"
+          class="mx-8 my-8 p-4 sm:m-2 sm:p-0 flex flex-col bg-ghost/95 effect-glass rounded-3xl h-[80vh]"
         >
           <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
             <h1>All</h1>
@@ -147,7 +147,7 @@ function beforeTaskLeave(el: any) {
               </button>
             </div>
           </header>
-          <div class="p-8 sm:p-4 overflow-y-auto w-full bg-ghost h-full">
+          <div class="p-8 sm:p-4 overflow-y-auto w-full h-full">
             <Transition appear mode="out-in" name="fade">
               <div
                 v-if="loading"
@@ -203,7 +203,7 @@ function beforeTaskLeave(el: any) {
 
       <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2 z-10">
         <AddTaskPopUp
-          class="my-4 max-w-[48em] sm:w-full p-2 rounded-xl text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
+          class="my-4 max-w-[48em] sm:w-full p-2 rounded-2xl text-raisin mx-auto shadow-lg shadow-yonder/50 bg-ghost transition-colors"
           expandedClass="bg-white"
           @expandFull="router.push({ name: 'tasks' })"
         />

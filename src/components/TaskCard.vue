@@ -36,7 +36,7 @@ const dateDayEnding = computed(() => {
 </script>
 
 <template>
-  <div class="min-w-[12em] p-4 flex items-center rounded-xl">
+  <div class="min-w-[12em] p-3 flex items-center rounded-full">
     <div
       :class="
         'w-8 h-8 rounded-full mr-4 relative border-2' +
@@ -54,15 +54,19 @@ const dateDayEnding = computed(() => {
     </div>
     <div class="flex flex-1 items-baseline flex-wrap gap-x-4 min-w-0">
       <span
-        class="min-w-[180px] text-md font-bold whitespace-nowrap overflow-hidden overflow-ellipsis"
+        class="w-[40%] min-w-[200px] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
         >{{ task.title }}</span
       >
-      <span class="flex-1 text-xs text-gray-500 whitespace-nowrap"
-        >{{ formatDateTimeString }}
-        <span class="text-[0.8em] relative top-[-0.3em] left-[-0.3em]">
-          {{ dateDayEnding }}</span
-        ></span
+      <div
+        class="box-border border-l-2 border-raisin/40 flex-1 text-xs text-gray-500 whitespace-nowrap pl-2"
       >
+        <span
+          >{{ formatDateTimeString }}
+          <span class="text-[0.8em] relative top-[-0.3em] left-[-0.3em]">
+            {{ dateDayEnding }}</span
+          ></span
+        >
+      </div>
     </div>
     <div class="p-1 px-4 rounded-full flex items-center bg-ghost">
       <span class="text-xs text-gray-500">Fach</span>

@@ -19,25 +19,37 @@ const links = [
   {
     name: "tasks",
     icon: IconHome,
-    text: "Home",
+    text: "Tasks",
+    children: [
+      {
+        name: "not-found",
+        text: "Private",
+      },
+      {
+        name: "not-found",
+        text: "Groups",
+      },
+    ],
   },
   {
     name: "groups",
     icon: IconGroup,
     text: "Groups",
+    children: [],
   },
   {
     name: "not-found",
     icon: IconConnections,
     text: "Connections",
+    children: [],
   },
 ];
 </script>
 
 <template>
   <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost sm:hidden">
-    <div class="m-3 flex-col items-center">
-      <div class="my-8 font-bold flex flex-col items-center">
+    <div class="flex-col items-center">
+      <div class="my-8 flex flex-col items-center">
         <IconUser
           class="h-[7em] w-[7em] mx-auto text-raisin/50 bg-yonder/10 rounded-full"
         />
@@ -61,18 +73,28 @@ const links = [
           />
         </div>
       </div>
-      <ul class="flex flex-col font-bold gap-4">
-        <li v-for="link in links" :key="link.name">
+      <ul class="flex flex-col gap-4">
+        <li v-for="link in links" :key="link.name" class="main-links">
           <router-link
             :to="{ name: link.name }"
-            class="flex gap-4 p-4 rounded-full transition-all items-center hover:bg-yonder/5"
+            class="flex gap-4 p-4 rounded-r-full mr-4 pl-12 transition-all items-center hover:bg-yonder/5"
           >
             <component
               :is="link.icon"
-              class="w-[26px] h-[26px] font-bold transition-all"
+              class="w-[26px] h-[26px] transition-all"
             />
             <span class="condensed-hidden">{{ link.text }}</span>
           </router-link>
+          <ul v-if="link.children.length > 0" class="flex flex-col mt-4">
+            <li v-for="child in link.children" :key="child.name">
+              <router-link
+                :to="{ name: child.name }"
+                class="flex gap-4 p-2 rounded-r-full mr-4 transition-all items-center hover:text-yonder/100"
+              >
+                <span class="condensed-hidden ml-20">{{ child.text }}</span>
+              </router-link>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
@@ -81,7 +103,7 @@ const links = [
 
 <!--suppress CssUnusedSymbol -->
 <style scoped>
-.router-link-active {
-  @apply bg-yonder/10 text-yonder shadow-inner shadow-yonder/10 gap-6;
+.main-links > .router-link-active {
+  @apply bg-white text-yonder shadow-md shadow-yonder/10;
 }
 </style>
