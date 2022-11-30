@@ -35,9 +35,7 @@ watch(
 <template>
   <div :class="{ 'input-error': error || createdError }" class="input-field">
     <label :for="id">{{ label }}</label>
-    <div class="input-wrapper relative">
-      <slot />
-    </div>
+    <slot />
     <div class="flex text-sm min-h-[1.5em]">
       <div>
         <span v-if="error || createdError" class="text-red-500 text-sm block">
