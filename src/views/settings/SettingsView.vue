@@ -38,8 +38,8 @@ const links = [
         </li>
       </ul>
     </nav>
-    <div class="flex-1 flex justify-center mx-auto mx-[10vw]">
-      <RouterView class="w-full" />
+    <div class="flex-1 flex justify-center mx-auto mx-8">
+      <RouterView class="w-full max-w-[800px]" />
     </div>
   </div>
 </template>

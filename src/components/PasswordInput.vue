@@ -17,15 +17,15 @@ const showPassword = ref(false);
       v-bind="$attrs"
       @input="$emit('update:modelValue', $event.target.value)"
     />
+    <button
+      class="absolute right-2 top-1/2 transform -translate-y-1/2 text-raisinA"
+      type="button"
+      @click="showPassword = !showPassword"
+    >
+      <IconEyeOff v-if="showPassword" class="w-5 h-5" />
+      <IconEye v-else class="w-5 h-5" />
+    </button>
   </div>
-  <button
-    @click="showPassword = !showPassword"
-    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-raisinA"
-    type="button"
-  >
-    <IconEyeOff v-if="showPassword" class="w-5 h-5" />
-    <IconEye v-else class="w-5 h-5" />
-  </button>
 </template>
 
 <style scoped></style>
