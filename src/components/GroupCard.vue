@@ -3,7 +3,6 @@ import IconGroup from "@/components/icons/IconGroup.vue";
 import type { Group } from "@/models/Group";
 
 const props = defineProps<{
-  // TODO: Make type safe
   group: Group;
 }>();
 </script>
@@ -23,7 +22,7 @@ const props = defineProps<{
     </div>
     <div class="flex items-center ml-auto">
       <IconGroup class="w-[1.2em] h-[1.2em] m-2 text-raisin/50" />
-      <span class="text-sm text-gray-500">{{ props.group.users.length }}</span>
+      <span class="text-sm text-gray-500">{{ group.users.length || 0 }}</span>
     </div>
   </div>
 </template>

@@ -105,10 +105,7 @@ function onSectionLeave(element: any, done: any) {
 </script>
 
 <template>
-  <form
-    class="w-full min-h-[20em] min-w-[600px] sm:min-w-0"
-    @submit.prevent="onSubmit"
-  >
+  <form class="w-full min-h-[20em] min-w-[600px] sm:min-w-0">
     <Transition
       mode="out-in"
       name="slide"

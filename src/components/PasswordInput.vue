@@ -15,7 +15,7 @@ const showPassword = ref(false);
       :type="showPassword ? 'text' : 'password'"
       :value="modelValue"
       v-bind="$attrs"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:modelValue', $event.target)"
     />
     <button
       class="absolute right-2 top-1/2 transform -translate-y-1/2 text-raisinA"

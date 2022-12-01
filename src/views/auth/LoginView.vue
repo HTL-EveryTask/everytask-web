@@ -89,6 +89,13 @@ async function onSubmit() {
 
         <InputField id="password" :validation="v$.password" label="Password">
           <PasswordInput id="password" v-model="password" class="w-full" />
+          <template #right>
+            <router-link
+              :to="{ name: 'forgotPassword' }"
+              class="text-raisin/80 underline"
+              >Forgot password?
+            </router-link>
+          </template>
         </InputField>
 
         <LoadingButton

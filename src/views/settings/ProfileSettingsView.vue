@@ -10,6 +10,7 @@ import IconSpinner from "@/components/icons/IconSpinner.vue";
 import ModalContainer from "@/components/ModalContainer.vue";
 import PasswordInput from "@/components/PasswordInput.vue";
 import { useToastStore } from "@/stores/toast";
+import { useAuthenticateStore } from "@/stores/auth";
 
 const userStore = useUserStore();
 const loading = ref(true);
@@ -111,7 +112,7 @@ async function updateProfile() {
 async function changePassword() {
   changePasswordValues.value.loading = true;
   try {
-    const response = await userStore.changePassword(
+    const response = await useAuthenticateStore().changePassword(
       changePasswordValues.value.currentPassword,
       changePasswordValues.value.newPassword
     );
@@ -170,9 +171,7 @@ async function changePassword() {
                 />
 
                 <template #right>
-                  <span class="text-raisin/50">
-                    {{ vProfile$.username.$model.length }}/32</span
-                  >
+                  <span class="text-raisin/50"> {{ username.length }}/32</span>
                 </template>
               </InputField>
               <InputField id="email" label="Email">
@@ -252,6 +251,7 @@ async function changePassword() {
             </InputField>
             <LoadingButton
               :loading="changePasswordValues.loading"
+              :disabled="vChangePassword$.$invalid"
               class="mt-4 btn-primary"
               type="submit"
             >
