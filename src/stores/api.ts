@@ -30,7 +30,7 @@ export const useApiStore = defineStore("api", () => {
         method: method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${TOKEN}`,
+          ...(authorized && { Authorization: `${TOKEN}` }),
         },
         body: body ? JSON.stringify(body) : null,
       });

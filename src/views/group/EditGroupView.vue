@@ -13,7 +13,7 @@ import { useUserStore } from "@/stores/user";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
-  id?: number;
+  id: number;
 }>();
 
 const groupStore = useGroupStore();
@@ -83,6 +83,8 @@ async function onSubmit() {
     id: group.value?.id || 0,
     name: name.value,
     description: description.value,
+    users: group.value?.users || [],
+    admins: group.value?.admins || [],
   };
   if (group.value) {
     await groupStore.updateGroup(newGroup);

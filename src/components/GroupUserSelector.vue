@@ -119,7 +119,7 @@ function beforeLeave(el: any) {
           class="font-bold text-gray-500 cursor-pointer rounded-full w-5 h-5 font-bold flex items-center justify-center hover:bg-gray-300"
           @click="
             selectedItems = selectedItems.filter(
-              (i) => i.id !== item.id || i.type !== item.type
+              (i: any) => i.id !== item.id || i.type !== item.type
             )
           "
         />

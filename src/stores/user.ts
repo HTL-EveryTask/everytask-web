@@ -30,18 +30,10 @@ export const useUserStore = defineStore("user", () => {
     return response;
   }
 
-  async function changePassword(oldPassword: string, newPassword: string) {
-    return await api.callApi("password", "PATCH", {
-      oldPassword,
-      newPassword,
-    });
-  }
-
   return {
     ME,
     getMe,
     setMe,
     changeUsername,
-    changePassword,
   };
 });

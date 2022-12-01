@@ -85,6 +85,19 @@ const router = createRouter({
       component: () => import("../views/auth/LoginView.vue"),
     },
     {
+      path: "/forgot-password",
+      name: "forgotPassword",
+      meta: { hideNavBar: true },
+      component: () => import("../views/auth/ForgotPasswordView.vue"),
+    },
+    {
+      path: "/reset",
+      name: "resetPassword",
+      meta: { hideNavBar: true },
+      component: () => import("../views/ext/ChangePasswordView.vue"),
+      props: (route) => ({ code: route.query.code }),
+    },
+    {
       path: "/activate",
       name: "activate",
       meta: { hideNavBar: true },

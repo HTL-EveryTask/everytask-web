@@ -72,6 +72,29 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     );
   }
 
+  async function sendResetPasswordEmail(email: string) {
+    return await api.callApi("password", "POST", { email: email }, false);
+  }
+
+  async function changePassword(oldPassword: string, newPassword: string) {
+    return await api.callApi("password", "PATCH", {
+      oldPassword,
+      newPassword,
+    });
+  }
+
+  async function resetPassword(newPassword: string, code: string) {
+    return await api.callApi(
+      "password",
+      "PATCH",
+      {
+        newPassword,
+        code,
+      },
+      false
+    );
+  }
+
   return {
     checkAuth,
     register,
@@ -79,5 +102,8 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     logout,
     resendVerificationEmail,
     activateAccount,
+    sendResetPasswordEmail,
+    changePassword,
+    resetPassword,
   };
 });
