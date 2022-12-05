@@ -4,9 +4,10 @@ import IconGroup from "@/components/icons/IconGroup.vue";
 import IconConnections from "@/components/icons/IconConnections.vue";
 import IconUser from "@/components/icons/IconUser.vue";
 import { useUserStore } from "@/stores/user";
-import { onMounted } from "vue";
+import { markRaw, onMounted, ref } from "vue";
 import IconLogout from "@/components/icons/IconLogout.vue";
 import { useAuthenticateStore } from "@/stores/auth";
+import IconChevron from "@/components/icons/IconChevron.vue";
 
 const userStore = useUserStore();
 const authenticateStore = useAuthenticateStore();
@@ -15,10 +16,10 @@ onMounted(async () => {
   await userStore.getMe();
 });
 
-const links = [
+const links = ref([
   {
     name: "tasks",
-    icon: IconHome,
+    icon: markRaw(IconHome),
     text: "Tasks",
     children: [
       {
@@ -30,20 +31,28 @@ const links = [
         text: "Groups",
       },
     ],
+    expanded: false,
   },
   {
     name: "groups",
-    icon: IconGroup,
+    icon: markRaw(IconGroup),
     text: "Groups",
     children: [],
+    expanded: false,
   },
   {
-    name: "not-found",
-    icon: IconConnections,
+    name: "connections",
+    icon: markRaw(IconConnections),
     text: "Connections",
     children: [],
+    expanded: false,
   },
-];
+]);
+
+function expand(link: any) {
+  link.expanded = !link.expanded;
+  console.log(link);
+}
 </script>
 
 <template>
@@ -75,7 +84,7 @@ const links = [
           />
         </div>
       </div>
-      <ul class="flex flex-col gap-4">
+      <TransitionGroup appear class="flex flex-col gap-4" name="list" tag="ul">
         <li v-for="link in links" :key="link.name" class="main-links">
           <router-link
             :to="{ name: link.name }"
@@ -86,19 +95,33 @@ const links = [
               class="w-[26px] h-[26px] transition-all"
             />
             <span class="condensed-hidden">{{ link.text }}</span>
+
+            <div class="flex-1" @click.prevent="expand(link)">
+              <IconChevron
+                v-if="link.children.length > 0"
+                :class="{ 'rotate-0': link.expanded }"
+                class="w-4 h-4 ml-auto transition-transform transform rotate-180"
+              />
+            </div>
           </router-link>
-          <ul v-if="link.children.length > 0" class="flex flex-col mt-4">
-            <li v-for="child in link.children" :key="child.name">
-              <router-link
-                :to="{ name: child.name }"
-                class="flex gap-4 p-2 rounded-r-full mr-4 transition-all items-center hover:text-yonder/100"
-              >
-                <span class="condensed-hidden ml-20">{{ child.text }}</span>
-              </router-link>
-            </li>
-          </ul>
+          <Transition
+            v-if="link.children.length > 0 && link.expanded"
+            appear
+            name="fade"
+          >
+            <ul class="flex flex-col mt-4">
+              <li v-for="child in link.children" :key="child.name">
+                <router-link
+                  :to="{ name: child.name }"
+                  class="flex gap-4 p-2 rounded-r-full mr-4 transition-all items-center hover:text-yonder/100"
+                >
+                  <span class="condensed-hidden ml-20">{{ child.text }}</span>
+                </router-link>
+              </li>
+            </ul>
+          </Transition>
         </li>
-      </ul>
+      </TransitionGroup>
     </div>
   </nav>
 </template>
@@ -107,5 +130,35 @@ const links = [
 <style scoped>
 .main-links > .router-link-active {
   @apply bg-white text-yonder shadow-md shadow-yonder/10;
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.list-leave-to {
+  opacity: 0;
+}
+
+.list-leave-active {
+  position: absolute;
+  width: 100%;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

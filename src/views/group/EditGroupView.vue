@@ -10,6 +10,7 @@ import IconSpinner from "@/components/icons/IconSpinner.vue";
 import { useGroupStore } from "@/stores/group";
 import IconUser from "@/components/icons/IconUser.vue";
 import { useUserStore } from "@/stores/user";
+import { useToastStore } from "@/stores/toast";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -21,18 +22,18 @@ const groupStore = useGroupStore();
 const group = ref<Group | undefined>();
 
 const orderedUsers = computed(() => {
-  const groupCopy = group.value;
-  const me = useUserStore().ME;
-  if (groupCopy && groupCopy.users && me) {
-    const users = groupCopy.users;
-    const index = users.findIndex((user) => user.id === me?.id);
-    if (index !== -1) {
-      users.splice(index, 1);
-    }
-    users.unshift(me);
-    return users;
-  }
-  return [];
+  if (!group.value) return [];
+  const groupUsersCopy = [...group.value.users];
+  const me = groupUsersCopy.find((user) => user.id === useUserStore().ME?.id);
+  groupUsersCopy.sort((a, b) => {
+    // show my own user first, then admins, then the rest
+    if (a.id === me?.id) return -1;
+    if (b.id === me?.id) return 1;
+    if (a.is_admin && !b.is_admin) return -1;
+    if (!a.is_admin && b.is_admin) return 1;
+    return 0;
+  });
+  return groupUsersCopy;
 });
 
 const name = ref("");
@@ -45,6 +46,11 @@ onMounted(async () => {
       if (id) {
         loading.value = true;
         group.value = await groupStore.getGroup(id);
+
+        if (!group.value) {
+          emit("close");
+          return;
+        }
         name.value = group.value?.name || "";
         description.value = group.value?.description || "";
         loading.value = false;
@@ -84,7 +90,6 @@ async function onSubmit() {
     name: name.value,
     description: description.value,
     users: group.value?.users || [],
-    admins: group.value?.admins || [],
   };
   if (group.value) {
     await groupStore.updateGroup(newGroup);
@@ -92,6 +97,11 @@ async function onSubmit() {
   loading.value = false;
   await groupStore.getGroups();
 
+  useToastStore().addToast({
+    title: "Group updated",
+    message: "The group has been updated",
+    type: "success",
+  });
   emit("close");
 }
 
@@ -156,9 +166,7 @@ async function leaveGroup() {
           >
             <IconUser class="w-8 h-8" />
             <span class="text-gray-500">{{ user.username }}</span>
-            <span v-if="group?.admins.map((a) => a.id).includes(user.id)">
-              (Admin)
-            </span>
+            <span v-if="user.is_admin" class="text-gray-500"> (Admin) </span>
           </div>
         </div>
 

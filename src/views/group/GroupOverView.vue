@@ -13,6 +13,7 @@ const error = ref("");
 onMounted(async () => {
   try {
     await groupStore.getGroups();
+    console.log(groupStore.groups);
   } catch {
     error.value = "Error while loading groups";
   }
@@ -53,7 +54,6 @@ onMounted(async () => {
         </button>
       </div>
     </div>
-    <div></div>
 
     <ModalContainer
       :show="$route.name === 'createGroup'"

@@ -33,7 +33,7 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function updateGroup(group: Group) {
-    const response = await api.callApi("group", "PATCH", group);
+    const response = await api.callApi(`group/${group.id}`, "PATCH", group);
     if (response.ok) {
       const updatedGroup = await response.json();
       const index = groups.value.findIndex((g) => g.id === updatedGroup.id);

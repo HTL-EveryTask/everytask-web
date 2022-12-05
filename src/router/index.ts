@@ -53,6 +53,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/connections",
+      name: "connections",
+      component: () => import("../views/connections/ConnectionsView.vue"),
+    },
+    {
       path: "/settings",
       name: "settings",
       component: () => import("../views/settings/SettingsView.vue"),
