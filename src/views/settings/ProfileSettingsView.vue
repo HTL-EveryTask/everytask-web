@@ -94,9 +94,10 @@ async function updateProfile() {
         type: "success",
       });
     } else {
+      const msg = await response.json().then((data) => data.message);
       useToastStore().addToast({
         title: "Error",
-        message: "Failed to update profile",
+        message: msg || "Failed to update profile",
         type: "error",
       });
     }

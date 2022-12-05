@@ -52,15 +52,11 @@ export const useTaskStore = defineStore("task", () => {
   }
 
   async function setTaskDone(id: number, isDone: boolean) {
-    const response = await api.callApi(`task/${id}/done`, "PATCH", {
+    const index = tasks.value.findIndex((t) => t.id === id);
+    tasks.value[index].is_done = isDone;
+    return await api.callApi(`task/${id}/done`, "PATCH", {
       is_done: isDone,
     });
-    console.log(response);
-    if (response.ok) {
-      const index = tasks.value.findIndex((t) => t.id === id);
-      tasks.value[index].is_done = isDone;
-    }
-    return response;
   }
 
   return {
