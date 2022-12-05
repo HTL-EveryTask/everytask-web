@@ -105,7 +105,10 @@ function onSectionLeave(element: any, done: any) {
 </script>
 
 <template>
-  <form class="w-full min-h-[20em] min-w-[600px] sm:min-w-0">
+  <form
+    class="w-full min-h-[20em] min-w-[600px] sm:min-w-0"
+    @submit.prevent="createGroup"
+  >
     <Transition
       mode="out-in"
       name="slide"
@@ -155,7 +158,6 @@ function onSectionLeave(element: any, done: any) {
               :loading="loading"
               class="btn-primary block ml-auto mt-4"
               type="submit"
-              @click="createGroup"
             >
               Create Group
             </LoadingButton>

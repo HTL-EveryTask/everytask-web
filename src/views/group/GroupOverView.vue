@@ -30,7 +30,7 @@ onMounted(async () => {
 <template>
   <div class="flex h-full relative">
     <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
-      <div class="flex flex-col gap-4 overflow-y-auto p-8 w-[60vw]">
+      <div class="flex flex-col gap-4 overflow-y-auto p-8 w-[48em] mx-auto">
         <TransitionGroup name="list">
           <GroupCard
             v-for="group in groupStore.groups"
