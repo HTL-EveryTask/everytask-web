@@ -99,8 +99,8 @@ function expand(link: any) {
             <div class="flex-1" @click.prevent="expand(link)">
               <IconChevron
                 v-if="link.children.length > 0"
-                :class="{ 'rotate-0': link.expanded }"
-                class="w-4 h-4 ml-auto transition-transform transform rotate-180"
+                :class="{ 'rotate-180': link.expanded }"
+                class="w-4 h-4 ml-auto transition-transform transform duration-300"
               />
             </div>
           </router-link>

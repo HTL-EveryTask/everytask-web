@@ -2,13 +2,10 @@
 import TaskCard from "@/components/TaskCard.vue";
 import { computed, onMounted, ref } from "vue";
 import router from "@/router";
-import IconHome from "@/components/icons/IconHome.vue";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
 import { useTaskStore } from "@/stores/task";
 import { useGroupStore } from "@/stores/group";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
-import IconSun from "@/components/icons/IconSun.vue";
-import IconDot from "@/components/icons/IconDot.vue";
 import SideViewContainer from "@/components/SideViewContainer.vue";
 
 const taskStore = useTaskStore();
@@ -29,8 +26,6 @@ const orderedTasks = computed(() => {
 
 const loading = ref(false);
 const error = ref("");
-
-const selectedGroupId = ref();
 
 onMounted(async () => {
   loading.value = true;
@@ -67,76 +62,76 @@ function beforeTaskLeave(el: any) {
   <div
     class="flex bg-gradient-to-tr from-cerulean/30 to-rebecca/30 h-full relative"
   >
-    <nav class="w-44 h-full shadow-lg text-sm bg-ghost sm:hidden">
-      <ul class="py-4">
-        <li
-          :class="{
-            'bg-rebecca/10 text-rebecca': selectedGroupId === 'all',
-            'bg-ghost': selectedGroupId !== 'all',
-          }"
-          class="transition-colors duration-300 hover:bg-rebecca/5"
-          @click="selectedGroupId = 'all'"
-        >
-          <div class="flex gap-2 px-4 py-2 items-center">
-            <IconDot />
-            <span>All</span>
-          </div>
-        </li>
-        <li
-          :class="{
-            'bg-rebecca/10 text-rebecca': selectedGroupId === 'today',
-            'bg-ghost': selectedGroupId !== 'today',
-          }"
-          class="transition-colors duration-300 hover:bg-rebecca/5"
-          @click="selectedGroupId = 'today'"
-        >
-          <div class="flex gap-2 px-4 py-2 items-center">
-            <IconSun />
-            <span>Today</span>
-          </div>
-        </li>
-        <li
-          :class="{
-            'bg-rebecca/10 text-rebecca': selectedGroupId === 'private',
-            'bg-ghost': selectedGroupId !== 'private',
-          }"
-          class="transition-colors duration-300 hover:bg-rebecca/5"
-          @click="selectedGroupId = 'private'"
-        >
-          <div class="flex gap-2 px-4 py-2 items-center">
-            <IconHome />
-            <span>Private</span>
-          </div>
-        </li>
-      </ul>
+    <!--    <nav class="w-44 h-full shadow-lg text-sm bg-ghost sm:hidden">-->
+    <!--      <ul class="py-4">-->
+    <!--        <li-->
+    <!--          :class="{-->
+    <!--            'bg-rebecca/10 text-rebecca': selectedGroupId === 'all',-->
+    <!--            'bg-ghost': selectedGroupId !== 'all',-->
+    <!--          }"-->
+    <!--          class="transition-colors duration-300 hover:bg-rebecca/5"-->
+    <!--          @click="selectedGroupId = 'all'"-->
+    <!--        >-->
+    <!--          <div class="flex gap-2 px-4 py-2 items-center">-->
+    <!--            <IconDot />-->
+    <!--            <span>All</span>-->
+    <!--          </div>-->
+    <!--        </li>-->
+    <!--        <li-->
+    <!--          :class="{-->
+    <!--            'bg-rebecca/10 text-rebecca': selectedGroupId === 'today',-->
+    <!--            'bg-ghost': selectedGroupId !== 'today',-->
+    <!--          }"-->
+    <!--          class="transition-colors duration-300 hover:bg-rebecca/5"-->
+    <!--          @click="selectedGroupId = 'today'"-->
+    <!--        >-->
+    <!--          <div class="flex gap-2 px-4 py-2 items-center">-->
+    <!--            <IconSun />-->
+    <!--            <span>Today</span>-->
+    <!--          </div>-->
+    <!--        </li>-->
+    <!--        <li-->
+    <!--          :class="{-->
+    <!--            'bg-rebecca/10 text-rebecca': selectedGroupId === 'private',-->
+    <!--            'bg-ghost': selectedGroupId !== 'private',-->
+    <!--          }"-->
+    <!--          class="transition-colors duration-300 hover:bg-rebecca/5"-->
+    <!--          @click="selectedGroupId = 'private'"-->
+    <!--        >-->
+    <!--          <div class="flex gap-2 px-4 py-2 items-center">-->
+    <!--            <IconHome />-->
+    <!--            <span>Private</span>-->
+    <!--          </div>-->
+    <!--        </li>-->
+    <!--      </ul>-->
 
-      <div class="border-t-2 border-yonder" />
+    <!--      <div class="border-t-2 border-yonder" />-->
 
-      <ul class="py-4">
-        <li
-          v-for="group in groupStore.groups"
-          :key="group.id"
-          :class="{
-            'bg-rebecca/10 text-rebecca': selectedGroupId === group.id,
-            'bg-ghost': selectedGroupId !== group.id,
-          }"
-          class="transition-colors duration-300 hover:bg-rebecca/5"
-          @click="selectedGroupId = group.id"
-        >
-          <div class="flex gap-2 px-4 py-2 items-center">
-            <IconDot class="flex-none" />
-            <span class="overflow-ellipsis overflow-hidden">{{
-              group.name
-            }}</span>
-          </div>
-        </li>
-      </ul>
-    </nav>
+    <!--      <ul class="py-4">-->
+    <!--        <li-->
+    <!--          v-for="group in groupStore.groups"-->
+    <!--          :key="group.id"-->
+    <!--          :class="{-->
+    <!--            'bg-rebecca/10 text-rebecca': selectedGroupId === group.id,-->
+    <!--            'bg-ghost': selectedGroupId !== group.id,-->
+    <!--          }"-->
+    <!--          class="transition-colors duration-300 hover:bg-rebecca/5"-->
+    <!--          @click="selectedGroupId = group.id"-->
+    <!--        >-->
+    <!--          <div class="flex gap-2 px-4 py-2 items-center">-->
+    <!--            <IconDot class="flex-none" />-->
+    <!--            <span class="overflow-ellipsis overflow-hidden">{{-->
+    <!--              group.name-->
+    <!--            }}</span>-->
+    <!--          </div>-->
+    <!--        </li>-->
+    <!--      </ul>-->
+    <!--    </nav>-->
 
     <main class="flex-1 flex flex-col relative">
-      <div class="flex-1">
+      <div class="flex-1 mx-4">
         <div
-          class="mx-8 my-8 p-4 sm:m-2 sm:p-0 flex flex-col bg-ghost/95 effect-glass rounded-3xl h-[80vh]"
+          class="mx-auto my-8 p-4 sm:m-2 sm:p-0 flex flex-col bg-ghost/95 effect-glass rounded-3xl h-[80vh] max-w-[70em]"
         >
           <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
             <h1>All</h1>
