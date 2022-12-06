@@ -5,7 +5,6 @@ import IconSettings from "@/components/icons/IconSettings.vue";
 import NavBar from "@/components/NavBar.vue";
 import ToastList from "@/components/ToastList.vue";
 import CustomDatePicker from "@/components/CustomDatePicker.vue";
-import IconSun from "@/components/icons/IconSun.vue";
 
 const authenticateStore = useAuthenticateStore();
 
@@ -39,9 +38,19 @@ const date = ref("2022-11-11");
       <NavBar v-if="!$route.meta.hideNavBar" class="z-10" />
       <div class="w-full h-full overflow-auto">
         <!--        <RouterView />-->
-        <CustomDatePicker class="m-4" v-model="date">
-          <IconSun class="h-12 w-12" />
-        </CustomDatePicker>
+        <div class="m-52">
+          <CustomDatePicker class="-top-4" v-model="date">
+            <input type="date" v-model="date" readonly />
+          </CustomDatePicker>
+        </div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+          consectetur, nisl nec ultricies lacinia, nisl nisl aliquet nisl, nec
+          tincidunt nisl nisl nec nunc. Nulla facilisi. Nulla facilisi. Nulla
+        </p>
+        <button class="bg-raisin/50 text-raisin/80 rounded-md p-2">
+          Click Me
+        </button>
       </div>
     </div>
 

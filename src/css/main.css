@@ -16,6 +16,10 @@
         font-style: normal;
     }
 
+    input, textarea, select, button {
+        @apply focus:outline-none;
+    }
+
     .input-field > label {
         @apply block;
         @apply text-current opacity-80;
