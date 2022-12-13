@@ -9,6 +9,7 @@ import IconSpinner from "@/components/icons/IconSpinner.vue";
 import { useTaskStore } from "@/stores/task";
 import IconChevron from "@/components/icons/IconChevron.vue";
 import GroupUserSelector from "@/components/GroupUserSelector.vue";
+import CustomDatePicker from "@/components/CustomDatePicker.vue";
 
 defineProps<{
   expandedClass: string;
@@ -51,6 +52,8 @@ const title = ref("");
 const description = ref("test");
 const due = ref(new Date().toJSON().slice(0, 16));
 const assigned = ref([]);
+
+const date = ref("2022-11-11");
 
 const rules = {
   title: {
@@ -113,7 +116,7 @@ async function onSubmit() {
     <Transition name="expand">
       <div v-if="expanded" class="h-3 text-raisin/50 flex justify-center">
         <div
-          class="px-5 hover:text-raisin"
+          class="px-5 pt-2 hover:text-raisin"
           @click="expandedFull = !expandedFull"
         >
           <IconChevron
@@ -125,7 +128,10 @@ async function onSubmit() {
     </Transition>
     <form @submit.prevent="onSubmit">
       <Transition name="expand">
-        <div v-if="expanded && expandedFull" class="h-[36rem] overflow-auto">
+        <div
+          v-if="expanded && expandedFull"
+          class="h-[36rem] overflow-auto px-4"
+        >
           <div class="w-full p-4">
             <h1 class="text-2xl mb-4">{{ title ? title : "New Task" }}</h1>
             <InputField
@@ -157,10 +163,10 @@ async function onSubmit() {
           </div>
         </div>
       </Transition>
-      <div class="flex items-center">
+      <div class="flex items-center rounded-full p-2 gap-4">
         <button
           :disabled="v$.$invalid || loading"
-          class="flex items-center justify-center mr-4 p-2 rounded-lg disabled:opacity-50 text-yonder disabled:text-raisin border-2 border-yonder/50 disabled:border-transparent transition-all duration-200"
+          class="flex items-center justify-center mr-4 p-2 rounded-full disabled:opacity-50 text-yonder disabled:text-raisin border-2 border-yonder/50 disabled:border-transparent transition-all duration-200"
           type="submit"
           @click.stop
         >
@@ -170,7 +176,7 @@ async function onSubmit() {
         <div class="flex-1 flex items-center relative">
           <input
             v-model="title"
-            class="w-full border-b-2 border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/50 focus:outline-none focus:placeholder-raisin/80 focus:border-raisin/70 transition-colors duration-300"
+            class="w-full border-b-[1px] border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/50 focus:outline-none focus:placeholder-raisin/80 focus:border-raisin/70 transition-colors duration-300"
             placeholder="Add a task"
             type="text"
           />
@@ -184,8 +190,15 @@ async function onSubmit() {
             {{ title.length }}/32
           </span>
         </div>
+
+        <div class="">
+          <CustomDatePicker class="bottom-14" v-model="date">
+            <input class="bg-transparent" type="date" v-model="date" readonly />
+          </CustomDatePicker>
+        </div>
+
         <select
-          class="mx-4 bg-transparent border-b-2 border-raisin/50 caret-raisin/70 disabled:opacity-50 text-raisin/50 transition-colors duration-300"
+          class="mx-4 bg-transparent border-b-[1px] border-raisin/50 caret-raisin/70 disabled:opacity-50 text-raisin/50 transition-colors duration-300"
         >
           <option disabled selected value="1">Subject</option>
           <option value="2">2</option>

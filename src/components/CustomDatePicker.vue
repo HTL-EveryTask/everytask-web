@@ -132,14 +132,14 @@ function isBetweenDates(date: Date, date1: Date, date2: Date) {
   );
 }
 
-const editing = ref(true);
+const editing = ref(false);
 
 const isSmallScreen = computed(() => {
   return windowWidth.value < 768;
 });
 </script>
 <template>
-  <div class="relative">
+  <div>
     <input
       ref="hiddenInput"
       :value="modelValue"
@@ -159,7 +159,7 @@ const isSmallScreen = computed(() => {
     >
       <div
         v-if="editing"
-        :class="{ 'h-0 w-0': !editing, 'w-[20rem]': editing }"
+        :class="[$attrs.class, !editing ? 'h-0 w-0' : 'w-[20rem]']"
         class="absolute sm:static bg-white shadow-lg sm:shadow-none transition-all duration-300 flex sm:flex-col rounded-xl"
       >
         <div

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import IconSettings from "@/components/icons/IconSettings.vue";
