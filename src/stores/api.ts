@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useToastStore } from "@/stores/toast";
 
 export const useApiStore = defineStore("api", () => {
-  const BASE_URL = "https://api.everytask.at/api";
+  const BASE_URL = "https://localhost:8000/api";
   let TOKEN = localStorage.getItem("token") || null;
 
   const toastStore = useToastStore();

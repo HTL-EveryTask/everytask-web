@@ -103,7 +103,7 @@ async function onSubmit() {
     <div
       v-if="expanded"
       :class="{ 'backdrop-blur-sm bg-raisin/5': expandedFull }"
-      class="fixed w-screen h-screen left-0 top-0 z-10"
+      class="fixed w-screen h-screen left-0 top-0 z-20"
       @click="unExpand"
     />
   </Transition>

@@ -41,9 +41,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex h-full relative">
-    <main
-      class="flex-1 flex flex-col relative bg-gradient-to-tr from-cerulean/50 to-rebecca/50"
-    >
+    <main class="flex-1 flex flex-col relative">
       <div class="flex-1 overflow-y-auto">
         <div class="mx-4">
           <TaskBoard
@@ -54,7 +52,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2 z-10">
+      <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2">
         <AddTaskPopUp
           class="my-4 max-w-[52em] sm:w-full rounded-3xl text-raisin mx-auto shadow-lg shadow-yonder/10 transition-colors bg-ghost"
           expandedClass="bg-white/100"
