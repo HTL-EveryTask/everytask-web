@@ -8,6 +8,7 @@ import InputField from "@/components/InputField.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 import { useTaskStore } from "@/stores/task";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
+import GroupUserSelector from "@/components/GroupUserSelector.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -21,6 +22,7 @@ const task = ref<Task | undefined>();
 const title = ref("");
 const description = ref("");
 const due = ref("");
+const assigned = ref<any[]>([]);
 
 onMounted(async () => {
   watch(
@@ -37,8 +39,22 @@ onMounted(async () => {
 
         title.value = task.value?.title || "";
         description.value = task.value?.description || "";
-
         due.value = task.value?.due_time || "";
+
+        const assignedUsers = task.value?.assigned_users?.map((user) => ({
+          ...user,
+          type: "user",
+        }));
+
+        const assignedGroups = task.value?.assigned_groups?.map((group) => ({
+          ...group,
+          type: "group",
+        }));
+
+        assigned.value = [...assignedUsers, ...assignedGroups];
+
+        console.log(assigned.value);
+
         loading.value = false;
       } else {
         emit("close");
@@ -79,6 +95,8 @@ async function onSubmit() {
     description: description.value,
     due_time: due.value,
     is_done: task.value?.is_done ?? false,
+    assigned_users: task.value?.assigned_users ?? [],
+    assigned_groups: task.value?.assigned_groups ?? [],
   };
 
   loading.value = true;
@@ -134,6 +152,10 @@ async function deleteTask() {
 
         <InputField id="due" :validation="v$.due" label="Due">
           <input id="due" v-model="due" class="w-full" type="datetime-local" />
+        </InputField>
+
+        <InputField id="assigned" label="Assigned">
+          <GroupUserSelector id="assigned" v-model="assigned" />
         </InputField>
 
         <LoadingButton

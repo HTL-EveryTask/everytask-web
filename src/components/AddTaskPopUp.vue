@@ -79,12 +79,26 @@ const v$ = useVuelidate(
 
 async function onSubmit() {
   console.log("submit");
+
+  const assignedUsers = assigned.value
+    .filter((item) => item["type"] === "user")
+    .map((item) => item["id"]);
+
+  const assignedGroups = assigned.value
+    .filter((item) => item["type"] === "group")
+    .map((item) => item["id"]);
+
+  console.log(assignedUsers);
+  console.log(assignedGroups);
+
   const newTask: Task = {
     id: 0,
     title: title.value,
     description: description.value,
     due_time: due.value,
     is_done: false,
+    assigned_users: assignedUsers,
+    assigned_groups: assignedGroups,
   };
 
   loading.value = true;
@@ -192,8 +206,8 @@ async function onSubmit() {
         </div>
 
         <div>
-          <CustomDatePicker class="bottom-14" v-model="date">
-            <input class="quick-input" type="date" v-model="date" readonly />
+          <CustomDatePicker v-model="date" class="bottom-14">
+            <input v-model="date" class="quick-input" readonly type="date" />
           </CustomDatePicker>
         </div>
 

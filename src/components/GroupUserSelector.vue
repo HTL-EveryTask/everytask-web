@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import IconX from "@/components/icons/IconX.vue";
 import { useGroupStore } from "@/stores/group";
 import type { Group } from "@/models/Group";
@@ -39,6 +39,10 @@ const filteredGroups = computed(() => {
       )
     );
   });
+});
+
+onMounted(() => {
+  useGroupStore().getGroups();
 });
 
 const filteredUsers = computed(() => {
@@ -129,7 +133,7 @@ function beforeLeave(el: any) {
       <input
         ref="input"
         v-model="query"
-        class="w-full h-full focus:outline-none"
+        class="bg-transparent w-full h-full focus:outline-none"
         @blur="isFocused = false"
         @click="isFocused = true"
         @focus="isFocused = true"
