@@ -2,42 +2,17 @@
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import TaskCard from "@/components/TaskCard.vue";
 import router from "@/router";
-import { useTaskStore } from "@/stores/task";
-import { useGroupStore } from "@/stores/group";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import type { Task } from "@/models/Task";
-
-const taskStore = useTaskStore();
-const groupStore = useGroupStore();
+import IconSearch from "@/components/icons/IconSearch.vue";
 
 defineProps<{
   tasks: Task[];
+  title: string;
+  loading?: boolean;
 }>();
 
-const loading = ref(false);
 const error = ref("");
-
-onMounted(async () => {
-  loading.value = true;
-  try {
-    const response = await taskStore.getTasks();
-    if (!response.ok) {
-      error.value = await response.json().then((data) => data.message);
-    }
-    await groupStore.getGroups();
-  } catch (error: any) {
-    error.value = "Connection to the server could not be established";
-  } finally {
-    loading.value = false;
-  }
-  console.log(taskStore.tasks);
-});
-
-function deleteAllTasks() {
-  taskStore.tasks.forEach((task) => {
-    taskStore.deleteTask(task.id);
-  });
-}
 
 function beforeTaskLeave(el: any) {
   const { marginLeft, marginTop, width, height } = window.getComputedStyle(el);
@@ -50,11 +25,15 @@ function beforeTaskLeave(el: any) {
 
 <template>
   <div class="main-board flex flex-col">
-    <header class="text-3xl font-bold p-4 border-b-2 border-yonder/60">
-      <h1>All</h1>
-      <div class="text-sm flex gap-2">
-        <span>{{ taskStore.tasks.length }}</span>
-        <button class="text-red-500" @click="deleteAllTasks">Delete all</button>
+    <header class="text-3xl p-8 border-b-2 border-yonder/60 flex">
+      <h1 class="font-semibold">{{ title }}</h1>
+      <div
+        class="h-10 rounded-full flex bg-white items-center p-4 mx-8 border-[1px] border-yonder/20"
+      >
+        <input type="text" class="text-sm" placeholder="Search..." />
+        <div class="ml-auto">
+          <IconSearch class="h-4 w-4" />
+        </div>
       </div>
     </header>
     <div class="p-8 sm:p-4 overflow-y-auto w-full h-full">
@@ -89,7 +68,7 @@ function beforeTaskLeave(el: any) {
             ]"
             :data-index="index"
             :task="task"
-            class="bg-white shadow-md shadow-yonder/10 hover:bg-cerulean/5 hover:shadow-yonder/20 transition-colors duration-300"
+            class="bg-white shadow-md shadow-yonder/10 hover:bg-blue-50 hover:shadow-yonder/20 transition-all duration-300"
             @click="
               Number(router.currentRoute.value.params.id) === task.id
                 ? router.push({ name: 'tasks' })

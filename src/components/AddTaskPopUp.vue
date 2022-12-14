@@ -166,17 +166,17 @@ async function onSubmit() {
       <div class="flex items-center rounded-full p-2 gap-4">
         <button
           :disabled="v$.$invalid || loading"
-          class="flex items-center justify-center mr-4 p-2 rounded-full disabled:opacity-50 text-yonder disabled:text-raisin border-2 border-yonder/50 disabled:border-transparent transition-all duration-200"
+          class="flex items-center justify-center p-2 rounded-full disabled:opacity-50 text-yonder disabled:text-raisin border-2 border-yonder/50 disabled:border-transparent transition-all duration-200"
           type="submit"
           @click.stop
         >
           <IconPlus v-if="!loading" />
           <IconSpinner v-else />
         </button>
-        <div class="flex-1 flex items-center relative">
+        <div class="flex-1 flex items-center relative max-w-[24em]">
           <input
             v-model="title"
-            class="w-full border-b-[1px] border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/50 focus:outline-none focus:placeholder-raisin/80 focus:border-raisin/70 transition-colors duration-300"
+            class="w-full quick-input"
             placeholder="Add a task"
             type="text"
           />
@@ -191,15 +191,13 @@ async function onSubmit() {
           </span>
         </div>
 
-        <div class="">
+        <div>
           <CustomDatePicker class="bottom-14" v-model="date">
-            <input class="bg-transparent" type="date" v-model="date" readonly />
+            <input class="quick-input" type="date" v-model="date" readonly />
           </CustomDatePicker>
         </div>
 
-        <select
-          class="mx-4 bg-transparent border-b-[1px] border-raisin/50 caret-raisin/70 disabled:opacity-50 text-raisin/50 transition-colors duration-300"
-        >
+        <select class="mx-4 ml-auto quick-input">
           <option disabled selected value="1">Subject</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -211,6 +209,10 @@ async function onSubmit() {
 
 <!--suppress CssUnusedSymbol -->
 <style scoped>
+.quick-input {
+  @apply border-b-[1px] border-raisin/50 bg-transparent placeholder-raisin/70 caret-raisin/50 focus:outline-none focus:placeholder-raisin/80 focus:border-raisin/70 transition-colors duration-300;
+}
+
 .expand-enter-active,
 .expand-leave-active {
   transition: all 0.5s ease;

@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import router from "@/router";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
 import { useTaskStore } from "@/stores/task";
 import SideViewContainer from "@/components/SideViewContainer.vue";
 import TaskBoard from "@/components/icons/TaskBoard.vue";
+import { useToastStore } from "@/stores/toast";
 
 const taskStore = useTaskStore();
+const loading = ref(false);
 
 const orderedTasks = computed(() => {
   const taskCopy = [...taskStore.tasks];
@@ -20,22 +22,41 @@ const orderedTasks = computed(() => {
     }
   });
 });
+
+onMounted(async () => {
+  loading.value = true;
+  try {
+    await taskStore.getTasks();
+  } catch {
+    useToastStore().addToast({
+      title: "Error",
+      message: "Error while loading tasks",
+      type: "error",
+    });
+  } finally {
+    loading.value = false;
+  }
+});
 </script>
 
 <template>
-  <div
-    class="flex bg-gradient-to-tr from-cerulean/30 to-rebecca/30 h-full relative"
-  >
-    <main class="flex-1 flex flex-col relative">
+  <div class="flex h-full relative">
+    <main
+      class="flex-1 flex flex-col relative bg-gradient-to-tr from-cerulean/50 to-rebecca/50"
+    >
       <div class="flex-1 overflow-y-auto">
         <div class="mx-4">
-          <TaskBoard title="All" :tasks="orderedTasks" />
+          <TaskBoard
+            :loading="loading"
+            :tasks="orderedTasks"
+            title="All Tasks"
+          />
         </div>
       </div>
 
       <div class="absolute bottom-0 left-0 right-0 px-8 sm:px-2 z-10">
         <AddTaskPopUp
-          class="my-4 max-w-[52em] sm:w-full rounded-3xl text-raisin mx-auto shadow-lg shadow-yonder/50 transition-colors bg-ghost"
+          class="my-4 max-w-[52em] sm:w-full rounded-3xl text-raisin mx-auto shadow-lg shadow-yonder/10 transition-colors bg-ghost"
           expandedClass="bg-white/100"
           @expandFull="router.push({ name: 'tasks' })"
         />
@@ -53,50 +74,4 @@ const orderedTasks = computed(() => {
 </template>
 
 <!--suppress CssUnusedSymbol -->
-<style scoped>
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-
-.list-leave-to {
-  opacity: 0;
-}
-
-.list-leave-active {
-  position: absolute;
-  width: 100%;
-}
-
-.side-enter-active,
-.side-leave-active {
-  transition: all 0.4s ease-in-out;
-}
-
-.side-enter-from,
-.side-leave-to {
-  opacity: 0;
-  min-width: 0;
-  width: 0;
-}
-
-.side-leave-active {
-  overflow: hidden;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.4s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
+<style scoped></style>

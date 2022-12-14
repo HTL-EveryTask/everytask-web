@@ -20,7 +20,7 @@ onMounted(async () => {
 <template>
   <div class="h-screen w-screen flex flex-col">
     <div
-      class="h-16 w-full z-20 shadow-md shadow-yonder/10 flex justify-between items-center"
+      class="h-16 w-full z-10 shadow-md shadow-yonder/10 flex justify-between items-center bg-ghost"
     >
       <header class="h-full w-full p-3 ml-2">
         <img alt="logo" class="h-full" src="@/assets/logo_light.svg" />

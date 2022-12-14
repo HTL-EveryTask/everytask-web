@@ -28,32 +28,47 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex h-full relative">
-    <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
-      <div class="flex flex-col gap-4 overflow-y-auto p-8 w-[48em] mx-auto">
-        <TransitionGroup name="list">
-          <GroupCard
-            v-for="group in groupStore.groups"
-            :key="group.id"
-            :group="group"
-            class="bg-white"
-            @click="
-              router.push({
-                name: 'showGroup',
-                params: { id: group.id },
-              })
-            "
-          />
-        </TransitionGroup>
-        <button
-          class="sticky bottom-0 m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
-          @click="$router.push({ name: 'createGroup' })"
-        >
-          <IconPlus class="w-[2rem] h-[2rem] mr-2" />
-          Create Group
-        </button>
+  <div
+    class="flex h-full relative bg-gradient-to-tr from-cerulean/30 to-rebecca/30"
+  >
+    <main class="min-h-0 flex flex-1 flex-col z-[5]">
+      <div class="flex-1 overflow-y-auto">
+        <div class="mx-4">
+          <div class="main-board">
+            <header class="text-3xl p-4 border-b-2 border-yonder/60">
+              <h1 class="font-semibold">My Groups</h1>
+            </header>
+            <div class="p-8 sm:p-4 overflow-y-auto w-full h-full">
+              <TransitionGroup
+                class="flex flex-col gap-4"
+                name="list"
+                tag="div"
+              >
+                <GroupCard
+                  v-for="group in groupStore.groups"
+                  :key="group.id"
+                  :group="group"
+                  class="bg-white"
+                  @click="
+                    router.push({
+                      name: 'showGroup',
+                      params: { id: group.id },
+                    })
+                  "
+                />
+              </TransitionGroup>
+            </div>
+            <button
+              class="sticky bottom-0 m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
+              @click="$router.push({ name: 'createGroup' })"
+            >
+              <IconPlus class="w-[2rem] h-[2rem] mr-2" />
+              Create Group
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
 
     <ModalContainer
       :show="$route.name === 'createGroup'"

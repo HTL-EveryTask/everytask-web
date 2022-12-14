@@ -7,7 +7,7 @@
         font-family: proxima-nova, sans-serif;
         font-weight: 500;
         font-style: normal;
-        @apply bg-ghost text-raisin;
+        @apply text-raisin;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -49,7 +49,7 @@
     }
 
     .effect-glass {
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        @apply shadow-xl shadow-yonder/10;
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
     }
