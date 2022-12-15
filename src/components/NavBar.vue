@@ -18,7 +18,7 @@ onMounted(async () => {
 
 const links = ref([
   {
-    name: "tasks",
+    route: { name: "tasks", params: { type: "all" } },
     icon: markRaw(IconHome),
     text: "Tasks",
     children: [
@@ -34,14 +34,14 @@ const links = ref([
     expanded: false,
   },
   {
-    name: "groups",
+    route: { name: "groups" },
     icon: markRaw(IconGroup),
     text: "Groups",
     children: [],
     expanded: false,
   },
   {
-    name: "connections",
+    route: { name: "connections" },
     icon: markRaw(IconConnections),
     text: "Connections",
     children: [],
@@ -51,7 +51,6 @@ const links = ref([
 
 function expand(link: any) {
   link.expanded = !link.expanded;
-  console.log(link);
 }
 </script>
 
@@ -85,9 +84,10 @@ function expand(link: any) {
         </div>
       </div>
       <TransitionGroup appear class="flex flex-col gap-4" name="list" tag="ul">
-        <li v-for="link in links" :key="link.name" class="main-links">
+        <li v-for="link in links" :key="link.route" class="main-links">
           <router-link
-            :to="{ name: link.name }"
+            :class="{ 'active-link': $route.name === link.route.name }"
+            :to="link.route"
             class="flex gap-4 p-4 rounded-r-full mr-4 pl-8 transition-all items-center hover:bg-yonder/5"
           >
             <component
@@ -128,7 +128,8 @@ function expand(link: any) {
 
 <!--suppress CssUnusedSymbol -->
 <style scoped>
-.main-links > .router-link-active {
+.main-links > .router-link-active,
+.active-link {
   @apply bg-white text-yonder shadow-md shadow-yonder/10;
 }
 

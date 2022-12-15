@@ -19,7 +19,7 @@ const router = createRouter({
       redirect: { name: "tasks" },
     },
     {
-      path: "/tasks/:type?",
+      path: "/tasks/:type",
       name: "tasks",
       component: TaskOverView,
       props: true,
@@ -32,6 +32,10 @@ const router = createRouter({
           props: (route) => ({ id: Number(route.params.id) }),
         },
       ],
+    },
+    {
+      path: "/tasks",
+      redirect: { name: "tasks", params: { type: "all" } },
     },
     {
       path: "/groups",

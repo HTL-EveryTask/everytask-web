@@ -14,7 +14,7 @@ const groupStore = useGroupStore();
 const loading = ref(false);
 
 const type = ref(router.currentRoute.value.params.type);
-const groupId = ref(router.currentRoute.value.query.groupId);
+const groupId = ref();
 
 const orderedTasks = computed(() => {
   const taskCopy = [...taskStore.tasks];
@@ -63,13 +63,13 @@ onMounted(async () => {
   );
 
   watch(
-    () => router.currentRoute.value.query.groupId,
+    () => groupId.value,
     (newGroupId) => {
       groupId.value = newGroupId;
       // scroll into view
-      const element = document.getElementById(newGroupId as string);
+      const element = document.getElementById(newGroupId);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        element.scrollIntoView({ behavior: "smooth" });
       }
     }
   );
@@ -84,22 +84,18 @@ onMounted(async () => {
       </h1>
       <ul class="text-raisin/80">
         <li v-for="group in filteredGroups" :key="group.id">
-          <router-link
+          <div
             :class="[
               group.id === parseInt(groupId)
                 ? 'bg-white/70 shadow-md shadow-yonder/10 text-rebecca'
                 : 'hover:bg-rebecca/5',
             ]"
-            :to="{
-              name: 'tasks',
-              params: { type: 'groups' },
-              query: { groupId: group.id },
-            }"
             class="flex items-center p-3 my-1 mr-4 rounded-r-full pr-6 pl-4 transition-all duration-300"
+            @click="groupId = group.id"
           >
             <IconDot class="h-5 w-5 mr-1" />
             {{ group.name }}
-          </router-link>
+          </div>
         </li>
       </ul>
     </nav>
