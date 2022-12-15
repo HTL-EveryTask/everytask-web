@@ -109,7 +109,9 @@ onMounted(async () => {
           <TaskBoard
             v-if="type === 'private'"
             :tasks="
-              orderedTasks.filter((task) => task.type[0] === 'private_task')
+              orderedTasks.filter((task) =>
+                task.type.find((t) => t === 'private_task')
+              )
             "
             title="Private Tasks"
           />

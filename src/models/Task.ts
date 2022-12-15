@@ -9,4 +9,5 @@ export interface Task {
   due_time: string;
   assigned_users: User[];
   assigned_groups: Group[];
+  type?: [];
 }
