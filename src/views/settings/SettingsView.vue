@@ -8,12 +8,12 @@ const links = [
     text: "Profile",
   },
   {
-    name: "tasks",
+    name: "groups",
     icon: IconUser,
     text: "Placeholder",
   },
   {
-    name: "tasks",
+    name: "groups",
     icon: IconUser,
     text: "Placeholder",
   },

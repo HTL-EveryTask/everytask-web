@@ -16,7 +16,7 @@ const router = createRouter({
     },
     {
       path: "/",
-      redirect: { name: "tasks" },
+      redirect: { name: "tasks", params: { type: "all" } },
     },
     {
       path: "/tasks/:type",

@@ -41,7 +41,7 @@ async function onSubmit() {
       password.value
     );
     if (response.ok) {
-      await router.push({ name: "tasks" });
+      await router.push({ name: "tasks", params: { type: "all" } });
     } else {
       currentError.value = await response.json().then((data) => data.message);
     }
