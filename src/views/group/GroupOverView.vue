@@ -32,8 +32,10 @@ onMounted(async () => {
     <main class="min-h-0 flex flex-1 flex-col z-[5]">
       <div class="flex-1 overflow-y-auto">
         <div class="mx-4">
-          <div class="main-board flex flex-col">
-            <header class="text-3xl p-8 border-b-2 border-yonder/60">
+          <div class="main-board flex flex-col h-auto max-h-[80vh]">
+            <header
+              class="text-3xl p-8 border-b-2 border-yonder/60 flex items-center"
+            >
               <h1 class="font-semibold">My Groups</h1>
             </header>
             <div

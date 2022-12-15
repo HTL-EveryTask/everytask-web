@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import IconX from "@/components/icons/IconX.vue";
 import { useGroupStore } from "@/stores/group";
 import type { Group } from "@/models/Group";
+import { useUserStore } from "@/stores/user";
 
 const query = ref("");
 
@@ -46,6 +47,7 @@ onMounted(() => {
 });
 
 const filteredUsers = computed(() => {
+  const me = useUserStore().ME;
   if (!groups.value) return [];
   const users = groups.value
     .flatMap((group: any) => group.users)
@@ -55,7 +57,8 @@ const filteredUsers = computed(() => {
         !selectedItems.value.find(
           (selectedUser: any) =>
             selectedUser.id === user.id && selectedUser.type === "user"
-        )
+        ) &&
+        user.id !== me?.id
       );
     });
 

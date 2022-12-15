@@ -23,11 +23,11 @@ const links = ref([
     text: "Tasks",
     children: [
       {
-        name: "not-found",
+        route: { name: "tasks", params: { type: "private" } },
         text: "Private",
       },
       {
-        name: "not-found",
+        route: { name: "tasks", params: { type: "groups" } },
         text: "Groups",
       },
     ],
@@ -56,7 +56,7 @@ function expand(link: any) {
 </script>
 
 <template>
-  <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost sm:hidden">
+  <nav class="h-full w-64 shadow-md shadow-yonder/10 bg-ghost">
     <div class="flex-col items-center">
       <div class="my-8 flex flex-col items-center">
         <router-link :to="{ name: 'profileSettings' }">
@@ -112,7 +112,7 @@ function expand(link: any) {
             <ul class="flex flex-col mt-4">
               <li v-for="child in link.children" :key="child.name">
                 <router-link
-                  :to="{ name: child.name }"
+                  :to="child.route"
                   class="flex gap-4 p-2 rounded-r-full mr-4 transition-all items-center hover:text-yonder/100"
                 >
                   <span class="condensed-hidden ml-20">{{ child.text }}</span>
@@ -130,6 +130,10 @@ function expand(link: any) {
 <style scoped>
 .main-links > .router-link-active {
   @apply bg-white text-yonder shadow-md shadow-yonder/10;
+}
+
+.router-link-exact-active {
+  @apply text-yonder;
 }
 
 .list-move,

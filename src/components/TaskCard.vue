@@ -58,11 +58,11 @@ const dateDayEnding = computed(() => {
         >{{ task.title }}</span
       >
       <div
-        class="box-border border-l-[1px] border-raisin/40 sm:border-none flex-1 text-sm text-gray-500 whitespace-nowrap pl-2"
+        class="flex items-center box-border border-l-[1px] border-raisin/40 sm:border-none flex-1 text-sm text-gray-500 whitespace-nowrap pl-2 self-stretch"
       >
-        <span
+        <span class="flex items-center"
           >{{ formatDateTimeString }}
-          <span class="text-[0.8em] relative top-[-0.3em] left-[-0.3em]">
+          <span class="text-[0.8em] relative top-[-0.3em]">
             {{ dateDayEnding }}</span
           ></span
         >

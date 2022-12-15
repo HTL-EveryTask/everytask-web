@@ -1,14 +1,20 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import router from "@/router";
 import AddTaskPopUp from "@/components/AddTaskPopUp.vue";
 import { useTaskStore } from "@/stores/task";
 import SideViewContainer from "@/components/SideViewContainer.vue";
-import TaskBoard from "@/components/icons/TaskBoard.vue";
+import TaskBoard from "@/components/TaskBoard.vue";
 import { useToastStore } from "@/stores/toast";
+import { useGroupStore } from "@/stores/group";
+import IconDot from "@/components/icons/IconDot.vue";
 
 const taskStore = useTaskStore();
+const groupStore = useGroupStore();
 const loading = ref(false);
+
+const type = ref(router.currentRoute.value.params.type);
+const groupId = ref(router.currentRoute.value.query.groupId);
 
 const orderedTasks = computed(() => {
   const taskCopy = [...taskStore.tasks];
@@ -23,8 +29,20 @@ const orderedTasks = computed(() => {
   });
 });
 
+const filteredGroups = computed(() => {
+  return groupStore.groups.filter(
+    (storeGroups) =>
+      orderedTasks.value.filter((task) =>
+        task.assigned_groups.find((g) => g.id === storeGroups.id)
+      ).length
+  );
+});
+
 onMounted(async () => {
-  loading.value = true;
+  groupStore.getGroups();
+  if (!taskStore.tasks.length) {
+    loading.value = true;
+  }
   try {
     await taskStore.getTasks();
   } catch {
@@ -36,15 +54,80 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+
+  watch(
+    () => router.currentRoute.value.params.type,
+    (newType) => {
+      type.value = newType;
+    }
+  );
+
+  watch(
+    () => router.currentRoute.value.query.groupId,
+    (newGroupId) => {
+      groupId.value = newGroupId;
+      // scroll into view
+      const element = document.getElementById(newGroupId as string);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  );
 });
 </script>
 
 <template>
   <div class="flex h-full relative">
+    <nav v-if="type === 'groups'" class="bg-ghost/70 effect-glass w-[12rem]">
+      <h1 class="text-md text-center mb-4 mt-6 text-raisin/80 font-medium">
+        Groups
+      </h1>
+      <ul class="text-raisin/80">
+        <li v-for="group in filteredGroups" :key="group.id">
+          <router-link
+            :class="[
+              group.id === parseInt(groupId)
+                ? 'bg-white/70 shadow-md shadow-yonder/10 text-rebecca'
+                : 'hover:bg-rebecca/5',
+            ]"
+            :to="{
+              name: 'tasks',
+              params: { type: 'groups' },
+              query: { groupId: group.id },
+            }"
+            class="flex items-center p-3 my-1 mr-4 rounded-r-full pr-6 pl-4 transition-all duration-300"
+          >
+            <IconDot class="h-5 w-5 mr-1" />
+            {{ group.name }}
+          </router-link>
+        </li>
+      </ul>
+    </nav>
     <main class="flex-1 flex flex-col relative">
       <div class="flex-1 overflow-y-auto">
         <div class="mx-4">
           <TaskBoard
+            v-if="type === 'private'"
+            :tasks="
+              orderedTasks.filter((task) => task.type[0] === 'private_task')
+            "
+            title="Private Tasks"
+          />
+          <TaskBoard
+            v-for="group in filteredGroups"
+            v-else-if="type === 'groups'"
+            :id="group.id"
+            :key="group.id"
+            :tasks="
+              orderedTasks.filter((task) =>
+                task.assigned_groups.find((g) => g.id === group.id)
+              )
+            "
+            :title="group.name"
+            class="h-auto max-h-[70vh]"
+          />
+          <TaskBoard
+            v-else
             :loading="loading"
             :tasks="orderedTasks"
             title="All Tasks"

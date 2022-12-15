@@ -19,9 +19,10 @@ const router = createRouter({
       redirect: { name: "tasks" },
     },
     {
-      path: "/tasks",
+      path: "/tasks/:type?",
       name: "tasks",
       component: TaskOverView,
+      props: true,
       children: [
         {
           path: "task/:id",
@@ -63,16 +64,12 @@ const router = createRouter({
       component: () => import("../views/settings/SettingsView.vue"),
       children: [
         {
-          path: "",
-          name: "settings",
-          redirect: { name: "profileSettings" },
-        },
-        {
           path: "profile",
           name: "profileSettings",
           component: () => import("../views/settings/ProfileSettingsView.vue"),
         },
       ],
+      redirect: { name: "profileSettings" },
     },
     {
       path: "/register",

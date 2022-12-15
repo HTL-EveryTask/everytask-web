@@ -2,17 +2,27 @@
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import TaskCard from "@/components/TaskCard.vue";
 import router from "@/router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Task } from "@/models/Task";
 import IconSearch from "@/components/icons/IconSearch.vue";
 
-defineProps<{
+const props = defineProps<{
   tasks: Task[];
   title: string;
   loading?: boolean;
 }>();
 
 const error = ref("");
+const query = ref("");
+
+const filteredTasks = computed(() => {
+  return props.tasks.filter((task) => {
+    return (
+      task.title.toLowerCase().includes(query.value.toLowerCase()) ||
+      task.description.toLowerCase().includes(query.value.toLowerCase())
+    );
+  });
+});
 
 function beforeTaskLeave(el: any) {
   const { marginLeft, marginTop, width, height } = window.getComputedStyle(el);
@@ -25,12 +35,17 @@ function beforeTaskLeave(el: any) {
 
 <template>
   <div class="main-board flex flex-col">
-    <header class="text-3xl p-8 border-b-2 border-yonder/60 flex">
+    <header class="text-3xl p-8 border-b-2 border-yonder/60 flex items-center">
       <h1 class="font-semibold">{{ title }}</h1>
       <div
         class="h-10 rounded-full flex bg-white items-center p-4 mx-8 border-[1px] border-yonder/20"
       >
-        <input type="text" class="text-sm" placeholder="Search..." />
+        <input
+          type="text"
+          class="text-sm"
+          placeholder="Search..."
+          v-model="query"
+        />
         <div class="ml-auto">
           <IconSearch class="h-4 w-4" />
         </div>
@@ -59,7 +74,7 @@ function beforeTaskLeave(el: any) {
           @before-leave="beforeTaskLeave"
         >
           <TaskCard
-            v-for="(task, index) in tasks"
+            v-for="(task, index) in filteredTasks"
             :key="task.id"
             :class="[
               Number(router.currentRoute.value.params.id) === task.id
