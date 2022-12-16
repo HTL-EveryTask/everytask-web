@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
+import type { Ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { helpers, maxLength, minLength, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
@@ -15,9 +16,9 @@ import IconPlus from "@/components/icons/IconPlus.vue";
 import IconX from "@/components/icons/IconX.vue";
 
 const userStore = useUserStore();
-const pictures = ref([]);
+const pictures: Ref<any[]> = ref([]);
 const showPicturePopup = ref(false);
-const selectedPicture = ref(null);
+const selectedPicture = ref<any>();
 
 const loading = ref(true);
 const error = ref("");
@@ -212,15 +213,15 @@ function deleteAccount() {
             >
               <img
                 v-if="
-                  selectedPicture &&
-                  pictures.find((p) => p.id === selectedPicture.id)
+                  selectedPicture?.picture &&
+                  pictures.find((p) => p.id === selectedPicture?.id)
                 "
                 :src="`data:image/png;base64,${selectedPicture.picture}`"
                 alt="Profile Picture"
                 class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
               />
               <img
-                v-else-if="userStore.ME.profile_picture"
+                v-else-if="userStore.ME?.profile_picture"
                 :src="`data:image/png;base64,${userStore.ME.profile_picture}`"
                 alt="Profile Picture"
                 class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"

@@ -105,6 +105,7 @@ async function onSubmit() {
     is_done: task.value?.is_done ?? false,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
+    type: [],
   };
 
   loading.value = true;

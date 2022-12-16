@@ -91,7 +91,7 @@ function expand(link: any) {
         </div>
       </div>
       <TransitionGroup appear class="flex flex-col gap-4" name="list" tag="ul">
-        <li v-for="link in links" :key="link.route" class="main-links">
+        <li v-for="link in links" :key="link.route.name" class="main-links">
           <router-link
             :class="{ 'active-link': $route.name === link.route.name }"
             :to="link.route"
@@ -117,7 +117,7 @@ function expand(link: any) {
             name="fade"
           >
             <ul class="flex flex-col mt-4">
-              <li v-for="child in link.children" :key="child.name">
+              <li v-for="child in link.children" :key="child.route.name">
                 <router-link
                   :to="child.route"
                   class="flex gap-4 p-2 rounded-r-full mr-4 transition-all items-center hover:text-yonder/100"

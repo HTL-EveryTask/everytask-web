@@ -204,7 +204,7 @@ const isSmallScreen = computed(() => {
             <div class="grid grid-cols-7 grid-rows-6">
               <div
                 v-for="day in daysInSelectedMonth"
-                :key="day"
+                :key="day.getTime()"
                 :class="{
                   'opacity-50': day.getMonth() !== viewedDate.getMonth(),
                   'text-blue-500 font-bold': isSameDay(day, selectedDate),
