@@ -4,7 +4,6 @@ import { useUserStore } from "@/stores/user";
 import { helpers, maxLength, minLength, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import InputField from "@/components/InputField.vue";
-import IconUser from "@/components/icons/IconUser.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import ModalContainer from "@/components/ModalContainer.vue";
@@ -12,8 +11,14 @@ import PasswordInput from "@/components/PasswordInput.vue";
 import { useToastStore } from "@/stores/toast";
 import { useAuthenticateStore } from "@/stores/auth";
 import { useApiStore } from "@/stores/api";
+import IconPlus from "@/components/icons/IconPlus.vue";
+import IconX from "@/components/icons/IconX.vue";
 
 const userStore = useUserStore();
+const pictures = ref([]);
+const showPicturePopup = ref(false);
+const selectedPicture = ref(null);
+
 const loading = ref(true);
 const error = ref("");
 
@@ -73,6 +78,7 @@ const vChangePassword$ = useVuelidate(
 onMounted(async () => {
   loading.value = true;
   await userStore.getMe();
+  pictures.value = await userStore.getAllProfilePictures();
   if (userStore.ME) {
     username.value = userStore.ME.username;
   } else {
@@ -85,7 +91,10 @@ onMounted(async () => {
 
 async function updateProfile() {
   try {
-    const response = await userStore.changeUsername(username.value);
+    let response = await userStore.changeUsername(username.value);
+    if (selectedPicture.value) {
+      await userStore.changeProfilePicture(selectedPicture.value);
+    }
     if (response.ok) {
       useToastStore().addToast({
         title: "Success",
@@ -197,10 +206,52 @@ function deleteAccount() {
       <div class="main-card bg-white my-4">
         <form v-if="!loading" @submit.prevent="updateProfile">
           <div class="flex gap-4">
-            <div class="flex items-center">
-              <IconUser
-                class="w-40 h-40 rounded-full bg-raisin/5 text-raisin/50"
+            <div
+              class="flex items-center relative overflow-visible"
+              @click="showPicturePopup = !showPicturePopup"
+            >
+              <img
+                v-if="
+                  selectedPicture &&
+                  pictures.find((p) => p.id === selectedPicture.id)
+                "
+                :src="`data:image/png;base64,${selectedPicture.picture}`"
+                alt="Profile Picture"
+                class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
               />
+              <img
+                v-else-if="userStore.ME.profile_picture"
+                :src="`data:image/png;base64,${userStore.ME.profile_picture}`"
+                alt="Profile Picture"
+                class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
+              />
+
+              <IconPlus
+                v-else
+                class="w-40 h-40 p-8 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
+              />
+              <div
+                v-if="showPicturePopup"
+                class="flex justify-center bg-ghost p-2 rounded-xl absolute bottom-0 left-0 overflow-visible"
+              >
+                <div v-for="picture in pictures" :key="picture.id">
+                  <img
+                    :src="`data:image/png;base64,${picture.picture}`"
+                    alt="Profile Picture"
+                    class="w-12 h-12 rounded-full hover:shadow-lg shadow-yonder/10 cursor-pointer"
+                    @click="selectedPicture = picture"
+                  />
+                </div>
+                <div>
+                  <IconX
+                    class="w-12 h-12 p-2 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
+                    @click="
+                      showPicturePopup = false;
+                      selectedPicture = null;
+                    "
+                  />
+                </div>
+              </div>
             </div>
             <div class="flex-1 my-2">
               <InputField
@@ -314,9 +365,9 @@ function deleteAccount() {
         <ModalContainer
           :show="showDeleteAccountModal"
           class="bg-white w-[30rem]"
+          effect="shadow"
           relative
           title="Delete Account"
-          effect="shadow"
           @close="showDeleteAccountModal = false"
         >
           <form

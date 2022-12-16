@@ -59,7 +59,14 @@ function expand(link: any) {
     <div class="flex-col items-center">
       <div class="my-8 flex flex-col items-center">
         <router-link :to="{ name: 'profileSettings' }">
+          <img
+            v-if="userStore.ME && userStore.ME.profile_picture"
+            :src="`data:image/png;base64,${userStore.ME.profile_picture}`"
+            class="h-[7em] w-[7em] rounded-full"
+            alt="Profile Picture"
+          />
           <IconUser
+            v-else
             class="h-[7em] w-[7em] mx-auto text-raisin/50 bg-yonder/10 rounded-full cursor-pointer hover:text-raisin/70 transition-colors duration-300"
           />
         </router-link>
