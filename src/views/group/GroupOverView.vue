@@ -45,6 +45,7 @@ onMounted(async () => {
                 class="flex flex-col gap-4"
                 name="list"
                 tag="div"
+                appear
               >
                 <GroupCard
                   v-for="group in groupStore.groups"

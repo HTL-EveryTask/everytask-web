@@ -78,7 +78,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex h-full relative">
-    <nav v-if="type === 'groups'" class="bg-ghost/70 effect-glass w-[12rem]">
+    <nav v-if="type === 'groups'" class="bg-ghost/70 effect-glass w-[10rem]">
       <h1 class="text-md text-center mb-4 mt-6 text-raisin/80 font-medium">
         Groups
       </h1>

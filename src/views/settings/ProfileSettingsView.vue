@@ -29,12 +29,10 @@ const rules = {
   },
 };
 
-const changePasswordValues = ref({
-  currentPassword: "",
-  newPassword: "",
-  confirmPassword: "",
-  loading: false,
-});
+const oldPassword = ref("");
+const newPassword = ref("");
+const newPasswordConfirm = ref("");
+const loadingChangePassword = ref(false);
 
 const rulesChangePassword = {
   oldPassword: {
@@ -55,7 +53,7 @@ const rulesChangePassword = {
     sameAsPassword: helpers.withMessage(
       "Passwords must match",
       (value: string) => {
-        return value === changePasswordValues.value.newPassword;
+        return value === newPassword.value;
       }
     ),
   },
@@ -65,9 +63,9 @@ const vProfile$ = useVuelidate(rules, { username }, { $autoDirty: true });
 const vChangePassword$ = useVuelidate(
   rulesChangePassword,
   {
-    oldPassword: changePasswordValues.value.currentPassword,
-    newPassword: changePasswordValues.value.newPassword,
-    newPasswordConfirm: changePasswordValues.value.confirmPassword,
+    oldPassword,
+    newPassword,
+    newPasswordConfirm,
   },
   { $autoDirty: true }
 );
@@ -111,11 +109,11 @@ async function updateProfile() {
 }
 
 async function changePassword() {
-  changePasswordValues.value.loading = true;
+  loadingChangePassword.value = true;
   try {
     const response = await useAuthenticateStore().changePassword(
-      changePasswordValues.value.currentPassword,
-      changePasswordValues.value.newPassword
+      oldPassword.value,
+      newPassword.value
     );
 
     if (response.ok) {
@@ -124,6 +122,11 @@ async function changePassword() {
         message: "Your password has been changed successfully",
         type: "success",
       });
+      showChangePasswordModal.value = false;
+      // clear fields
+      oldPassword.value = "";
+      newPassword.value = "";
+      newPasswordConfirm.value = "";
     } else {
       useToastStore().addToast({
         title: "Password change failed",
@@ -132,17 +135,53 @@ async function changePassword() {
       });
     }
   } catch (e) {
-    changePasswordValues.value.loading = false;
-    showChangePasswordModal.value = false;
     useToastStore().addToast({
       title: "Password change failed",
       message: "Your password could not be changed",
       type: "error",
     });
   } finally {
-    changePasswordValues.value.loading = false;
-    showChangePasswordModal.value = false;
+    loadingChangePassword.value = false;
   }
+}
+
+const showDeleteAccountModal = ref(false);
+const deleteAccountLoading = ref(false);
+
+const deleteConfirmPassword = ref("");
+
+function deleteAccount() {
+  const authStore = useAuthenticateStore();
+  deleteAccountLoading.value = true;
+  authStore
+    .deleteAccount(deleteConfirmPassword.value)
+    .then((response) => {
+      if (response.ok) {
+        useToastStore().addToast({
+          title: "Account deleted",
+          message: "Your account has been deleted successfully",
+          type: "success",
+        });
+        authStore.logout();
+      } else {
+        useToastStore().addToast({
+          title: "Account deletion failed",
+          message: "Your account could not be deleted",
+          type: "error",
+        });
+      }
+    })
+    .catch(() => {
+      useToastStore().addToast({
+        title: "Account deletion failed",
+        message: "Your account could not be deleted",
+        type: "error",
+      });
+    })
+    .finally(() => {
+      deleteAccountLoading.value = false;
+      showDeleteAccountModal.value = false;
+    });
 }
 </script>
 
@@ -223,8 +262,7 @@ async function changePassword() {
             >
               <PasswordInput
                 id="current-password"
-                v-model="changePasswordValues.currentPassword"
-                autocomplete="new-password"
+                v-model="oldPassword"
                 class="w-full"
               />
             </InputField>
@@ -235,7 +273,7 @@ async function changePassword() {
             >
               <PasswordInput
                 id="new-password"
-                v-model="changePasswordValues.newPassword"
+                v-model="newPassword"
                 class="w-full"
               />
             </InputField>
@@ -246,17 +284,63 @@ async function changePassword() {
             >
               <PasswordInput
                 id="confirm-password"
-                v-model="changePasswordValues.confirmPassword"
+                v-model="newPasswordConfirm"
                 class="w-full"
               />
             </InputField>
             <LoadingButton
-              :loading="changePasswordValues.loading"
               :disabled="vChangePassword$.$invalid"
+              :loading="loadingChangePassword"
               class="mt-4 btn-primary"
               type="submit"
             >
               Update Password
+            </LoadingButton>
+          </form>
+        </ModalContainer>
+      </div>
+    </section>
+    <section class="mt-8">
+      <h2 class="text-2xl">Delete Account</h2>
+      <div class="my-4">
+        <button class="btn-red" @click="showDeleteAccountModal = true">
+          Delete Account
+        </button>
+        <ModalContainer
+          :show="showDeleteAccountModal"
+          class="bg-white w-[30rem]"
+          relative
+          title="Delete Account"
+          @close="showDeleteAccountModal = false"
+        >
+          <form
+            class="p-4 pt-0 flex flex-col gap-4"
+            @submit.prevent="deleteAccount"
+          >
+            <p
+              class="text-raisin/50 p-2 border-2 border-red-500 rounded-lg text-red-500 bg-red-500/5"
+            >
+              Are you sure you want to delete your account? This action cannot
+              be undone.
+            </p>
+            <InputField
+              id="confirm-password"
+              v-model="deleteConfirmPassword"
+              label="Confirm Password"
+            >
+              <PasswordInput
+                id="confirm-password"
+                v-model="deleteConfirmPassword"
+                class="w-full"
+              />
+            </InputField>
+            <LoadingButton
+              :disabled="deleteAccountLoading"
+              :loading="deleteAccountLoading"
+              class="btn-red"
+              type="submit"
+            >
+              Delete Account
             </LoadingButton>
           </form>
         </ModalContainer>

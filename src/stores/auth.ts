@@ -95,6 +95,12 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     );
   }
 
+  async function deleteAccount(password: string) {
+    return await api.callApi("user", "DELETE", {
+      password: password,
+    });
+  }
+
   return {
     checkAuth,
     register,
@@ -105,5 +111,6 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     sendResetPasswordEmail,
     changePassword,
     resetPassword,
+    deleteAccount,
   };
 });
