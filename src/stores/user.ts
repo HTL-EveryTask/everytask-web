@@ -30,10 +30,32 @@ export const useUserStore = defineStore("user", () => {
     return response;
   }
 
+  async function getAllProfilePictures() {
+    const response = await api.callApi("user/pictures", "GET");
+    if (response.ok) {
+      return await response.json().then((data) => data.pictures);
+    }
+    return [];
+  }
+
+  async function changeProfilePicture(picture_id: string) {
+    const response = await api.callApi("user/picture", "PATCH", {
+      picture_id,
+    });
+    if (response.ok && ME.value) {
+      ME.value.profile_picture = await response
+        .json()
+        .then((data) => data.picture);
+      console.log(ME.value);
+    }
+  }
+
   return {
     ME,
     getMe,
     setMe,
     changeUsername,
+    getAllProfilePictures,
+    changeProfilePicture,
   };
 });

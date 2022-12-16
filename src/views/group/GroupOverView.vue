@@ -13,6 +13,7 @@ const error = ref("");
 onMounted(async () => {
   try {
     await groupStore.getGroups();
+    console.log(groupStore.groups);
   } catch {
     error.value = "Error while loading groups";
   }
@@ -28,32 +29,49 @@ onMounted(async () => {
 
 <template>
   <div class="flex h-full relative">
-    <div class="min-h-0 flex flex-1 flex-col z-[5] bg-ghost">
-      <div class="flex flex-col gap-4 overflow-y-auto p-8 w-[60vw]">
-        <TransitionGroup name="list">
-          <GroupCard
-            v-for="group in groupStore.groups"
-            :key="group.id"
-            :group="group"
-            class="bg-white"
-            @click="
-              router.push({
-                name: 'showGroup',
-                params: { id: group.id },
-              })
-            "
-          />
-        </TransitionGroup>
-        <button
-          class="sticky bottom-0 m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
-          @click="$router.push({ name: 'createGroup' })"
-        >
-          <IconPlus class="w-[2rem] h-[2rem] mr-2" />
-          Create Group
-        </button>
+    <main class="min-h-0 flex flex-1 flex-col z-[5]">
+      <div class="flex-1 overflow-y-auto">
+        <div class="mx-4 sm:m-1">
+          <div class="main-board flex flex-col h-auto max-h-[80vh]">
+            <header
+              class="text-3xl p-8 border-b-2 border-yonder/60 flex items-center"
+            >
+              <h1 class="font-semibold">My Groups</h1>
+            </header>
+            <div
+              class="p-8 sm:p-4 overflow-y-auto w-full h-full border-b-2 border-yonder/60"
+            >
+              <TransitionGroup
+                class="flex flex-col gap-4 w-full"
+                name="list"
+                tag="div"
+                appear
+              >
+                <GroupCard
+                  v-for="group in groupStore.groups"
+                  :key="group.id"
+                  :group="group"
+                  class="bg-white"
+                  @click="
+                    router.push({
+                      name: 'showGroup',
+                      params: { id: group.id },
+                    })
+                  "
+                />
+              </TransitionGroup>
+            </div>
+            <button
+              class="m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
+              @click="$router.push({ name: 'createGroup' })"
+            >
+              <IconPlus class="w-[2rem] h-[2rem] mr-2" />
+              Create Group
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div></div>
+    </main>
 
     <ModalContainer
       :show="$route.name === 'createGroup'"

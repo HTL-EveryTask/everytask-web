@@ -7,7 +7,7 @@
         font-family: proxima-nova, sans-serif;
         font-weight: 500;
         font-style: normal;
-        @apply bg-ghost text-raisin;
+        @apply text-raisin;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -16,16 +16,20 @@
         font-style: normal;
     }
 
+    input, textarea, select, button {
+        @apply focus:outline-none;
+    }
+
     .input-field > label {
         @apply block;
         @apply text-current opacity-80;
     }
 
-    .input-field > input, .input-field > textarea, .input-field > select, .input-field > .input-wrapper {
+    .input-field > input, .input-field > textarea, .input-field > select, .input-field > .input-wrapper > input {
         @apply block w-full p-2 border-2 border-yonder/30 rounded-md focus:outline-none focus:border-indigo-500/30 focus:bg-cerulean/5 bg-inherit;
     }
 
-    .input-error input, .input-error textarea, .input-error select {
+    .input-error input, .input-error textarea, .input-error select, .input-error .input-wrapper > input {
         @apply border-red-400 focus:border-red-500;
     }
 
@@ -43,6 +47,12 @@
     .btn-base {
         @apply font-bold py-2 px-4 rounded;
     }
+
+    .effect-glass {
+        @apply shadow-xl shadow-yonder/10;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
 }
 
 @layer components {
@@ -52,5 +62,13 @@
 
     .btn-red {
         @apply btn-base bg-red-500 text-white hover:bg-red-700;
+    }
+
+    .main-card {
+        @apply p-8 mx-auto rounded-3xl shadow-lg shadow-yonder/10 shadow-yonder/10;
+    }
+
+    .main-board {
+        @apply mx-auto my-8 p-4 sm:m-0 sm:p-0 bg-ghost/95 effect-glass rounded-3xl h-[80vh] max-w-[70em]
     }
 }

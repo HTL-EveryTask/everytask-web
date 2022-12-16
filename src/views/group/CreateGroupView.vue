@@ -107,7 +107,7 @@ function onSectionLeave(element: any, done: any) {
 <template>
   <form
     class="w-full min-h-[20em] min-w-[600px] sm:min-w-0"
-    @submit.prevent="onSubmit"
+    @submit.prevent="createGroup"
   >
     <Transition
       mode="out-in"
@@ -158,7 +158,6 @@ function onSectionLeave(element: any, done: any) {
               :loading="loading"
               class="btn-primary block ml-auto mt-4"
               type="submit"
-              @click="createGroup"
             >
               Create Group
             </LoadingButton>
@@ -180,7 +179,13 @@ function onSectionLeave(element: any, done: any) {
 
         <div class="flex w-full input-field my-4">
           <input :value="inviteLink" class="flex-1" readonly type="text" />
-          <button class="btn-primary ml-2" @click="copyInviteLink">Copy</button>
+          <button
+            type="button"
+            class="btn-primary ml-2"
+            @click="copyInviteLink"
+          >
+            Copy
+          </button>
         </div>
 
         <LoadingButton

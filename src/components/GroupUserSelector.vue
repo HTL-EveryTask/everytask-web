@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import IconX from "@/components/icons/IconX.vue";
 import { useGroupStore } from "@/stores/group";
 import type { Group } from "@/models/Group";
+import { useUserStore } from "@/stores/user";
 
 const query = ref("");
 
@@ -41,7 +42,12 @@ const filteredGroups = computed(() => {
   });
 });
 
+onMounted(() => {
+  useGroupStore().getGroups();
+});
+
 const filteredUsers = computed(() => {
+  const me = useUserStore().ME;
   if (!groups.value) return [];
   const users = groups.value
     .flatMap((group: any) => group.users)
@@ -51,7 +57,8 @@ const filteredUsers = computed(() => {
         !selectedItems.value.find(
           (selectedUser: any) =>
             selectedUser.id === user.id && selectedUser.type === "user"
-        )
+        ) &&
+        user.id !== me?.id
       );
     });
 
@@ -119,7 +126,7 @@ function beforeLeave(el: any) {
           class="font-bold text-gray-500 cursor-pointer rounded-full w-5 h-5 font-bold flex items-center justify-center hover:bg-gray-300"
           @click="
             selectedItems = selectedItems.filter(
-              (i) => i.id !== item.id || i.type !== item.type
+              (i: any) => i.id !== item.id || i.type !== item.type
             )
           "
         />
@@ -129,7 +136,7 @@ function beforeLeave(el: any) {
       <input
         ref="input"
         v-model="query"
-        class="w-full h-full focus:outline-none"
+        class="bg-transparent w-full h-full focus:outline-none"
         @blur="isFocused = false"
         @click="isFocused = true"
         @focus="isFocused = true"

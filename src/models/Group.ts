@@ -4,6 +4,5 @@ export interface Group {
   id: number;
   name: string;
   description: string;
-  users?: User[];
-  admins?: User[];
+  users: User[];
 }

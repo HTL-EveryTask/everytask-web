@@ -3,6 +3,9 @@ import type { Task } from "@/models/Task";
 import { computed } from "vue";
 import { useTaskStore } from "@/stores/task";
 import IconCheck from "@/components/icons/IconCheck.vue";
+import IconLock from "@/components/icons/IconLock.vue";
+import IconSun from "@/components/icons/IconSun.vue";
+import IconGroup from "@/components/icons/IconGroup.vue";
 
 const taskStore = useTaskStore();
 
@@ -36,7 +39,7 @@ const dateDayEnding = computed(() => {
 </script>
 
 <template>
-  <div class="min-w-[12em] p-4 flex items-center rounded-xl">
+  <div class="min-w-[12em] p-3 flex items-center rounded-full">
     <div
       :class="
         'w-8 h-8 rounded-full mr-4 relative border-2' +
@@ -52,20 +55,40 @@ const dateDayEnding = computed(() => {
         <IconCheck v-if="task.is_done" class="w-6 h-6 text-white" />
       </div>
     </div>
-    <div class="flex flex-1 items-baseline flex-wrap gap-x-4 min-w-0">
+    <div
+      class="flex flex-1 sm:w-[12em] items-baseline flex-wrap gap-x-4 min-w-0"
+    >
       <span
-        class="min-w-[180px] text-md font-bold whitespace-nowrap overflow-hidden overflow-ellipsis"
+        class="w-[50%] sm:w-[100%] sm:mr-2 min-w-[12em] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
         >{{ task.title }}</span
       >
-      <span class="flex-1 text-xs text-gray-500 whitespace-nowrap"
-        >{{ formatDateTimeString }}
-        <span class="text-[0.8em] relative top-[-0.3em] left-[-0.3em]">
-          {{ dateDayEnding }}</span
-        ></span
+      <div
+        class="flex items-center box-border border-l-[1px] border-raisin/40 sm:border-none text-sm text-gray-500 whitespace-nowrap pl-2 sm:pl-0"
       >
+        <span class="flex items-center"
+          >{{ formatDateTimeString }}
+          <span class="text-[0.8em] relative top-[-0.3em]">
+            {{ dateDayEnding }}</span
+          ></span
+        >
+      </div>
     </div>
     <div class="p-1 px-4 rounded-full flex items-center bg-ghost">
       <span class="text-xs text-gray-500">Fach</span>
+    </div>
+    <div class="ml-4 border-[1px] border-raisin/20 p-2 rounded-full">
+      <IconLock
+        v-if="task.type.find((t) => t === 'private_task')"
+        class="w-4 h-4"
+        @click.stop
+      />
+      <IconGroup v-else class="w-4 h-4" />
+    </div>
+    <div
+      class="rounded-full hover:bg-cerulean/10 ml-4 p-1 sm:hidden"
+      @click.stop
+    >
+      <IconSun class="w-6 h-6" />
     </div>
   </div>
 </template>

@@ -16,12 +16,13 @@ const router = createRouter({
     },
     {
       path: "/",
-      redirect: { name: "tasks" },
+      redirect: { name: "tasks", params: { type: "all" } },
     },
     {
-      path: "/tasks",
+      path: "/tasks/:type",
       name: "tasks",
       component: TaskOverView,
+      props: true,
       children: [
         {
           path: "task/:id",
@@ -31,6 +32,10 @@ const router = createRouter({
           props: (route) => ({ id: Number(route.params.id) }),
         },
       ],
+    },
+    {
+      path: "/tasks",
+      redirect: { name: "tasks", params: { type: "all" } },
     },
     {
       path: "/groups",
@@ -53,21 +58,22 @@ const router = createRouter({
       ],
     },
     {
+      path: "/connections",
+      name: "connections",
+      component: () => import("../views/connections/ConnectionsView.vue"),
+    },
+    {
       path: "/settings",
       name: "settings",
       component: () => import("../views/settings/SettingsView.vue"),
       children: [
-        {
-          path: "",
-          name: "settings",
-          redirect: { name: "profileSettings" },
-        },
         {
           path: "profile",
           name: "profileSettings",
           component: () => import("../views/settings/ProfileSettingsView.vue"),
         },
       ],
+      redirect: { name: "profileSettings" },
     },
     {
       path: "/register",
@@ -83,6 +89,19 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/auth/LoginView.vue"),
+    },
+    {
+      path: "/forgot-password",
+      name: "forgotPassword",
+      meta: { hideNavBar: true },
+      component: () => import("../views/auth/ForgotPasswordView.vue"),
+    },
+    {
+      path: "/reset",
+      name: "resetPassword",
+      meta: { hideNavBar: true },
+      component: () => import("../views/ext/ChangePasswordView.vue"),
+      props: (route) => ({ code: route.query.code }),
     },
     {
       path: "/activate",

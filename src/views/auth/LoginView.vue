@@ -41,7 +41,7 @@ async function onSubmit() {
       password.value
     );
     if (response.ok) {
-      await router.push({ name: "tasks" });
+      await router.push({ name: "tasks", params: { type: "all" } });
     } else {
       currentError.value = await response.json().then((data) => data.message);
     }
@@ -55,9 +55,7 @@ async function onSubmit() {
 
 <template>
   <div class="w-full h-full overflow-y-hidden">
-    <div
-      class="p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none flex flex-col shadow-lg shadow-yonder/10 max-w-[36em] sm:w-full sm:h-full bg-white mt-16"
-    >
+    <div class="main-card max-w-[36em] sm:w-[95vw] bg-ghost mt-16 mx-auto">
       <div class="mb-6 mt-2">
         <img
           alt="logo"
@@ -91,6 +89,13 @@ async function onSubmit() {
 
         <InputField id="password" :validation="v$.password" label="Password">
           <PasswordInput id="password" v-model="password" class="w-full" />
+          <template #right>
+            <router-link
+              :to="{ name: 'forgotPassword' }"
+              class="text-raisin/80 underline"
+              >Forgot password?
+            </router-link>
+          </template>
         </InputField>
 
         <LoadingButton

@@ -8,12 +8,12 @@ const links = [
     text: "Profile",
   },
   {
-    name: "tasks",
+    name: "groups",
     icon: IconUser,
     text: "Placeholder",
   },
   {
-    name: "tasks",
+    name: "groups",
     icon: IconUser,
     text: "Placeholder",
   },
@@ -22,7 +22,7 @@ const links = [
 
 <template>
   <div class="flex h-full">
-    <nav class="w-44 h-full shadow-md shadow-yonder/10">
+    <nav class="w-44 h-full shadow-md shadow-yonder/10 bg-ghost">
       <ul>
         <li v-for="link in links" :key="link.name">
           <router-link
@@ -38,8 +38,8 @@ const links = [
         </li>
       </ul>
     </nav>
-    <div class="flex-1 flex justify-center mx-auto mx-[10vw]">
-      <RouterView class="w-full" />
+    <div class="flex-1 flex justify-center mx-auto mx-8">
+      <RouterView class="w-full max-w-[1000px] px-12 pt-8 bg-ghost" />
     </div>
   </div>
 </template>

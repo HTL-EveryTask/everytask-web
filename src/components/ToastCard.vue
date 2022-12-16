@@ -1,12 +1,19 @@
 <script lang="ts" setup>
 import type { Toast } from "@/models/Toast";
 import { useToastStore } from "@/stores/toast";
+import { onMounted } from "vue";
 
 const toastStore = useToastStore();
 
 const props = defineProps<{
   toast: Toast;
 }>();
+
+onMounted(() => {
+  setTimeout(() => {
+    toastStore.removeToast(props.toast);
+  }, 5000);
+});
 
 function closeToast() {
   console.log("close");
@@ -46,7 +53,7 @@ function closeToast() {
         </h1>
         <button class="text-2xl" @click="closeToast">×</button>
       </header>
-      <div class="max-h-[50px] overflow-y-auto overflow-x-hidden mr-8">
+      <div class="max-h-[50px] overflow-y-auto mr-8 w-full">
         <p class="text-md wrap">{{ toast.message }}</p>
       </div>
     </div>
