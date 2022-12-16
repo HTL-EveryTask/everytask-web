@@ -83,12 +83,15 @@ onMounted(async () => {
         Groups
       </h1>
       <ul class="text-raisin/80">
-        <li v-for="group in filteredGroups" :key="group.id">
+        <li v-for="group in groupStore.groups" :key="group.id">
           <div
             :class="[
               group.id === parseInt(groupId)
                 ? 'bg-white/70 shadow-md shadow-yonder/10 text-rebecca'
-                : 'hover:bg-rebecca/5',
+                : '',
+              !filteredGroups.find((g) => g.id === group.id)
+                ? 'text-raisin/40 cursor-not-allowed'
+                : 'cursor-pointer hover:bg-rebecca/5',
             ]"
             class="flex items-center p-3 my-1 mr-4 rounded-r-full pr-6 pl-4 transition-all duration-300"
             @click="groupId = group.id"
@@ -101,7 +104,7 @@ onMounted(async () => {
     </nav>
     <main class="flex-1 flex flex-col relative">
       <div class="flex-1 overflow-y-auto">
-        <div class="mx-4">
+        <div class="mx-4 sm:m-1">
           <TaskBoard
             v-if="type === 'private'"
             :tasks="

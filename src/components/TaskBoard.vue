@@ -38,11 +38,11 @@ function beforeTaskLeave(el: any) {
     <header class="text-3xl p-8 border-b-2 border-yonder/60 flex items-center">
       <h1 class="font-semibold">{{ title }}</h1>
       <div
-        class="h-10 rounded-full flex bg-white items-center p-4 mx-8 border-[1px] border-yonder/20"
+        class="h-10 rounded-full flex bg-white items-center p-4 mx-8 sm:mx-2 border-[1px] border-yonder/20"
       >
         <input
           type="text"
-          class="text-sm"
+          class="text-sm w-full"
           placeholder="Search..."
           v-model="query"
         />
@@ -51,7 +51,7 @@ function beforeTaskLeave(el: any) {
         </div>
       </div>
     </header>
-    <div class="p-8 sm:p-4 overflow-y-auto w-full h-full">
+    <div class="p-8 sm:p-4 sm:px-2 overflow-y-auto w-full h-full">
       <Transition appear mode="out-in" name="fade">
         <div v-if="loading" class="flex justify-center items-center h-full">
           <IconSpinner />

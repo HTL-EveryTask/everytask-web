@@ -65,10 +65,10 @@
     }
 
     .main-card {
-        @apply p-8 sm:p-4 mx-auto rounded-3xl sm:rounded-none shadow-lg shadow-yonder/10 shadow-yonder/10;
+        @apply p-8 mx-auto rounded-3xl shadow-lg shadow-yonder/10 shadow-yonder/10;
     }
 
     .main-board {
-        @apply mx-auto my-8 p-4 sm:m-2 sm:p-0 bg-ghost/95 effect-glass rounded-3xl h-[80vh] max-w-[70em]
+        @apply mx-auto my-8 p-4 sm:m-0 sm:p-0 bg-ghost/95 effect-glass rounded-3xl h-[80vh] max-w-[70em]
     }
 }

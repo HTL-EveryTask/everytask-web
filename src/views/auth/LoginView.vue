@@ -55,7 +55,7 @@ async function onSubmit() {
 
 <template>
   <div class="w-full h-full overflow-y-hidden">
-    <div class="main-card max-w-[36em] sm:w-full sm:h-full bg-ghost mt-16">
+    <div class="main-card max-w-[36em] sm:w-[95vw] bg-ghost mt-16 mx-auto">
       <div class="mb-6 mt-2">
         <img
           alt="logo"

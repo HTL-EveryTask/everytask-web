@@ -11,6 +11,7 @@ import ModalContainer from "@/components/ModalContainer.vue";
 import PasswordInput from "@/components/PasswordInput.vue";
 import { useToastStore } from "@/stores/toast";
 import { useAuthenticateStore } from "@/stores/auth";
+import { useApiStore } from "@/stores/api";
 
 const userStore = useUserStore();
 const loading = ref(true);
@@ -127,6 +128,10 @@ async function changePassword() {
       oldPassword.value = "";
       newPassword.value = "";
       newPasswordConfirm.value = "";
+
+      // set new token
+      const newToken = await response.json().then((data) => data.token);
+      await useApiStore().setToken(newToken);
     } else {
       useToastStore().addToast({
         title: "Password change failed",
@@ -311,6 +316,7 @@ function deleteAccount() {
           class="bg-white w-[30rem]"
           relative
           title="Delete Account"
+          effect="shadow"
           @close="showDeleteAccountModal = false"
         >
           <form

@@ -190,7 +190,7 @@ async function onSubmit() {
         <div class="flex-1 flex items-center relative max-w-[24em]">
           <input
             v-model="title"
-            class="w-full quick-input"
+            class="w-full quick-input pr-14"
             placeholder="Add a task"
             type="text"
           />

@@ -55,13 +55,15 @@ const dateDayEnding = computed(() => {
         <IconCheck v-if="task.is_done" class="w-6 h-6 text-white" />
       </div>
     </div>
-    <div class="flex flex-1 items-baseline flex-wrap gap-x-4 min-w-0">
+    <div
+      class="flex flex-1 sm:w-[12em] items-baseline flex-wrap gap-x-4 min-w-0"
+    >
       <span
-        class="w-[40%] min-w-[200px] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
+        class="w-[50%] sm:w-[100%] sm:mr-2 min-w-[12em] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
         >{{ task.title }}</span
       >
       <div
-        class="flex items-center box-border border-l-[1px] border-raisin/40 sm:border-none flex-1 text-sm text-gray-500 whitespace-nowrap pl-2 self-stretch"
+        class="flex items-center box-border border-l-[1px] border-raisin/40 sm:border-none text-sm text-gray-500 whitespace-nowrap pl-2 sm:pl-0"
       >
         <span class="flex items-center"
           >{{ formatDateTimeString }}
@@ -78,13 +80,13 @@ const dateDayEnding = computed(() => {
       <IconLock
         v-if="task.type.find((t) => t === 'private_task')"
         class="w-4 h-4"
+        @click.stop
       />
       <IconGroup v-else class="w-4 h-4" />
     </div>
     <div
-      class="rounded-full hover:bg-cerulean/10 ml-4 p-1"
+      class="rounded-full hover:bg-cerulean/10 ml-4 p-1 sm:hidden"
       @click.stop
-      @mouseover.stop
     >
       <IconSun class="w-6 h-6" />
     </div>

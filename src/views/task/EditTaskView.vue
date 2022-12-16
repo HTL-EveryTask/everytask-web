@@ -89,14 +89,22 @@ const v$ = useVuelidate(
 );
 
 async function onSubmit() {
+  const assignedUsers = assigned.value
+    .filter((item) => item["type"] === "user")
+    .map((item) => item["id"]);
+
+  const assignedGroups = assigned.value
+    .filter((item) => item["type"] === "group")
+    .map((item) => item["id"]);
+
   const newTask: Task = {
     id: task.value?.id ?? 0,
     title: title.value,
     description: description.value,
     due_time: due.value,
     is_done: task.value?.is_done ?? false,
-    assigned_users: task.value?.assigned_users ?? [],
-    assigned_groups: task.value?.assigned_groups ?? [],
+    assigned_users: assignedUsers,
+    assigned_groups: assignedGroups,
   };
 
   loading.value = true;

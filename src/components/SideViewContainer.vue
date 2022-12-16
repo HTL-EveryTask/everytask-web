@@ -13,7 +13,7 @@ defineProps<{
   <Transition name="side">
     <aside
       v-if="show"
-      class="xl:absolute h-full right-0 overflow-hidden w-[30vw] min-w-[500px] sm:min-w-0 sm:w-screen sm:fixed top-0 right-0 bg-ghost sm:rounded-none shadow-md shadow-yonder/10 z-[15]"
+      class="xl:absolute h-full right-0 overflow-hidden w-[30vw] min-w-[500px] sm:min-w-0 sm:w-screen sm:fixed top-0 right-0 bg-ghost sm:rounded-none shadow-md shadow-yonder/10 z-[20]"
       :class="$attrs.class"
       @close="emit('close')"
     >

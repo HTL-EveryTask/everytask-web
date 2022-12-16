@@ -246,12 +246,14 @@ const isSmallScreen = computed(() => {
               <button
                 class="text-sm hover:text-red-500 transition-colors duration-200"
                 @click="selectedDate = today"
+                type="button"
               >
                 Clear
               </button>
               <button
                 class="text-sm hover:text-blue-400 transition-colors duration-200"
                 @click="editing = false"
+                type="button"
               >
                 Done
               </button>

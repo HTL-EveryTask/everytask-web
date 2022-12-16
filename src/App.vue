@@ -34,10 +34,11 @@ onMounted(async () => {
     class="h-screen w-screen flex flex-col bg-gradient-to-tr from-cerulean/50 to-rebecca/50"
   >
     <div
-      class="h-16 w-full z-20 sm:z-40 shadow-md shadow-yonder/10 flex justify-between items-center bg-ghost rounded-br-xl"
+      class="h-16 w-full z-30 sm:z-40 shadow-md shadow-yonder/10 flex justify-between items-center bg-ghost"
     >
       <header class="h-full w-full p-3 ml-2 flex items-center">
         <div
+          :class="{ 'opacity-50': $route.meta.hideNavBar }"
           class="p-2 bg-ghost hidden sm:block mx-2 rounded-full hover:bg-yonder/10 active:bg-yonder/20"
           @click="isMenuOpen = !isMenuOpen"
         >
@@ -45,12 +46,14 @@ onMounted(async () => {
         </div>
         <img
           alt="logo"
-          class="h-full sm:hidden"
+          class="h-full sm:hidden cursor-pointer"
           src="@/assets/logo_light.svg"
+          @click="router.push('/')"
         />
       </header>
       <router-link :to="{ name: 'settings' }" class="h-full p-2 mr-[5vw]">
         <div
+          v-if="!$route.meta.hideNavBar"
           class="h-full hover:bg-yonder/10 text-raisin hover:text-raisin rounded-full p-2"
         >
           <IconSettings class="h-full" />
@@ -74,7 +77,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <ToastList class="fixed top-0 right-0 z-30" />
+    <ToastList class="fixed top-0 right-0 z-50" />
   </div>
 </template>
 

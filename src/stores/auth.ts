@@ -85,7 +85,7 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
 
   async function resetPassword(newPassword: string, code: string) {
     return await api.callApi(
-      "password",
+      "password/reset",
       "PATCH",
       {
         newPassword,

@@ -31,7 +31,7 @@ onMounted(async () => {
   <div class="flex h-full relative">
     <main class="min-h-0 flex flex-1 flex-col z-[5]">
       <div class="flex-1 overflow-y-auto">
-        <div class="mx-4">
+        <div class="mx-4 sm:m-1">
           <div class="main-board flex flex-col h-auto max-h-[80vh]">
             <header
               class="text-3xl p-8 border-b-2 border-yonder/60 flex items-center"
@@ -42,7 +42,7 @@ onMounted(async () => {
               class="p-8 sm:p-4 overflow-y-auto w-full h-full border-b-2 border-yonder/60"
             >
               <TransitionGroup
-                class="flex flex-col gap-4"
+                class="flex flex-col gap-4 w-full"
                 name="list"
                 tag="div"
                 appear
