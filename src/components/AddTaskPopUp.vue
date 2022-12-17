@@ -185,7 +185,7 @@ async function onSubmit() {
           type="submit"
           @click.stop
         >
-          <IconPlus v-if="!loading" />
+          <IconPlus v-if="!loading" class="w-6 h-6" />
           <IconSpinner v-else />
         </button>
         <div class="flex-1 flex items-center relative max-w-[24em]">

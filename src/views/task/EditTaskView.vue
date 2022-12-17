@@ -9,6 +9,8 @@ import LoadingButton from "@/components/LoadingButton.vue";
 import { useTaskStore } from "@/stores/task";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import GroupUserSelector from "@/components/GroupUserSelector.vue";
+import SideHeader from "@/components/SideHeader.vue";
+import IconSettings from "@/components/icons/IconSettings.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -131,85 +133,99 @@ async function deleteTask() {
 </script>
 
 <template>
-  <Transition name="fade">
-    <div v-if="!loading" class="relative h-full">
-      <form class="w-full" @submit.prevent="onSubmit">
-        <InputField id="title" :validation="v$.title" label="Title">
-          <input id="title" v-model="title" class="w-full" type="text" />
-          <template v-slot:right>
-            <span class="text-gray-500 text-sm"> {{ title.length }}/32 </span>
-          </template>
-        </InputField>
+  <div>
+    <SideHeader title="Edit Task" @close="emit('close')">
+      <template v-slot:right>
+        <IconSettings class="w-6 h-6" />
+      </template>
+    </SideHeader>
 
-        <InputField
-          id="description"
-          :validation="v$.description"
-          label="Description"
-        >
-          <textarea
+    <Transition name="fade" mode="out-in">
+      <div v-if="!loading" class="relative h-full px-8 py-6">
+        <form class="w-full" @submit.prevent="onSubmit">
+          <InputField id="title" :validation="v$.title" label="Title">
+            <input id="title" v-model="title" class="w-full" type="text" />
+            <template v-slot:right>
+              <span class="text-gray-500 text-sm"> {{ title.length }}/32 </span>
+            </template>
+          </InputField>
+
+          <InputField
             id="description"
-            v-model="description"
-            class="w-full"
-            rows="3"
-          ></textarea>
-          <template v-slot:right>
-            <span class="text-gray-500 text-sm">
-              {{ description.length }}/300
-            </span>
-          </template>
-        </InputField>
+            :validation="v$.description"
+            label="Description"
+          >
+            <textarea
+              id="description"
+              v-model="description"
+              class="w-full"
+              rows="3"
+            ></textarea>
+            <template v-slot:right>
+              <span class="text-gray-500 text-sm">
+                {{ description.length }}/300
+              </span>
+            </template>
+          </InputField>
 
-        <InputField id="due" :validation="v$.due" label="Due">
-          <input id="due" v-model="due" class="w-full" type="datetime-local" />
-        </InputField>
+          <InputField id="due" :validation="v$.due" label="Due">
+            <input
+              id="due"
+              v-model="due"
+              class="w-full"
+              type="datetime-local"
+            />
+          </InputField>
 
-        <InputField id="assigned" label="Assigned">
-          <GroupUserSelector id="assigned" v-model="assigned" />
-        </InputField>
+          <InputField id="assigned" label="Assigned">
+            <GroupUserSelector id="assigned" v-model="assigned" />
+          </InputField>
 
-        <LoadingButton
-          :disabled="v$.$invalid"
-          :loading="loading"
-          class="btn-primary mt-4"
-          type="submit"
+          <LoadingButton
+            :disabled="v$.$invalid"
+            :loading="loading"
+            class="btn-primary mt-4"
+            type="submit"
+          >
+            Update
+          </LoadingButton>
+        </form>
+
+        <button v-if="task" class="btn-red" @click="showDeleteModal = true">
+          Delete Task
+        </button>
+
+        <ModalContainer
+          :show="showDeleteModal"
+          class="bg-ghost"
+          headless
+          relative
+          @close="showDeleteModal = false"
         >
-          Update
-        </LoadingButton>
-      </form>
-
-      <button v-if="task" class="btn-red" @click="showDeleteModal = true">
-        Delete Task
-      </button>
-
-      <ModalContainer
-        :show="showDeleteModal"
-        class="bg-ghost"
-        headless
-        relative
-        @close="showDeleteModal = false"
-      >
-        <div class="flex flex-col items-center">
-          <p class="whitespace-nowrap text-center my-2 font-bold px-4">
-            Are you sure you want to delete this task?
-          </p>
-          <div class="flex w-full gap-4 justify-center">
-            <LoadingButton
-              :loading="loadingDelete"
-              class="btn-red"
-              @click="deleteTask"
-              >Delete
-            </LoadingButton>
-            <button class="btn-primary" @click="showDeleteModal = false">
-              Cancel
-            </button>
+          <div class="flex flex-col items-center">
+            <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+              Are you sure you want to delete this task?
+            </p>
+            <div class="flex w-full gap-4 justify-center">
+              <LoadingButton
+                :loading="loadingDelete"
+                class="btn-red"
+                @click="deleteTask"
+                >Delete
+              </LoadingButton>
+              <button class="btn-primary" @click="showDeleteModal = false">
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      </ModalContainer>
-    </div>
-    <div v-else class="h-full flex items-center justify-center">
-      <IconSpinner class="w-16 h-16 text-raisin/50" />
-    </div>
-  </Transition>
+        </ModalContainer>
+      </div>
+      <div v-else class="h-full flex gap-4 items-center justify-center mt-16">
+        <span class="text-gray-500">Loading...</span>
+        <IconSpinner class="w-6 h-6 text-raisin/50" />
+      </div>
+    </Transition>
+  </div>
 </template>
 
 <!--suppress CssUnusedSymbol -->

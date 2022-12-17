@@ -42,21 +42,28 @@ onMounted(async () => {
               class="p-8 sm:p-4 overflow-y-auto w-full h-full border-b-2 border-yonder/60"
             >
               <TransitionGroup
+                appear
                 class="flex flex-col gap-4 w-full"
                 name="list"
                 tag="div"
-                appear
               >
                 <GroupCard
                   v-for="group in groupStore.groups"
                   :key="group.id"
+                  :class="[
+                    Number(router.currentRoute.value.params.id) === group.id
+                      ? 'border-cerulean/50 border-2'
+                      : 'border-transparent border-2',
+                  ]"
                   :group="group"
                   class="bg-white"
                   @click="
-                    router.push({
-                      name: 'showGroup',
-                      params: { id: group.id },
-                    })
+                    Number(router.currentRoute.value.params.id) === group.id
+                      ? router.push({ name: 'groups' })
+                      : router.replace({
+                          name: 'showGroup',
+                          params: { id: group.id },
+                        })
                   "
                 />
               </TransitionGroup>

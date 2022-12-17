@@ -113,6 +113,7 @@ onMounted(async () => {
               )
             "
             title="Private Tasks"
+            class="sm:h-auto"
           />
           <TaskBoard
             v-for="group in filteredGroups"

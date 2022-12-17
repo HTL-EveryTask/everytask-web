@@ -11,6 +11,8 @@ import { useGroupStore } from "@/stores/group";
 import IconUser from "@/components/icons/IconUser.vue";
 import { useUserStore } from "@/stores/user";
 import { useToastStore } from "@/stores/toast";
+import IconSettings from "@/components/icons/IconSettings.vue";
+import SideHeader from "@/components/SideHeader.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -129,119 +131,127 @@ async function leaveGroup() {
 </script>
 
 <template>
-  <Transition name="fade">
-    <div v-if="!loading" class="relative h-full">
-      <form class="w-full" @submit.prevent="onSubmit">
-        <InputField id="name" :validation="v$.name" label="Name">
-          <input id="name" v-model="name" class="w-full" type="text" />
-          <template v-slot:right>
-            <span class="text-gray-500 text-sm"> {{ name.length }}/32 </span>
-          </template>
-        </InputField>
+  <div>
+    <SideHeader title="Edit Group" @close="emit('close')">
+      <template v-slot:right>
+        <IconSettings class="w-6 h-6" />
+      </template>
+    </SideHeader>
+    <Transition name="fade">
+      <div v-if="!loading" class="relative h-full px-8 py-6">
+        <form class="w-full" @submit.prevent="onSubmit">
+          <InputField id="name" :validation="v$.name" label="Name">
+            <input id="name" v-model="name" class="w-full" type="text" />
+            <template v-slot:right>
+              <span class="text-gray-500 text-sm"> {{ name.length }}/32 </span>
+            </template>
+          </InputField>
 
-        <InputField
-          id="description"
-          :validation="v$.description"
-          label="Description"
-        >
-          <textarea
+          <InputField
             id="description"
-            v-model="description"
-            class="w-full"
-            rows="3"
-          ></textarea>
-          <template v-slot:right>
-            <span class="text-gray-500 text-sm">
-              {{ description.length }}/300
-            </span>
-          </template>
-        </InputField>
-
-        <h2 class="text-lg font-bold mt-4 mb-2">Members</h2>
-        <div class="flex flex-col gap-2">
-          <div
-            v-for="user in orderedUsers"
-            :key="user.id"
-            class="flex gap-2 items-center"
+            :validation="v$.description"
+            label="Description"
           >
-            <IconUser class="w-8 h-8" />
-            <span class="text-gray-500">{{ user.username }}</span>
-            <span v-if="user.is_admin" class="text-gray-500"> (Admin) </span>
-          </div>
-        </div>
+            <textarea
+              id="description"
+              v-model="description"
+              class="w-full"
+              rows="3"
+            ></textarea>
+            <template v-slot:right>
+              <span class="text-gray-500 text-sm">
+                {{ description.length }}/300
+              </span>
+            </template>
+          </InputField>
 
-        <LoadingButton
-          :disabled="v$.$invalid"
-          :loading="loading"
-          class="btn-primary mt-4"
-          type="submit"
+          <h2 class="text-lg font-bold mt-4 mb-2">Members</h2>
+          <div class="flex flex-col gap-2">
+            <div
+              v-for="user in orderedUsers"
+              :key="user.id"
+              class="flex gap-2 items-center"
+            >
+              <IconUser class="w-8 h-8" />
+              <span class="text-gray-500">{{ user.username }}</span>
+              <span v-if="user.is_admin" class="text-gray-500"> (Admin) </span>
+            </div>
+          </div>
+
+          <LoadingButton
+            :disabled="v$.$invalid"
+            :loading="loading"
+            class="btn-primary mt-4"
+            type="submit"
+          >
+            Update
+          </LoadingButton>
+        </form>
+
+        <button v-if="group" class="btn-red" @click="showDeleteModal = true">
+          Delete Group
+        </button>
+
+        <ModalContainer
+          :show="showDeleteModal"
+          class="bg-ghost"
+          headless
+          relative
+          @close="showDeleteModal = false"
         >
-          Update
-        </LoadingButton>
-      </form>
-
-      <button v-if="group" class="btn-red" @click="showDeleteModal = true">
-        Delete Group
-      </button>
-
-      <ModalContainer
-        :show="showDeleteModal"
-        class="bg-ghost"
-        headless
-        relative
-        @close="showDeleteModal = false"
-      >
-        <div class="flex flex-col items-center">
-          <p class="whitespace-nowrap text-center my-2 font-bold px-4">
-            Are you sure you want to delete this group?
-          </p>
-          <div class="flex w-full gap-4 justify-center">
-            <LoadingButton
-              :loading="loadingDelete"
-              class="btn-red"
-              @click="deleteGroup"
-              >Delete
-            </LoadingButton>
-            <button class="btn-primary" @click="showDeleteModal = false">
-              Cancel
-            </button>
+          <div class="flex flex-col items-center">
+            <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+              Are you sure you want to delete this group?
+            </p>
+            <div class="flex w-full gap-4 justify-center">
+              <LoadingButton
+                :loading="loadingDelete"
+                class="btn-red"
+                @click="deleteGroup"
+                >Delete
+              </LoadingButton>
+              <button class="btn-primary" @click="showDeleteModal = false">
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      </ModalContainer>
+        </ModalContainer>
 
-      <button class="btn-red" @click="showLeaveModal = true">
-        Leave Group
-      </button>
+        <button class="btn-red" @click="showLeaveModal = true">
+          Leave Group
+        </button>
 
-      <ModalContainer
-        :show="showLeaveModal"
-        class="bg-ghost"
-        headless
-        relative
-        @close="showLeaveModal = false"
-      >
-        <div class="flex flex-col items-center">
-          <p class="whitespace-nowrap text-center my-2 font-bold px-4">
-            Are you sure you want to leave this group?
-          </p>
-          <div class="flex w-full gap-4 justify-center">
-            <LoadingButton
-              :loading="loadingLeave"
-              class="btn-red"
-              @click="leaveGroup"
-              >Leave
-            </LoadingButton>
-            <button class="btn-primary" @click="showDeleteModal = false">
-              Cancel
-            </button>
+        <ModalContainer
+          :show="showLeaveModal"
+          class="bg-ghost"
+          headless
+          relative
+          @close="showLeaveModal = false"
+        >
+          <div class="flex flex-col items-center">
+            <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+              Are you sure you want to leave this group?
+            </p>
+            <div class="flex w-full gap-4 justify-center">
+              <LoadingButton
+                :loading="loadingLeave"
+                class="btn-red"
+                @click="leaveGroup"
+                >Leave
+              </LoadingButton>
+              <button class="btn-primary" @click="showDeleteModal = false">
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      </ModalContainer>
-    </div>
-    <div v-else class="h-full flex items-center justify-center">
-      <IconSpinner class="w-16 h-16 text-raisin/50" />
-    </div>
-  </Transition>
+        </ModalContainer>
+      </div>
+      <div v-else class="h-full flex gap-4 items-center justify-center mt-16">
+        <span class="text-gray-500">Loading...</span>
+        <IconSpinner class="w-6 h-6 text-raisin/50" />
+      </div>
+    </Transition>
+  </div>
 </template>
 
 <!--suppress CssUnusedSymbol -->
