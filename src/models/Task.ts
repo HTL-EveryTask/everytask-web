@@ -7,6 +7,7 @@ export interface Task {
   description: string;
   is_done: boolean;
   due_time: string;
+  tags: string[];
   assigned_users: User[];
   assigned_groups: Group[];
   type: [];

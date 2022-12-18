@@ -10,6 +10,7 @@ import { useTaskStore } from "@/stores/task";
 import IconChevron from "@/components/icons/IconChevron.vue";
 import GroupUserSelector from "@/components/GroupUserSelector.vue";
 import CustomDatePicker from "@/components/CustomDatePicker.vue";
+import TagInput from "@/components/TagInput.vue";
 
 defineProps<{
   expandedClass: string;
@@ -52,6 +53,7 @@ const title = ref("");
 const description = ref("test");
 const due = ref(new Date().toJSON().slice(0, 16));
 const assigned = ref([]);
+const tags = ref<string[]>([]);
 
 const date = ref("2022-11-11");
 
@@ -97,6 +99,7 @@ async function onSubmit() {
     description: description.value,
     due_time: due.value,
     is_done: false,
+    tags: tags.value,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
     type: [],
@@ -149,6 +152,11 @@ async function onSubmit() {
         >
           <div class="w-full p-4">
             <h1 class="text-2xl mb-4">{{ title ? title : "New Task" }}</h1>
+
+            <InputField id="tags" label="Tags">
+              <TagInput v-model="tags" id="tags" />
+            </InputField>
+
             <InputField
               id="description"
               :validation="v$.description"
@@ -178,6 +186,10 @@ async function onSubmit() {
           </div>
         </div>
       </Transition>
+      <div
+        v-if="expandedFull"
+        class="w-full h-[2px] bg-raisin/20 rounded-full mx-auto w-[90%]"
+      ></div>
       <div class="flex items-center rounded-full p-2 gap-4">
         <button
           :disabled="v$.$invalid || loading"

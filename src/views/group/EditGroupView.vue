@@ -13,6 +13,7 @@ import { useUserStore } from "@/stores/user";
 import { useToastStore } from "@/stores/toast";
 import IconSettings from "@/components/icons/IconSettings.vue";
 import SideHeader from "@/components/SideHeader.vue";
+import GenerateInviteView from "@/views/group/GenerateInviteView.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -137,7 +138,7 @@ async function leaveGroup() {
         <IconSettings class="w-6 h-6" />
       </template>
     </SideHeader>
-    <Transition name="fade">
+    <Transition mode="out-in" name="fade">
       <div v-if="!loading" class="relative h-full px-8 py-6">
         <form class="w-full" @submit.prevent="onSubmit">
           <InputField id="name" :validation="v$.name" label="Name">
@@ -177,6 +178,9 @@ async function leaveGroup() {
               <span v-if="user.is_admin" class="text-gray-500"> (Admin) </span>
             </div>
           </div>
+
+          <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
+          <GenerateInviteView :group="group" />
 
           <LoadingButton
             :disabled="v$.$invalid"

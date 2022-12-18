@@ -58,7 +58,11 @@ const filteredUsers = computed(() => {
           (selectedUser: any) =>
             selectedUser.id === user.id && selectedUser.type === "user"
         ) &&
-        user.id !== me?.id
+        user.id !== me?.id &&
+        !selectedItems.value
+          .filter((i2: any) => i2.type === "group")
+          .flatMap((g2: any) => g2.users)
+          .find((u2: any) => u2.id === user.id)
       );
     });
 
@@ -83,7 +87,6 @@ function scrollToSuggestion(index = 0) {
   if (index < groupSuggestions.value.length) {
     if (groupSuggestions.value[index]) {
       groupSuggestions.value[index].scrollIntoView({
-        behavior: "smooth",
         block: "nearest",
       });
     }
@@ -92,7 +95,6 @@ function scrollToSuggestion(index = 0) {
       userSuggestions.value[
         index - groupSuggestions.value.length
       ].scrollIntoView({
-        behavior: "smooth",
         block: "nearest",
       });
     }
@@ -110,7 +112,7 @@ function beforeLeave(el: any) {
 
 <template>
   <TransitionGroup
-    class="flex items-center flex-wrap border-b-2 border-raisin/40 w-full min-h-[3rem]"
+    class="flex items-center flex-wrap border-b-[1px] border-raisin/40 w-full min-h-[3rem]"
     name="list"
     tag="div"
     @before-leave="beforeLeave"
@@ -146,7 +148,7 @@ function beforeLeave(el: any) {
           scrollToSuggestion(highLightedIndex);
         "
         @keydown.esc="isFocused = false"
-        @keydown.enter="
+        @keydown.enter.prevent="
           select(
             highLightedIndex < groupSuggestions.length
               ? filteredGroups[highLightedIndex]
@@ -170,6 +172,11 @@ function beforeLeave(el: any) {
               ? 0
               : highLightedIndex + 1;
           scrollToSuggestion(highLightedIndex);
+        "
+        @keydown.delete="
+          query.length === 0 && selectedItems.length > 0
+            ? selectedItems.pop()
+            : null
         "
       />
 

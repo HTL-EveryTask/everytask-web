@@ -41,6 +41,7 @@ function closeToast() {
         'bg-green-500': toast.type === 'success',
         'bg-red-500': toast.type === 'error',
         'bg-yellow-500': toast.type === 'warning',
+        'bg-blue-500': toast.type === 'info',
       }"
       class="w-2"
     />

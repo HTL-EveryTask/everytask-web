@@ -11,6 +11,7 @@ import IconSpinner from "@/components/icons/IconSpinner.vue";
 import GroupUserSelector from "@/components/GroupUserSelector.vue";
 import SideHeader from "@/components/SideHeader.vue";
 import IconSettings from "@/components/icons/IconSettings.vue";
+import TagInput from "@/components/TagInput.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -25,6 +26,7 @@ const title = ref("");
 const description = ref("");
 const due = ref("");
 const assigned = ref<any[]>([]);
+const tags = ref<string[]>([]);
 
 onMounted(async () => {
   watch(
@@ -42,6 +44,7 @@ onMounted(async () => {
         title.value = task.value?.title || "";
         description.value = task.value?.description || "";
         due.value = task.value?.due_time || "";
+        tags.value = task.value?.tags || [];
 
         const assignedUsers = task.value?.assigned_users?.map((user) => ({
           ...user,
@@ -105,6 +108,7 @@ async function onSubmit() {
     description: description.value,
     due_time: due.value,
     is_done: task.value?.is_done ?? false,
+    tags: tags.value,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
     type: [],
@@ -148,6 +152,10 @@ async function deleteTask() {
             <template v-slot:right>
               <span class="text-gray-500 text-sm"> {{ title.length }}/32 </span>
             </template>
+          </InputField>
+
+          <InputField id="tags" label="Tags">
+            <TagInput v-model="tags" />
           </InputField>
 
           <InputField

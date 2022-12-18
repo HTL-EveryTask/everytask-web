@@ -8,6 +8,7 @@ import IconPlus from "@/components/icons/IconPlus.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 import { useGroupStore } from "@/stores/group";
 import type { Group } from "@/models/Group";
+import GenerateInviteView from "@/views/group/GenerateInviteView.vue";
 
 const emit = defineEmits(["close"]);
 
@@ -20,8 +21,6 @@ const name = ref("");
 const description = ref("");
 
 const createdGroup = ref<Group | undefined>();
-
-const inviteLink = ref("");
 
 function stepForward() {
   change.value = 1;
@@ -62,20 +61,6 @@ const v$ = useVuelidate(
   { name: name, description },
   { $autoDirty: true }
 );
-
-async function requestInviteLink() {
-  loading.value = true;
-  if (createdGroup.value) {
-    const response = await groupStore.requestInvite(createdGroup.value.id);
-    inviteLink.value = await response.json().then((data) => data.key);
-    inviteLink.value = `${window.location.origin}/invite/?code=${inviteLink.value}`;
-  }
-  loading.value = false;
-}
-
-function copyInviteLink() {
-  navigator.clipboard.writeText(inviteLink.value);
-}
 
 function onSectionEnter(element: any, done: any) {
   gsap.fromTo(
@@ -169,25 +154,7 @@ function onSectionLeave(element: any, done: any) {
         <h2 class="text-xl text-center">
           Invite your Colleagues to join {{ name }}
         </h2>
-        <button
-          class="btn-primary block mt-4"
-          type="button"
-          @click="requestInviteLink"
-        >
-          Generate Invite Link
-        </button>
-
-        <div class="flex w-full input-field my-4">
-          <input :value="inviteLink" class="flex-1" readonly type="text" />
-          <button
-            type="button"
-            class="btn-primary ml-2"
-            @click="copyInviteLink"
-          >
-            Copy
-          </button>
-        </div>
-
+        <GenerateInviteView :group="createdGroup" />
         <LoadingButton
           :loading="loading"
           class="bg-gray-200 text-gray-700 rounded-md px-4 py-2"
