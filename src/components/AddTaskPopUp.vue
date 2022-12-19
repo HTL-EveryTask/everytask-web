@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { maxLength, required } from "@vuelidate/validators";
+import { helpers, maxLength, required } from "@vuelidate/validators";
 import { onMounted, ref, watch } from "vue";
 import useVuelidate from "@vuelidate/core";
 import type { Task } from "@/models/Task";
@@ -71,11 +71,17 @@ const rules = {
   assigned: {
     maxArrayLength: maxLength(5),
   },
+  tags: {
+    maxLength: helpers.withMessage(
+      "Only a maximum of 5 tags are allowed",
+      (value: string[]) => value.length <= 5
+    ),
+  },
 };
 
 const v$ = useVuelidate(
   rules,
-  { title, description, due, assigned },
+  { title, description, due, assigned, tags },
   { $autoDirty: true }
 );
 
@@ -153,8 +159,8 @@ async function onSubmit() {
           <div class="w-full p-4">
             <h1 class="text-2xl mb-4">{{ title ? title : "New Task" }}</h1>
 
-            <InputField id="tags" label="Tags">
-              <TagInput v-model="tags" id="tags" />
+            <InputField id="tags" label="Tags" :validation="v$.tags">
+              <TagInput v-model="tags" id="tags" :max-chars="20" />
             </InputField>
 
             <InputField

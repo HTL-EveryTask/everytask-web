@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { maxLength, required } from "@vuelidate/validators";
+import { helpers, maxLength, required } from "@vuelidate/validators";
 import { onMounted, ref, watch } from "vue";
 import useVuelidate from "@vuelidate/core";
 import ModalContainer from "@/components/ModalContainer.vue";
@@ -85,11 +85,21 @@ const rules = {
   due: {
     required,
   },
+  tags: {
+    maxLength: helpers.withMessage(
+      "Only a maximum of 5 tags are allowed",
+      (value: string[]) => value.length <= 5
+    ),
+    maxIndividualLength: helpers.withMessage(
+      "Only a maximum of 32 characters are allowed",
+      (value: string[]) => value.every((tag) => tag.length <= 32)
+    ),
+  },
 };
 
 const v$ = useVuelidate(
   rules,
-  { title, description, due },
+  { title, description, due, tags },
   { $autoDirty: true }
 );
 
@@ -154,8 +164,8 @@ async function deleteTask() {
             </template>
           </InputField>
 
-          <InputField id="tags" label="Tags">
-            <TagInput v-model="tags" />
+          <InputField id="tags" label="Tags" :validation="v$.tags">
+            <TagInput v-model="tags" :max-chars="20" />
           </InputField>
 
           <InputField

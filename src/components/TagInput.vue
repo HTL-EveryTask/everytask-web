@@ -3,11 +3,14 @@ import { computed, ref } from "vue";
 import IconX from "@/components/icons/IconX.vue";
 
 const query = ref("");
-// model value is an array of strings
 const props = defineProps({
   modelValue: {
     type: Array,
     required: true,
+  },
+  maxChars: {
+    type: Number,
+    default: 20,
   },
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -26,7 +29,11 @@ function beforeLeave(el: any) {
 }
 
 function addTag() {
-  if (query.value.length > 0 && !tags.value.includes(query.value)) {
+  if (
+    query.value.length > 0 &&
+    !tags.value.includes(query.value) &&
+    query.value.length <= props.maxChars
+  ) {
     tags.value.push(query.value);
     query.value = "";
   }
@@ -53,7 +60,11 @@ function addTag() {
         />
       </div>
     </div>
-    <div id="input" key="query" class="relative flex-1 min-w-[7em] h-full">
+    <div
+      id="input"
+      key="query"
+      class="relative flex-1 min-w-[7em] h-full flex items-center"
+    >
       <input
         ref="input"
         v-model="query"
@@ -63,6 +74,13 @@ function addTag() {
           query.length === 0 && tags.length > 0 ? tags.pop() : null
         "
       />
+      <span
+        v-if="query.length > 0"
+        :class="{ 'text-red-500': query.length > maxChars }"
+        class="absolute right-0 m-2 text-raisin/50 transition-colors duration-300"
+      >
+        {{ query.length }}/{{ props.maxChars }}
+      </span>
     </div>
   </TransitionGroup>
 </template>
