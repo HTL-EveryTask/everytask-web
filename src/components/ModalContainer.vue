@@ -77,7 +77,10 @@ onMounted(() => {
           <h1 class="text-xl font-bold">{{ title }}</h1>
           <button class="text-2xl" @click="$emit('close')">×</button>
         </div>
-        <div class="p-4 pt-0 max-h-[75vh] overflow-auto">
+        <div
+          class="p-4 pt-0 max-h-[75vh] overflow-auto"
+          :class="[headless ? 'pt-4' : '']"
+        >
           <slot></slot>
         </div>
       </div>

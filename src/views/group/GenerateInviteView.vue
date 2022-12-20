@@ -2,8 +2,7 @@
 import { ref } from "vue";
 import type { Group } from "@/models/Group";
 import { useGroupStore } from "@/stores/group";
-import IconCopy from "@/components/icons/IconCopy.vue";
-import { useToastStore } from "@/stores/toast";
+import CopyableField from "@/components/CopyableField.vue";
 
 const loading = ref(false);
 const inviteLink = ref("");
@@ -19,15 +18,6 @@ async function requestInviteLink() {
   inviteLink.value = `${window.location.origin}/invite/?code=${inviteLink.value}`;
   loading.value = false;
 }
-
-function copyInviteLink() {
-  navigator.clipboard.writeText(inviteLink.value);
-  useToastStore().addToast({
-    title: "Invite link copied",
-    type: "info",
-    message: "",
-  });
-}
 </script>
 
 <template>
@@ -40,18 +30,19 @@ function copyInviteLink() {
       Generate Invite Link
     </button>
 
-    <div class="flex items-center w-full input-field my-4">
-      <input :value="inviteLink" class="flex-1" disabled type="text" />
-      <button
-        class="ml-2 p-2 rounded-xl hover:bg-gray-200"
-        type="button"
-        title="Copy"
+    <CopyableField
+      v-model="inviteLink"
+      class="mt-4 input-field"
+      message="Invite link copied to clipboard"
+    >
+      <input
         :disabled="!inviteLink"
-        @click="copyInviteLink"
-      >
-        <IconCopy class="w-5 h-5" />
-      </button>
-    </div>
+        :value="inviteLink"
+        placeholder="Your invite link will appear here"
+        type="text"
+        readonly
+      />
+    </CopyableField>
   </div>
 </template>
 

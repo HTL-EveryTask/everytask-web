@@ -81,6 +81,10 @@ export const useGroupStore = defineStore("group", () => {
     return await api.callApi(`group/invite/accept`, "POST", { key: code });
   }
 
+  async function deleteInvite(groupId: number) {
+    return await api.callApi(`group/${groupId}/key`, "DELETE");
+  }
+
   return {
     groups,
     getGroups,
@@ -92,5 +96,6 @@ export const useGroupStore = defineStore("group", () => {
     addUserToGroup,
     requestInvite,
     acceptInvite,
+    deleteInvite,
   };
 });

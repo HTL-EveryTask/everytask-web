@@ -69,6 +69,7 @@ const loadingLeave = ref(false);
 
 let showDeleteModal = ref(false);
 let showLeaveModal = ref(false);
+let showDeleteInviteModal = ref(false);
 
 const rules = {
   name: {
@@ -129,6 +130,14 @@ async function leaveGroup() {
   showLeaveModal.value = false;
   emit("close");
 }
+
+async function deleteInvite() {
+  if (group.value) {
+    await groupStore.deleteInvite(group.value.id);
+    await groupStore.getGroups;
+  }
+  showDeleteInviteModal.value = false;
+}
 </script>
 
 <template>
@@ -178,19 +187,53 @@ async function leaveGroup() {
               <span v-if="user.is_admin" class="text-gray-500"> (Admin) </span>
             </div>
           </div>
-
-          <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
-          <GenerateInviteView :group="group" />
-
-          <LoadingButton
-            :disabled="v$.$invalid"
-            :loading="loading"
-            class="btn-primary mt-4"
-            type="submit"
-          >
-            Update
-          </LoadingButton>
         </form>
+
+        <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
+        <GenerateInviteView :group="group" />
+        <LoadingButton
+          :loading="loadingDelete"
+          class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"
+          @click="showDeleteInviteModal = true"
+          >Delete Invite
+        </LoadingButton>
+        <ModalContainer
+          :show="showDeleteInviteModal"
+          :title="'Delete Invite'"
+          class="bg-ghost w-96"
+          headless
+          relative
+          @close="showDeleteInviteModal = false"
+        >
+          <div class="p-4">
+            <p class="font-bold">
+              Are you sure you want to delete this invite?
+            </p>
+            <p class="italic text-raisin/50">
+              (Note:) Afterwards people will not be able to join this group
+              anymore.
+            </p>
+          </div>
+
+          <div class="flex justify-between gap-2">
+            <LoadingButton
+              :loading="loadingDelete"
+              class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"
+              @click="deleteInvite"
+              >Delete Invite
+            </LoadingButton>
+            <Button @click="showDeleteInviteModal = false">Cancel</Button>
+          </div>
+        </ModalContainer>
+
+        <LoadingButton
+          :disabled="v$.$invalid"
+          :loading="loading"
+          class="btn-primary mt-4"
+          type="submit"
+        >
+          Update
+        </LoadingButton>
 
         <button v-if="group" class="btn-red" @click="showDeleteModal = true">
           Delete Group
