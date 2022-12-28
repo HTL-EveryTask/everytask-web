@@ -75,6 +75,12 @@ const router = createRouter({
       ],
       redirect: { name: "profileSettings" },
     },
+
+    {
+      path: "/calendar",
+      name: "calendar",
+      component: () => import("../views/calendar/CalendarView.vue"),
+    },
     {
       path: "/register",
       name: "register",
@@ -116,6 +122,12 @@ const router = createRouter({
       meta: { hideNavBar: true },
       component: () => import("../views/ext/InviteView.vue"),
       props: (route) => ({ code: route.query.code }),
+    },
+    {
+      path: "/teamsauth",
+      name: "teamsauth",
+      meta: { hideNavBar: true },
+      component: () => import("../views/TeamsAuthView.vue"),
     },
   ],
 });
