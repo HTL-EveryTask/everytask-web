@@ -148,7 +148,7 @@ async function deleteInvite() {
       </template>
     </SideHeader>
     <Transition mode="out-in" name="fade">
-      <div v-if="!loading" class="relative h-full px-8 py-6">
+      <div v-if="!loading && group" class="relative h-full px-8 py-6">
         <form class="w-full" @submit.prevent="onSubmit">
           <InputField id="name" :validation="v$.name" label="Name">
             <input id="name" v-model="name" class="w-full" type="text" />

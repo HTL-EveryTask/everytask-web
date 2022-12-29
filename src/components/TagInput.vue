@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
+import type { PropType } from "vue";
 import IconX from "@/components/icons/IconX.vue";
 
 const query = ref("");
 const props = defineProps({
   modelValue: {
-    type: Array,
+    type: Array as PropType<string[]>,
     required: true,
   },
   maxChars: {

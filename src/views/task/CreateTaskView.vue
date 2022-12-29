@@ -84,6 +84,7 @@ async function onSubmit() {
     title: title.value,
     description: description.value,
     due_time: due.value,
+    tags: [],
     is_done: false,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,

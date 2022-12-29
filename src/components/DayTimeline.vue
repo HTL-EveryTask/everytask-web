@@ -154,8 +154,8 @@ function calculateStartingPosition(startTime: number) {
     </div>
     <div class="absolute pt-8 w-full h-full relative">
       <div
-        v-for="entry in data"
-        :key="entry"
+        v-for="(entry, index) in data"
+        :key="index"
         :style="{ top: calculateStartingPosition(entry[0].startTime) + 'px' }"
         class="absolute flex w-full"
       >

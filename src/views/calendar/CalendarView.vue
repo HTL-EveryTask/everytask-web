@@ -38,7 +38,7 @@ const currentWeek = computed(() => {
   return [firstDayOfWeek, lastDayOfWeek];
 });
 
-function forwardViewByDays(days) {
+function forwardViewByDays(days: number) {
   console.log(viewedDate.value);
   viewedDate.value = new Date(
     viewedDate.value.setDate(viewedDate.value.getDate() + days)

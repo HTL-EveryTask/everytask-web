@@ -195,7 +195,10 @@ function onSectionLeave(element: any, done: any) {
         </div>
       </section>
 
-      <section v-else-if="stepCounter === 3" class="h-full flex flex-col">
+      <section
+        v-else-if="stepCounter === 3 && createdGroup"
+        class="h-full flex flex-col"
+      >
         <h2 class="text-xl text-center">
           Invite your Colleagues to join {{ name }}
         </h2>
