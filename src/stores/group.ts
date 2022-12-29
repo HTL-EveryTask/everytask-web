@@ -8,6 +8,15 @@ export const useGroupStore = defineStore("group", () => {
 
   const groups = ref<Group[]>([]);
 
+  function getAllUsers() {
+    // flatmap the groups to get all users in one array but keep them unique
+    return groups.value
+      .flatMap((group) => group.users)
+      .filter(
+        (user, index, self) => self.findIndex((u) => u.id === user.id) === index
+      );
+  }
+
   async function getGroups() {
     const response = await api.callApi("groups", "GET");
     if (response.ok) {
@@ -73,6 +82,18 @@ export const useGroupStore = defineStore("group", () => {
     return response;
   }
 
+  async function addUsersToGroup(groupId: number, userIds: number[]) {
+    const response = await api.callApi(`group/${groupId}`, "PATCH", {
+      members: userIds,
+    });
+    if (response.ok) {
+      const group = await response.json();
+      const index = groups.value.findIndex((g) => g.id === group.id);
+      groups.value[index] = group;
+    }
+    return response;
+  }
+
   async function requestInvite(groupId: number) {
     return await api.callApi(`group/${groupId}/invite`, "POST");
   }
@@ -87,6 +108,7 @@ export const useGroupStore = defineStore("group", () => {
 
   return {
     groups,
+    getAllUsers,
     getGroups,
     getGroup,
     createGroup,
@@ -94,6 +116,7 @@ export const useGroupStore = defineStore("group", () => {
     deleteGroup,
     leaveGroup,
     addUserToGroup,
+    addUsersToGroup,
     requestInvite,
     acceptInvite,
     deleteInvite,

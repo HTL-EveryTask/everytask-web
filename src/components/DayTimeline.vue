@@ -22,6 +22,118 @@ const data = [
       description: "Test",
     },
   ],
+  [
+    {
+      startTime: 10000,
+      endTime: 11000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 10000,
+      endTime: 12000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 11000,
+      endTime: 12000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 11000,
+      endTime: 13000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 12000,
+      endTime: 13000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 12000,
+      endTime: 14000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 13000,
+      endTime: 14000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 13000,
+      endTime: 15000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 14000,
+      endTime: 15000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 14000,
+      endTime: 16000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 15000,
+      endTime: 16000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 15000,
+      endTime: 17000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 16000,
+      endTime: 17000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 16000,
+      endTime: 18000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
+  [
+    {
+      startTime: 17000,
+      endTime: 18000,
+      title: "Test",
+      description: "Test",
+    },
+    {
+      startTime: 17500,
+      endTime: 19000,
+      title: "Test",
+      description: "Test",
+    },
+  ],
 ];
 
 function calculateStartingPosition(startTime: number) {
@@ -43,9 +155,9 @@ function calculateStartingPosition(startTime: number) {
     <div class="absolute pt-8 w-full h-full relative">
       <div
         v-for="entry in data"
-        class="absolute flex w-full"
         :key="entry"
         :style="{ top: calculateStartingPosition(entry[0].startTime) + 'px' }"
+        class="absolute flex w-full"
       >
         <div
           v-for="event in entry"

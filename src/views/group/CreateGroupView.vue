@@ -9,6 +9,10 @@ import LoadingButton from "@/components/LoadingButton.vue";
 import { useGroupStore } from "@/stores/group";
 import type { Group } from "@/models/Group";
 import GenerateInviteView from "@/views/group/GenerateInviteView.vue";
+import type { User } from "@/models/User";
+import MemberSelector from "@/components/MemberSelector.vue";
+import IconCheck from "@/components/icons/IconCheck.vue";
+import { useToastStore } from "@/stores/toast";
 
 const emit = defineEmits(["close"]);
 
@@ -19,6 +23,8 @@ const change = ref(0);
 
 const name = ref("");
 const description = ref("");
+
+const selectedUsers = ref<User[]>([]);
 
 const createdGroup = ref<Group | undefined>();
 
@@ -36,10 +42,23 @@ const loading = ref(false);
 
 async function createGroup() {
   loading.value = true;
-  const response = await groupStore.createGroup(name.value, description.value);
+  let response = await groupStore.createGroup(name.value, description.value);
   const data = await response.json();
   createdGroup.value = data.group;
   console.log(createdGroup.value);
+  if (createdGroup.value) {
+    response = await groupStore.addUsersToGroup(
+      createdGroup.value.id,
+      selectedUsers.value.map((user) => user.id)
+    );
+    if (!response.ok) {
+      useToastStore().addToast({
+        title: "Error",
+        message: "Failed to add users to the group",
+        type: "error",
+      });
+    }
+  }
   await groupStore.getGroups();
 
   loading.value = false;
@@ -91,8 +110,8 @@ function onSectionLeave(element: any, done: any) {
 
 <template>
   <form
-    class="w-full min-h-[20em] min-w-[600px] sm:min-w-0"
-    @submit.prevent="createGroup"
+    class="w-full h-[20rem] min-h-[20rem] min-w-[600px] sm:min-w-0"
+    @submit.prevent
   >
     <Transition
       mode="out-in"
@@ -100,8 +119,8 @@ function onSectionLeave(element: any, done: any) {
       @enter="onSectionEnter"
       @leave="onSectionLeave"
     >
-      <section v-if="stepCounter === 1">
-        <div class="flex flex-col">
+      <section v-if="stepCounter === 1" class="h-full flex flex-col">
+        <div class="flex flex-col h-[20rem]">
           <div class="flex sm:flex-col items-center gap-8">
             <div
               class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost"
@@ -137,32 +156,78 @@ function onSectionLeave(element: any, done: any) {
               </InputField>
             </div>
           </div>
-          <div>
-            <LoadingButton
-              :disabled="v$.$invalid"
-              :loading="loading"
-              class="btn-primary block ml-auto mt-4"
-              type="submit"
-            >
-              Create Group
-            </LoadingButton>
-          </div>
+        </div>
+        <div>
+          <LoadingButton
+            :disabled="v$.$invalid"
+            :loading="loading"
+            class="btn-primary block ml-auto mt-4"
+            type="button"
+            @click="stepForward"
+          >
+            Next
+          </LoadingButton>
         </div>
       </section>
 
-      <section v-else-if="stepCounter === 2">
+      <section v-else-if="stepCounter === 2" class="h-full flex flex-col">
+        <h2 class="text-xl text-center">Add Users to {{ name }}</h2>
+        <div class="h-[20rem] py-4">
+          <MemberSelector
+            v-model="selectedUsers"
+            :pool="groupStore.getAllUsers()"
+            class="h-full"
+          />
+        </div>
+        <div class="flex justify-between mt-auto">
+          <button class="btn-secondary" type="button" @click="stepBackward">
+            Back
+          </button>
+          <LoadingButton
+            :class="{ 'btn-light': selectedUsers.length === 0 }"
+            :loading="loading"
+            class="btn-primary"
+            type="button"
+            @click="createGroup()"
+          >
+            {{ selectedUsers.length > 0 ? "Finish" : "Skip" }}
+          </LoadingButton>
+        </div>
+      </section>
+
+      <section v-else-if="stepCounter === 3" class="h-full flex flex-col">
         <h2 class="text-xl text-center">
           Invite your Colleagues to join {{ name }}
         </h2>
-        <GenerateInviteView :group="createdGroup" />
-        <LoadingButton
-          :loading="loading"
-          class="bg-gray-200 text-gray-700 rounded-md px-4 py-2"
-          type="button"
-          @click="emit('close')"
-        >
-          Finish
-        </LoadingButton>
+        <GenerateInviteView :group="createdGroup" class="py-4" />
+        <div class="flex justify-between mt-auto">
+          <button class="btn-secondary" type="button" @click="stepBackward">
+            Back
+          </button>
+          <button class="btn-primary" type="button" @click="stepForward">
+            Next
+          </button>
+        </div>
+      </section>
+      <section v-else-if="stepCounter === 4" class="h-full flex flex-col">
+        <div class="h-[20rem] flex justify-center items-center">
+          <div>
+            <IconCheck
+              class="w-24 h-24 text-green-500 mx-auto p-2 rounded-full border-4 border-green-500"
+            />
+            <h2 class="text-xl text-center m-4">
+              {{ name }} is now fully set up
+            </h2>
+          </div>
+        </div>
+        <div class="flex justify-between mt-auto">
+          <button class="btn-secondary" type="button" @click="stepBackward">
+            Back
+          </button>
+          <button class="btn-primary" type="button" @click="emit('close')">
+            Close
+          </button>
+        </div>
       </section>
     </Transition>
   </form>

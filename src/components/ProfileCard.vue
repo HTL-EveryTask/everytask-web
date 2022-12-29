@@ -49,7 +49,7 @@ async function updateProfile() {
   try {
     let response = await userStore.changeUsername(username.value);
     if (selectedPicture.value) {
-      await userStore.changeProfilePicture(selectedPicture.value);
+      await userStore.changeProfilePicture(selectedPicture.value.id);
     }
     if (response.ok) {
       useToastStore().addToast({
@@ -105,7 +105,7 @@ async function updateProfile() {
           />
           <div
             v-if="showPicturePopup"
-            class="flex justify-center bg-ghost p-2 rounded-xl absolute bottom-0 left-0 overflow-visible"
+            class="flex justify-around bg-ghost p-2 rounded-xl absolute bottom-0 -left-1/2 w-[300px] shadow-md shadow-yonder/10"
           >
             <div v-for="picture in pictures" :key="picture.id">
               <img
@@ -118,10 +118,7 @@ async function updateProfile() {
             <div>
               <IconX
                 class="w-12 h-12 p-2 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
-                @click="
-                  showPicturePopup = false;
-                  selectedPicture = null;
-                "
+                @click="selectedPicture = null"
               />
             </div>
           </div>

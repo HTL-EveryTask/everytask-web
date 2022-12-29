@@ -45,7 +45,7 @@
 
 @layer utilities {
     .btn-base {
-        @apply font-bold py-2 px-4 rounded;
+        @apply font-bold py-2 px-4 rounded transition-all duration-200;
     }
 
     .effect-glass {
@@ -58,6 +58,10 @@
 @layer components {
     .btn-primary {
         @apply btn-base bg-indigo-500 text-white hover:bg-indigo-700;
+    }
+
+    .btn-light {
+        @apply btn-base bg-white text-indigo-500 hover:bg-indigo-50;
     }
 
     .btn-red {

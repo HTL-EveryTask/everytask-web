@@ -286,7 +286,7 @@ async function deleteInvite() {
                 @click="leaveGroup"
                 >Leave
               </LoadingButton>
-              <button class="btn-primary" @click="showDeleteModal = false">
+              <button class="btn-primary" @click="showLeaveModal = false">
                 Cancel
               </button>
             </div>
