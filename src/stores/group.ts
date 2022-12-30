@@ -29,7 +29,15 @@ export const useGroupStore = defineStore("group", () => {
   async function getGroup(id: number) {
     const response = await api.callApi(`group/${id}`, "GET");
     if (response.ok) {
-      return await response.json().then((data) => data.group);
+      const group = await response.json().then((data) => data.group);
+      console.log(group);
+      const index = groups.value.findIndex((g) => g.id === group.id);
+      if (index !== -1) {
+        groups.value[index] = group;
+      } else {
+        groups.value.push(group);
+      }
+      return group;
     }
     return null;
   }
@@ -87,7 +95,7 @@ export const useGroupStore = defineStore("group", () => {
       members: userIds,
     });
     if (response.ok) {
-      const group = await response.json();
+      const group = await response.json().then((data) => data.group);
       const index = groups.value.findIndex((g) => g.id === group.id);
       groups.value[index] = group;
     }

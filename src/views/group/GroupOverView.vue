@@ -88,7 +88,7 @@ onMounted(async () => {
       title="Create Group"
       @close="$router.push({ name: 'groups' })"
     >
-      <RouterView class="px-8" @close="$router.push({ name: 'groups' })" />
+      <RouterView @close="$router.push({ name: 'groups' })" />
     </ModalContainer>
 
     <SideViewContainer

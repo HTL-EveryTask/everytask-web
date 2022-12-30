@@ -110,7 +110,7 @@ function onSectionLeave(element: any, done: any) {
 
 <template>
   <form
-    class="w-full h-[20rem] min-h-[20rem] min-w-[600px] sm:min-w-0"
+    class="w-full h-[30rem] min-h-[20rem] min-w-[600px] sm:min-w-0 px-4"
     @submit.prevent
   >
     <Transition
@@ -120,7 +120,7 @@ function onSectionLeave(element: any, done: any) {
       @leave="onSectionLeave"
     >
       <section v-if="stepCounter === 1" class="h-full flex flex-col">
-        <div class="flex flex-col h-[20rem]">
+        <div class="flex flex-col h-[25rem]">
           <div class="flex sm:flex-col items-center gap-8">
             <div
               class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost"
@@ -157,11 +157,11 @@ function onSectionLeave(element: any, done: any) {
             </div>
           </div>
         </div>
-        <div>
+        <div class="mt-auto">
           <LoadingButton
             :disabled="v$.$invalid"
             :loading="loading"
-            class="btn-primary block ml-auto mt-4"
+            class="btn-primary block ml-auto"
             type="button"
             @click="stepForward"
           >
@@ -171,21 +171,22 @@ function onSectionLeave(element: any, done: any) {
       </section>
 
       <section v-else-if="stepCounter === 2" class="h-full flex flex-col">
-        <h2 class="text-xl text-center">Add Users to {{ name }}</h2>
-        <div class="h-[20rem] py-4">
+        <h2 class="text-xl">Add Users to {{ name }}</h2>
+        <div class="flex-1 py-4">
           <MemberSelector
             v-model="selectedUsers"
             :pool="groupStore.getAllUsers()"
             class="h-full"
           />
         </div>
-        <div class="flex justify-between mt-auto">
+        <div class="flex justify-between mt-auto shrink-0">
           <button class="btn-secondary" type="button" @click="stepBackward">
             Back
           </button>
           <LoadingButton
             :class="{ 'btn-light': selectedUsers.length === 0 }"
             :loading="loading"
+            :disabled="loading"
             class="btn-primary"
             type="button"
             @click="createGroup()"
@@ -199,15 +200,14 @@ function onSectionLeave(element: any, done: any) {
         v-else-if="stepCounter === 3 && createdGroup"
         class="h-full flex flex-col"
       >
-        <h2 class="text-xl text-center">
-          Invite your Colleagues to join {{ name }}
-        </h2>
+        <h2 class="text-xl">Invite your Colleagues to join {{ name }}</h2>
         <GenerateInviteView :group="createdGroup" class="py-4" />
         <div class="flex justify-between mt-auto">
-          <button class="btn-secondary" type="button" @click="stepBackward">
-            Back
-          </button>
-          <button class="btn-primary" type="button" @click="stepForward">
+          <button
+            class="btn-primary ml-auto"
+            type="button"
+            @click="stepForward"
+          >
             Next
           </button>
         </div>

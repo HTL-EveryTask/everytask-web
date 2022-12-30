@@ -22,11 +22,7 @@ async function requestInviteLink() {
 
 <template>
   <div>
-    <button
-      class="btn-primary block mt-4"
-      type="button"
-      @click="requestInviteLink"
-    >
+    <button class="btn-primary block" type="button" @click="requestInviteLink">
       Generate Invite Link
     </button>
 

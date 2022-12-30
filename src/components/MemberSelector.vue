@@ -7,6 +7,8 @@ import { useUserStore } from "@/stores/user";
 import IconUser from "@/components/icons/IconUser.vue";
 import IconCheck from "@/components/icons/IconCheck.vue";
 
+const container = ref();
+
 const query = ref("");
 
 const props = defineProps<{
@@ -16,8 +18,6 @@ const props = defineProps<{
 const emit = defineEmits(["update:modelValue"]);
 
 const highLightedIndex = ref(0);
-
-const isFocused = ref(false);
 
 const selectedUsers = computed({
   get() {
@@ -56,6 +56,7 @@ function select(user: User) {
 
 onMounted(() => {
   useGroupStore().getGroups();
+  container.value.focus();
 });
 
 function beforeLeave(el: any) {
@@ -68,9 +69,24 @@ function beforeLeave(el: any) {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div
+    ref="container"
+    class="flex flex-col focus:outline-none"
+    tabindex="0"
+    @keydown.enter.prevent="
+      select(filteredUsers[highLightedIndex]);
+      query = '';
+    "
+    @keydown.up="highLightedIndex = Math.max(highLightedIndex - 1, 0)"
+    @keydown.down="
+      highLightedIndex = Math.min(
+        highLightedIndex + 1,
+        filteredUsers.length - 1
+      )
+    "
+  >
     <TransitionGroup
-      class="flex items-center flex-wrap max-h-32 overflow-y-auto justify-between border-b-[1px] border-raisin/40 min-h-[2.6rem] overflow-x-hidden"
+      class="flex items-center flex-wrap max-h-32 overflow-y-auto justify-between min-h-[3rem] overflow-x-hidden block w-full p-0 border-2 border-yonder/30 rounded-md focus:outline-none focus:border-indigo-500/30 focus:bg-cerulean/5 bg-inherit"
       name="list"
       tag="div"
       @before-leave="beforeLeave"
@@ -91,21 +107,8 @@ function beforeLeave(el: any) {
       <input
         key="query"
         v-model="query"
-        class="flex-1 min-w-[8rem] my-1 relative"
+        class="flex-1 min-w-[8rem] my-1 relative bg-transparent"
         type="text"
-        @blur="isFocused = false"
-        @focus="isFocused = true"
-        @keydown.enter.prevent="
-          select(filteredUsers[highLightedIndex]);
-          query = '';
-        "
-        @keydown.up="highLightedIndex = Math.max(highLightedIndex - 1, 0)"
-        @keydown.down="
-          highLightedIndex = Math.min(
-            highLightedIndex + 1,
-            filteredUsers.length - 1
-          )
-        "
       />
     </TransitionGroup>
     <div class="flex flex-col overflow-y-auto flex-1">

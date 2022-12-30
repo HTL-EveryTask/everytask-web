@@ -14,6 +14,8 @@ import { useToastStore } from "@/stores/toast";
 import IconSettings from "@/components/icons/IconSettings.vue";
 import SideHeader from "@/components/SideHeader.vue";
 import GenerateInviteView from "@/views/group/GenerateInviteView.vue";
+import IconPlus from "@/components/icons/IconPlus.vue";
+import AddMemberView from "@/views/group/AddMemberView.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -22,7 +24,9 @@ const props = defineProps<{
 
 const groupStore = useGroupStore();
 
-const group = ref<Group | undefined>();
+const group = ref<Group | undefined>(
+  groupStore.groups.find((g) => g.id === props.id)
+);
 
 const orderedUsers = computed(() => {
   if (!group.value) return [];
@@ -48,10 +52,17 @@ onMounted(async () => {
     async (id) => {
       if (id) {
         loading.value = true;
-        group.value = await groupStore.getGroup(id);
+        await groupStore.getGroup(id);
+        group.value = groupStore.groups.find((g) => g.id === id);
+        console.log(group.value);
 
         if (!group.value) {
           emit("close");
+          useToastStore().addToast({
+            title: "Error",
+            message: "Group not found",
+            type: "error",
+          });
           return;
         }
         name.value = group.value?.name || "";
@@ -70,6 +81,8 @@ const loadingLeave = ref(false);
 let showDeleteModal = ref(false);
 let showLeaveModal = ref(false);
 let showDeleteInviteModal = ref(false);
+
+let showAddUserModal = ref(false);
 
 const rules = {
   name: {
@@ -175,7 +188,33 @@ async function deleteInvite() {
             </template>
           </InputField>
 
-          <h2 class="text-lg font-bold mt-4 mb-2">Members</h2>
+          <div class="flex gap-2 items-center mb-2">
+            <h2 class="text-lg font-bold">Members</h2>
+            <button
+              class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
+              type="button"
+              @click="showAddUserModal = true"
+            >
+              <IconPlus class="w-5 h-5" />
+            </button>
+          </div>
+
+          <ModalContainer
+            :show="showAddUserModal"
+            class="w-[30rem] bg-white"
+            effect="shadow"
+            title="Add Users"
+            @close="showAddUserModal = false"
+          >
+            <AddMemberView
+              :group="group"
+              @close="
+                showAddUserModal = false;
+                group = groupStore.groups.find((g) => g.id === props.id);
+              "
+            />
+          </ModalContainer>
+
           <div class="flex flex-col gap-2">
             <div
               v-for="user in orderedUsers"
@@ -231,6 +270,7 @@ async function deleteInvite() {
           :loading="loading"
           class="btn-primary mt-4"
           type="submit"
+          @click="onSubmit"
         >
           Update
         </LoadingButton>

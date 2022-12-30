@@ -65,7 +65,7 @@ onMounted(() => {
         v-if="show"
         :class="[
           $attrs.class,
-          mobileFull ? 'sm:h-screen sm:w-screen' : '',
+          mobileFull ? 'sm:h-screen sm:w-screen sm:rounded-none' : '',
           relative ? 'absolute' : 'fixed',
         ]"
         class="left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-lg shadow-yonder/10 z-50"
@@ -91,7 +91,7 @@ onMounted(() => {
 <!--suppress CssUnusedSymbol -->
 <style scoped>
 .overlay-shadow {
-  @apply bg-slate-800 bg-opacity-20 backdrop-blur-sm;
+  @apply bg-yonder bg-opacity-10 backdrop-blur-sm;
 }
 
 .modal-enter-from,
