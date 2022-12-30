@@ -16,6 +16,9 @@ import SideHeader from "@/components/SideHeader.vue";
 import GenerateInviteView from "@/views/group/GenerateInviteView.vue";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import AddMemberView from "@/views/group/AddMemberView.vue";
+import type { User } from "@/models/User";
+import ContextMenu from "@imengyu/vue3-context-menu";
+import IconDotsVertical from "@/components/icons/IconDotsVertical.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -122,6 +125,31 @@ async function onSubmit() {
   emit("close");
 }
 
+function onContextMenu(e: MouseEvent, user: User) {
+  e.preventDefault();
+  ContextMenu.showContextMenu({
+    x: e.clientX,
+    y: e.clientY,
+    items: [
+      {
+        label: "Remove",
+        onClick: () => {
+          console.log("removing user", user);
+        },
+        customClass: "hover:bg-yonder/10",
+      },
+      {
+        label: "Make admin",
+        onClick: () => {
+          console.log("making admin", user);
+        },
+        customClass: "hover:bg-yonder/10",
+      },
+    ],
+    customClass: "bg-ghost shadow-md shadow-yonder/10",
+  });
+}
+
 async function deleteGroup() {
   loadingDelete.value = true;
   if (group.value) {
@@ -188,17 +216,6 @@ async function deleteInvite() {
             </template>
           </InputField>
 
-          <div class="flex gap-2 items-center mb-2">
-            <h2 class="text-lg font-bold">Members</h2>
-            <button
-              class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
-              type="button"
-              @click="showAddUserModal = true"
-            >
-              <IconPlus class="w-5 h-5" />
-            </button>
-          </div>
-
           <ModalContainer
             :show="showAddUserModal"
             class="w-[30rem] bg-white"
@@ -215,15 +232,31 @@ async function deleteInvite() {
             />
           </ModalContainer>
 
-          <div class="flex flex-col gap-2">
+          <div class="flex gap-2 items-center mb-2">
+            <h2 class="text-lg font-bold">Members</h2>
+            <button
+              class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
+              type="button"
+              @click="showAddUserModal = true"
+            >
+              <IconPlus class="w-5 h-5" />
+            </button>
+          </div>
+          <div class="flex flex-col">
             <div
               v-for="user in orderedUsers"
               :key="user.id"
-              class="flex gap-2 items-center"
+              class="flex gap-2 items-center hover:bg-ghost/50 p-3 transition-colors duration-200"
+              @contextmenu.prevent="onContextMenu($event, user)"
             >
               <IconUser class="w-8 h-8" />
-              <span class="text-gray-500">{{ user.username }}</span>
-              <span v-if="user.is_admin" class="text-gray-500"> (Admin) </span>
+              <span class="text-raisin/80">{{ user.username }}</span>
+              <span v-if="user.is_admin" class="text-raisin/40"> (Admin) </span>
+
+              <IconDotsVertical
+                class="w-7 h-7 rounded-full p-1 hover:bg-yonder/10 active:bg-yonder/20 text-gray-500 ml-auto"
+                @click="onContextMenu($event, user)"
+              />
             </div>
           </div>
         </form>

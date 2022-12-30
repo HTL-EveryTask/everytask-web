@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^2.32.1",
+    "@imengyu/vue3-context-menu": "^1.1.7",
     "@microsoft/microsoft-graph-client": "^3.0.4",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@vuelidate/core": "^2.0.0",
