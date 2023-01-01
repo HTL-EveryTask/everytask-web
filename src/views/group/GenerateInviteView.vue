@@ -1,15 +1,32 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import type { Group } from "@/models/Group";
 import { useGroupStore } from "@/stores/group";
 import CopyableField from "@/components/CopyableField.vue";
-
-const loading = ref(false);
-const inviteLink = ref("");
+import LoadingButton from "@/components/LoadingButton.vue";
 
 const props = defineProps<{
   group: Group;
+  inviteKey?: string;
 }>();
+
+const loading = ref(false);
+
+const inviteLink = ref(
+  props.inviteKey ? `${window.location.origin}/join/${props.inviteKey}` : ""
+);
+
+onMounted(async () => {
+  // watch for changes in the invite key prop
+  watch(
+    () => props.inviteKey,
+    async (inviteKey) => {
+      if (!inviteKey) {
+        inviteLink.value = "";
+      }
+    }
+  );
+});
 
 async function requestInviteLink() {
   loading.value = true;
@@ -22,9 +39,15 @@ async function requestInviteLink() {
 
 <template>
   <div>
-    <button class="btn-primary block" type="button" @click="requestInviteLink">
+    <LoadingButton
+      class="btn-primary block"
+      type="button"
+      @click="requestInviteLink"
+      v-if="!inviteLink"
+      :loading="loading"
+    >
       Generate Invite Link
-    </button>
+    </LoadingButton>
 
     <CopyableField
       v-model="inviteLink"

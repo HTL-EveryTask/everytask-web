@@ -11,6 +11,8 @@ import IconChevron from "@/components/icons/IconChevron.vue";
 import GroupUserSelector from "@/components/GroupUserSelector.vue";
 import CustomDatePicker from "@/components/CustomDatePicker.vue";
 import TagInput from "@/components/TagInput.vue";
+import type { Subject } from "@/models/Subject";
+import { useUntisStore } from "@/stores/untis";
 
 defineProps<{
   expandedClass: string;
@@ -25,7 +27,7 @@ const emit = defineEmits<{
   (e: "expandFull"): void;
 }>();
 
-onMounted(() => {
+onMounted(async () => {
   watch(expanded, (value) => {
     if (value) {
       emit("expand");
@@ -33,11 +35,15 @@ onMounted(() => {
       emit("close");
     }
   });
+
   watch(expandedFull, (value) => {
     if (value) {
       emit("expandFull");
     }
   });
+
+  await useUntisStore().getSubjects();
+  subjects.value = useUntisStore().subjects;
 });
 
 function unExpand() {
@@ -48,6 +54,8 @@ function unExpand() {
 
 const taskStore = useTaskStore();
 const loading = ref(false);
+
+const subjects = ref<Subject[]>([]);
 
 const title = ref("");
 const description = ref("test");
@@ -105,6 +113,7 @@ async function onSubmit() {
     description: description.value,
     due_time: due.value,
     is_done: false,
+    subject: {},
     tags: tags.value,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
@@ -159,8 +168,8 @@ async function onSubmit() {
           <div class="w-full p-4">
             <h1 class="text-2xl mb-4">{{ title ? title : "New Task" }}</h1>
 
-            <InputField id="tags" label="Tags" :validation="v$.tags">
-              <TagInput v-model="tags" id="tags" :max-chars="20" />
+            <InputField id="tags" :validation="v$.tags" label="Tags">
+              <TagInput id="tags" v-model="tags" :max-chars="20" />
             </InputField>
 
             <InputField
@@ -232,8 +241,13 @@ async function onSubmit() {
 
         <select class="mx-4 ml-auto quick-input">
           <option disabled selected value="1">Subject</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
+          <option
+            v-for="subject in subjects"
+            :key="subject.id"
+            :value="subject.id"
+          >
+            {{ subject.name }}
+          </option>
         </select>
       </div>
     </form>

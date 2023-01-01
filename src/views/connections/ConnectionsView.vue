@@ -6,6 +6,7 @@ import { ref } from "vue";
 import { required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import InputField from "@/components/InputField.vue";
+import { useUntisStore } from "@/stores/untis";
 
 const showWebUntisModal = ref(false);
 const serverUrl = ref("");
@@ -40,7 +41,12 @@ const $v = useVuelidate(
 );
 
 function connectWebUntis() {
-  console.log("connectWebUntis");
+  useUntisStore().createSession(
+    username.value,
+    password.value,
+    school.value,
+    serverUrl.value
+  );
 }
 </script>
 

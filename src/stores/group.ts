@@ -111,7 +111,11 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   async function deleteInvite(groupId: number) {
-    return await api.callApi(`group/${groupId}/key`, "DELETE");
+    const response = await api.callApi(`group/${groupId}/key`, "DELETE");
+    if (response.ok) {
+      const index = groups.value.findIndex((g) => g.id === groupId);
+      groups.value[index].key = undefined;
+    }
   }
 
   return {

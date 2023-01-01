@@ -103,6 +103,10 @@ const v$ = useVuelidate(
   { $autoDirty: true }
 );
 
+async function updateGroup() {
+  group.value = await groupStore.getGroup(props.id);
+}
+
 async function onSubmit() {
   loading.value = true;
   const newGroup: Group = {
@@ -178,6 +182,7 @@ async function deleteInvite() {
     await groupStore.getGroups;
   }
   showDeleteInviteModal.value = false;
+  updateGroup();
 }
 </script>
 
@@ -227,7 +232,7 @@ async function deleteInvite() {
               :group="group"
               @close="
                 showAddUserModal = false;
-                group = groupStore.groups.find((g) => g.id === props.id);
+                updateGroup();
               "
             />
           </ModalContainer>
@@ -246,7 +251,7 @@ async function deleteInvite() {
             <div
               v-for="user in orderedUsers"
               :key="user.id"
-              class="flex gap-2 items-center hover:bg-ghost/50 p-3 transition-colors duration-200"
+              class="flex gap-2 items-center hover:bg-yonder/10 p-3 transition-colors duration-200"
               @contextmenu.prevent="onContextMenu($event, user)"
             >
               <IconUser class="w-8 h-8" />
@@ -262,7 +267,7 @@ async function deleteInvite() {
         </form>
 
         <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
-        <GenerateInviteView :group="group" />
+        <GenerateInviteView :group="group" :invite-key="group?.key" />
         <LoadingButton
           :loading="loadingDelete"
           class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"

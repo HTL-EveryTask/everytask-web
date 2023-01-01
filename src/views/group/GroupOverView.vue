@@ -94,7 +94,7 @@ onMounted(async () => {
     <SideViewContainer
       :show="$route.name === 'showGroup'"
       title="Group"
-      class="bg-white"
+      class="bg-ghost"
       @close="$router.push({ name: 'groups' })"
     >
       <RouterView @close="$router.push({ name: 'groups' })" />

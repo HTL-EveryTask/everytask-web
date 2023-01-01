@@ -75,7 +75,13 @@ onMounted(() => {
           class="flex justify-between items-center p-4 px-6"
         >
           <h1 class="text-xl font-bold">{{ title }}</h1>
-          <button class="text-2xl" @click="$emit('close')">×</button>
+          <button
+            type="button"
+            class="text-2xl"
+            @click.prevent="$emit('close')"
+          >
+            ×
+          </button>
         </div>
         <div
           class="p-4 pt-0 max-h-[75vh] overflow-auto"
