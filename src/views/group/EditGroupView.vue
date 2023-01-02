@@ -187,195 +187,201 @@ async function deleteInvite() {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col h-full">
     <SideHeader title="Edit Group" @close="emit('close')">
       <template v-slot:right>
         <IconSettings class="w-6 h-6" />
       </template>
     </SideHeader>
-    <Transition mode="out-in" name="fade">
-      <div v-if="!loading && group" class="relative h-full px-8 py-6">
-        <form class="w-full" @submit.prevent="onSubmit">
-          <InputField id="name" :validation="v$.name" label="Name">
-            <input id="name" v-model="name" class="w-full" type="text" />
-            <template v-slot:right>
-              <span class="text-gray-500 text-sm"> {{ name.length }}/32 </span>
-            </template>
-          </InputField>
+    <div class="flex-1 overflow-y-auto">
+      <Transition mode="out-in" name="fade">
+        <div v-if="!loading && group" class="relative h-full px-8 py-6">
+          <form class="w-full" @submit.prevent="onSubmit">
+            <InputField id="name" :validation="v$.name" label="Name">
+              <input id="name" v-model="name" class="w-full" type="text" />
+              <template v-slot:right>
+                <span class="text-gray-500 text-sm">
+                  {{ name.length }}/32
+                </span>
+              </template>
+            </InputField>
 
-          <InputField
-            id="description"
-            :validation="v$.description"
-            label="Description"
-          >
-            <textarea
+            <InputField
               id="description"
-              v-model="description"
-              class="w-full"
-              rows="3"
-            ></textarea>
-            <template v-slot:right>
-              <span class="text-gray-500 text-sm">
-                {{ description.length }}/300
-              </span>
-            </template>
-          </InputField>
-
-          <ModalContainer
-            :show="showAddUserModal"
-            class="w-[30rem] bg-white"
-            effect="shadow"
-            title="Add Users"
-            @close="showAddUserModal = false"
-          >
-            <AddMemberView
-              :group="group"
-              @close="
-                showAddUserModal = false;
-                updateGroup();
-              "
-            />
-          </ModalContainer>
-
-          <div class="flex gap-2 items-center mb-2">
-            <h2 class="text-lg font-bold">Members</h2>
-            <button
-              class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
-              type="button"
-              @click="showAddUserModal = true"
+              :validation="v$.description"
+              label="Description"
             >
-              <IconPlus class="w-5 h-5" />
-            </button>
-          </div>
-          <div class="flex flex-col">
-            <div
-              v-for="user in orderedUsers"
-              :key="user.id"
-              class="flex gap-2 items-center hover:bg-yonder/10 p-3 transition-colors duration-200"
-              @contextmenu.prevent="onContextMenu($event, user)"
-            >
-              <IconUser class="w-8 h-8" />
-              <span class="text-raisin/80">{{ user.username }}</span>
-              <span v-if="user.is_admin" class="text-raisin/40"> (Admin) </span>
+              <textarea
+                id="description"
+                v-model="description"
+                class="w-full"
+                rows="3"
+              ></textarea>
+              <template v-slot:right>
+                <span class="text-gray-500 text-sm">
+                  {{ description.length }}/300
+                </span>
+              </template>
+            </InputField>
 
-              <IconDotsVertical
-                class="w-7 h-7 rounded-full p-1 hover:bg-yonder/10 active:bg-yonder/20 text-gray-500 ml-auto"
-                @click="onContextMenu($event, user)"
+            <ModalContainer
+              :show="showAddUserModal"
+              class="w-[30rem] bg-white"
+              effect="shadow"
+              title="Add Users"
+              @close="showAddUserModal = false"
+            >
+              <AddMemberView
+                :group="group"
+                @close="
+                  showAddUserModal = false;
+                  updateGroup();
+                "
               />
+            </ModalContainer>
+
+            <div class="flex gap-2 items-center mb-2">
+              <h2 class="text-lg font-bold">Members</h2>
+              <button
+                class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
+                type="button"
+                @click="showAddUserModal = true"
+              >
+                <IconPlus class="w-5 h-5" />
+              </button>
             </div>
-          </div>
-        </form>
+            <div class="flex flex-col">
+              <div
+                v-for="user in orderedUsers"
+                :key="user.id"
+                class="flex gap-2 items-center hover:bg-yonder/10 p-3 transition-colors duration-200"
+                @contextmenu.prevent="onContextMenu($event, user)"
+              >
+                <IconUser class="w-8 h-8" />
+                <span class="text-raisin/80">{{ user.username }}</span>
+                <span v-if="user.is_admin" class="text-raisin/40">
+                  (Admin)
+                </span>
 
-        <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
-        <GenerateInviteView :group="group" :invite-key="group?.key" />
-        <LoadingButton
-          :loading="loadingDelete"
-          class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"
-          @click="showDeleteInviteModal = true"
-          >Delete Invite
-        </LoadingButton>
-        <ModalContainer
-          :show="showDeleteInviteModal"
-          :title="'Delete Invite'"
-          class="bg-ghost w-96"
-          headless
-          relative
-          @close="showDeleteInviteModal = false"
-        >
-          <div class="p-4">
-            <p class="font-bold">
-              Are you sure you want to delete this invite?
-            </p>
-            <p class="italic text-raisin/50">
-              (Note:) Afterwards people will not be able to join this group
-              anymore.
-            </p>
-          </div>
+                <IconDotsVertical
+                  class="w-7 h-7 rounded-full p-1 hover:bg-yonder/10 active:bg-yonder/20 text-gray-500 ml-auto"
+                  @click="onContextMenu($event, user)"
+                />
+              </div>
+            </div>
+          </form>
 
-          <div class="flex justify-between gap-2">
-            <LoadingButton
-              :loading="loadingDelete"
-              class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"
-              @click="deleteInvite"
-              >Delete Invite
-            </LoadingButton>
-            <Button @click="showDeleteInviteModal = false">Cancel</Button>
-          </div>
-        </ModalContainer>
+          <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
+          <GenerateInviteView :group="group" :invite-key="group?.key" />
+          <LoadingButton
+            :loading="loadingDelete"
+            class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"
+            @click="showDeleteInviteModal = true"
+            >Delete Invite
+          </LoadingButton>
+          <ModalContainer
+            :show="showDeleteInviteModal"
+            :title="'Delete Invite'"
+            class="bg-ghost w-96"
+            headless
+            relative
+            @close="showDeleteInviteModal = false"
+          >
+            <div class="p-4">
+              <p class="font-bold">
+                Are you sure you want to delete this invite?
+              </p>
+              <p class="italic text-raisin/50">
+                (Note:) Afterwards people will not be able to join this group
+                anymore.
+              </p>
+            </div>
 
-        <LoadingButton
-          :disabled="v$.$invalid"
-          :loading="loading"
-          class="btn-primary mt-4"
-          type="submit"
-          @click="onSubmit"
-        >
-          Update
-        </LoadingButton>
-
-        <button v-if="group" class="btn-red" @click="showDeleteModal = true">
-          Delete Group
-        </button>
-
-        <ModalContainer
-          :show="showDeleteModal"
-          class="bg-ghost"
-          headless
-          relative
-          @close="showDeleteModal = false"
-        >
-          <div class="flex flex-col items-center">
-            <p class="whitespace-nowrap text-center my-2 font-bold px-4">
-              Are you sure you want to delete this group?
-            </p>
-            <div class="flex w-full gap-4 justify-center">
+            <div class="flex justify-between gap-2">
               <LoadingButton
                 :loading="loadingDelete"
-                class="btn-red"
-                @click="deleteGroup"
-                >Delete
+                class="bg-red-500/20 text-red-500 hover:bg-red-500/30 p-2 rounded-md"
+                @click="deleteInvite"
+                >Delete Invite
               </LoadingButton>
-              <button class="btn-primary" @click="showDeleteModal = false">
-                Cancel
-              </button>
+              <Button @click="showDeleteInviteModal = false">Cancel</Button>
             </div>
-          </div>
-        </ModalContainer>
+          </ModalContainer>
 
-        <button class="btn-red" @click="showLeaveModal = true">
-          Leave Group
-        </button>
+          <LoadingButton
+            :disabled="v$.$invalid"
+            :loading="loading"
+            class="btn-primary mt-4"
+            type="submit"
+            @click="onSubmit"
+          >
+            Update
+          </LoadingButton>
 
-        <ModalContainer
-          :show="showLeaveModal"
-          class="bg-ghost"
-          headless
-          relative
-          @close="showLeaveModal = false"
-        >
-          <div class="flex flex-col items-center">
-            <p class="whitespace-nowrap text-center my-2 font-bold px-4">
-              Are you sure you want to leave this group?
-            </p>
-            <div class="flex w-full gap-4 justify-center">
-              <LoadingButton
-                :loading="loadingLeave"
-                class="btn-red"
-                @click="leaveGroup"
-                >Leave
-              </LoadingButton>
-              <button class="btn-primary" @click="showLeaveModal = false">
-                Cancel
-              </button>
+          <button v-if="group" class="btn-red" @click="showDeleteModal = true">
+            Delete Group
+          </button>
+
+          <ModalContainer
+            :show="showDeleteModal"
+            class="bg-ghost"
+            headless
+            relative
+            @close="showDeleteModal = false"
+          >
+            <div class="flex flex-col items-center">
+              <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+                Are you sure you want to delete this group?
+              </p>
+              <div class="flex w-full gap-4 justify-center">
+                <LoadingButton
+                  :loading="loadingDelete"
+                  class="btn-red"
+                  @click="deleteGroup"
+                  >Delete
+                </LoadingButton>
+                <button class="btn-primary" @click="showDeleteModal = false">
+                  Cancel
+                </button>
+              </div>
             </div>
-          </div>
-        </ModalContainer>
-      </div>
-      <div v-else class="h-full flex gap-4 items-center justify-center mt-16">
-        <span class="text-gray-500">Loading...</span>
-        <IconSpinner class="w-6 h-6 text-raisin/50" />
-      </div>
-    </Transition>
+          </ModalContainer>
+
+          <button class="btn-red" @click="showLeaveModal = true">
+            Leave Group
+          </button>
+
+          <ModalContainer
+            :show="showLeaveModal"
+            class="bg-ghost"
+            headless
+            relative
+            @close="showLeaveModal = false"
+          >
+            <div class="flex flex-col items-center">
+              <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+                Are you sure you want to leave this group?
+              </p>
+              <div class="flex w-full gap-4 justify-center">
+                <LoadingButton
+                  :loading="loadingLeave"
+                  class="btn-red"
+                  @click="leaveGroup"
+                  >Leave
+                </LoadingButton>
+                <button class="btn-primary" @click="showLeaveModal = false">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </ModalContainer>
+        </div>
+        <div v-else class="h-full flex gap-4 items-center justify-center mt-16">
+          <span class="text-gray-500">Loading...</span>
+          <IconSpinner class="w-6 h-6 text-raisin/50" />
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 

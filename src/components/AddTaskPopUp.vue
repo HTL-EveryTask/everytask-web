@@ -62,8 +62,9 @@ const description = ref("test");
 const due = ref(new Date().toJSON().slice(0, 16));
 const assigned = ref([]);
 const tags = ref<string[]>([]);
+const subjectId = ref(-1);
 
-const date = ref("2022-11-11");
+const date = ref("");
 
 const rules = {
   title: {
@@ -113,7 +114,7 @@ async function onSubmit() {
     description: description.value,
     due_time: due.value,
     is_done: false,
-    subject: {},
+    subject: subjectId.value === -1 ? undefined : subjectId.value,
     tags: tags.value,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
@@ -166,7 +167,11 @@ async function onSubmit() {
           class="h-[36rem] overflow-auto px-4"
         >
           <div class="w-full p-4">
-            <h1 class="text-2xl mb-4">{{ title ? title : "New Task" }}</h1>
+            <input
+              class="text-2xl mb-4 font-semibold w-full bg-transparent border-none focus:outline-none"
+              v-model="title"
+              placeholder="New Task"
+            />
 
             <InputField id="tags" :validation="v$.tags" label="Tags">
               <TagInput id="tags" v-model="tags" :max-chars="20" />
@@ -239,8 +244,8 @@ async function onSubmit() {
           </CustomDatePicker>
         </div>
 
-        <select class="mx-4 ml-auto quick-input">
-          <option disabled selected value="1">Subject</option>
+        <select class="mx-4 ml-auto quick-input" v-model="subjectId">
+          <option disabled selected value="-1">Subject</option>
           <option
             v-for="subject in subjects"
             :key="subject.id"

@@ -1,6 +1,7 @@
 import type { Group } from "@/models/Group";
 import type { User } from "@/models/User";
 import type { Subject } from "@/models/Subject";
+import type { Note } from "@/models/Note";
 
 export interface Task {
   id: number;
@@ -10,6 +11,7 @@ export interface Task {
   due_time: string;
   tags: string[];
   subject?: number | Subject;
+  notes?: Note[];
   assigned_users: User[];
   assigned_groups: Group[];
   type: [];

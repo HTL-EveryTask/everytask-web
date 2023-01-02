@@ -29,6 +29,11 @@ onMounted(() => {
   window.addEventListener("resize", () => {
     windowWidth.value = window.innerWidth;
   });
+  // if no date is selected, select today
+  if (!props.modelValue) {
+    selectedDate.value = new Date();
+    viewedDate.value = new Date();
+  }
 });
 
 function dateToString(date: Date): string {
@@ -111,6 +116,12 @@ function selectDaysFromToday(n: number) {
     today.getMonth(),
     today.getDate() + n
   );
+
+  viewedDate.value = new Date(
+    selectedDate.value.getFullYear(),
+    selectedDate.value.getMonth(),
+    1
+  );
 }
 
 function isSameDay(date1: Date, date2: Date) {
@@ -139,6 +150,11 @@ const isSmallScreen = computed(() => {
 });
 </script>
 <template>
+  <div
+    v-if="editing"
+    class="fixed inset-0 flex items-center justify-center"
+    @click="editing = false"
+  />
   <div>
     <input
       ref="hiddenInput"
@@ -183,13 +199,13 @@ const isSmallScreen = computed(() => {
 
         <div class="calender grow rounded-xl">
           <div class="flex justify-center gap-2 h-12 items-center">
-            <button class="ml-2" @click="swipeMonth(-1)">
+            <button class="ml-2" @click.prevent="swipeMonth(-1)">
               <IconChevron class="h-4 w-4 transform -rotate-90" />
             </button>
             <span class="text-sm font-bold w-36 text-center">
               {{ MONTHS[viewedDate.getMonth()] }} {{ viewedDate.getFullYear() }}
             </span>
-            <button class="mr-2" @click="swipeMonth(1)">
+            <button class="mr-2" @click.prevent="swipeMonth(1)">
               <IconChevron class="h-4 w-4 transform rotate-90" />
             </button>
           </div>
@@ -245,15 +261,15 @@ const isSmallScreen = computed(() => {
             <div class="flex justify-between">
               <button
                 class="text-sm hover:text-red-500 transition-colors duration-200"
-                @click="selectedDate = today"
                 type="button"
+                @click="selectedDate = today"
               >
                 Clear
               </button>
               <button
                 class="text-sm hover:text-blue-400 transition-colors duration-200"
-                @click="editing = false"
                 type="button"
+                @click="editing = false"
               >
                 Done
               </button>
