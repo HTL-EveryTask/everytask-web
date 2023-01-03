@@ -62,7 +62,7 @@ const description = ref("test");
 const due = ref(new Date().toJSON().slice(0, 16));
 const assigned = ref([]);
 const tags = ref<string[]>([]);
-const subjectId = ref(-1);
+const subject = ref(undefined);
 
 const date = ref("");
 
@@ -114,7 +114,7 @@ async function onSubmit() {
     description: description.value,
     due_time: due.value,
     is_done: false,
-    subject: subjectId.value === -1 ? undefined : subjectId.value,
+    subject: subject.value,
     tags: tags.value,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
@@ -244,12 +244,12 @@ async function onSubmit() {
           </CustomDatePicker>
         </div>
 
-        <select class="mx-4 ml-auto quick-input" v-model="subjectId">
-          <option disabled selected value="-1">Subject</option>
+        <select class="mx-4 ml-auto quick-input" v-model="subject">
+          <option disabled selected :value="undefined">Subject</option>
           <option
             v-for="subject in subjects"
             :key="subject.id"
-            :value="subject.id"
+            :value="subject"
           >
             {{ subject.name }}
           </option>

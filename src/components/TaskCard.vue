@@ -73,8 +73,16 @@ const dateDayEnding = computed(() => {
         >
       </div>
     </div>
-    <div class="p-1 px-4 rounded-full flex items-center bg-ghost">
-      <span class="text-xs text-gray-500">Fach</span>
+    <div class="w-16 flex items-center justify-end">
+      <span
+        v-if="task.subject"
+        class="text-xs text-gray-500 p-1 min-w-[3rem] text-center rounded-full overflow-x-hidden overflow-ellipsis"
+        :style="{
+          backgroundColor: `${task.subject.back_color}70`,
+          color: `${task.subject.fore_color}`,
+        }"
+        >{{ task.subject?.name }}</span
+      >
     </div>
     <div class="ml-4 border-[1px] border-raisin/20 p-2 rounded-full">
       <IconLock

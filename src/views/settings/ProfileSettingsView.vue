@@ -84,7 +84,6 @@ function deleteAccount() {
           :show="showDeleteAccountModal"
           class="bg-white w-[30rem]"
           effect="shadow"
-          relative
           title="Delete Account"
           @close="showDeleteAccountModal = false"
         >

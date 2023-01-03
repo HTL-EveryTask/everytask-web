@@ -83,11 +83,6 @@ function expand(link: any) {
               <router-link :to="{ name: 'login' }">Login</router-link>
             </span>
           </span>
-          <IconLogout
-            v-if="userStore.ME"
-            class="h-6 w-6 text-raisin/60 hover:text-red-500/80 cursor-pointer transition-colors"
-            @click="authenticateStore.logout()"
-          />
         </div>
       </div>
       <TransitionGroup appear class="flex flex-col gap-4" name="list" tag="ul">
@@ -127,6 +122,15 @@ function expand(link: any) {
               </li>
             </ul>
           </Transition>
+        </li>
+        <li class="main-links" key="logout">
+          <div
+            class="flex gap-4 p-4 rounded-r-full mr-4 pl-8 transition-all items-center hover:bg-yonder/5 hover:text-red-500"
+            @click="authenticateStore.logout()"
+          >
+            <IconLogout class="w-[26px] h-[26px] transition-all" />
+            <span class="condensed-hidden">Logout</span>
+          </div>
         </li>
       </TransitionGroup>
     </div>
