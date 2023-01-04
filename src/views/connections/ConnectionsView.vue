@@ -2,11 +2,21 @@
 import IconConnections from "@/components/icons/IconConnections.vue";
 import IconClock from "@/components/icons/IconClock.vue";
 import ModalContainer from "@/components/ModalContainer.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import InputField from "@/components/InputField.vue";
 import { useUntisStore } from "@/stores/untis";
+import { useConnectionStore } from "@/stores/connection";
+
+const connectionStore = useConnectionStore();
+
+const connections = ref();
+
+onMounted(async () => {
+  const response = await connectionStore.checkConnections();
+  connections.value = await response.json();
+});
 
 const showWebUntisModal = ref(false);
 const serverUrl = ref("");
@@ -173,6 +183,9 @@ function connectWebUntis() {
         </div>
       </form>
     </ModalContainer>
+    <p class="text-center text-raisin/70 mt-8">
+      {{ connections }}
+    </p>
   </div>
 </template>
 
