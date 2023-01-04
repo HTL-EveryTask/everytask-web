@@ -62,7 +62,7 @@ function connectWebUntis() {
 
 <template>
   <div class="h-full overflow-y-hidden">
-    <div class="main-card max-w-[48em] sm:w-full sm:h-full bg-white mt-16">
+    <div class="main-card max-w-[48em] sm:w-full sm:h-full bg-ghost mt-16">
       <header>
         <IconConnections class="w-14 h-14 mx-auto mt-8 text-raisin/70" />
       </header>
@@ -74,7 +74,7 @@ function connectWebUntis() {
 
       <section class="mt-8 flex flex-col gap-4">
         <div class="connection-card">
-          <div class="w-24 h-24 p-4 mx-2 bg-white rounded-2xl">
+          <div class="w-24 h-24 p-4 mx-2 bg-ghost rounded-2xl">
             <IconClock class="text-raisin/70" />
           </div>
           <div class="flex flex-col flex-1 m-2">
@@ -95,7 +95,7 @@ function connectWebUntis() {
           </div>
         </div>
         <div class="connection-card">
-          <div class="w-24 h-24 p-4 mx-2 bg-white rounded-2xl">
+          <div class="w-24 h-24 p-4 mx-2 bg-ghost rounded-2xl">
             <IconClock class="text-raisin/70" />
           </div>
           <div class="flex flex-col flex-1 m-2">
@@ -191,6 +191,6 @@ function connectWebUntis() {
 
 <style scoped>
 .connection-card {
-  @apply w-full h-32 p-2 bg-ghost rounded-xl flex items-center;
+  @apply w-full h-32 p-2 bg-white rounded-xl flex items-center;
 }
 </style>
