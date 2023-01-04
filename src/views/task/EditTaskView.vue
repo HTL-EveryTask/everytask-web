@@ -14,6 +14,9 @@ import IconSettings from "@/components/icons/IconSettings.vue";
 import TagInput from "@/components/TagInput.vue";
 import NoteCard from "@/components/NoteCard.vue";
 import type { Note } from "@/models/Note";
+import type { Subject } from "@/models/Subject";
+import CustomDropDown from "@/components/SubjectSelector.vue";
+import { useUntisStore } from "@/stores/untis";
 
 const mockNotes: Note[] = [
   {
@@ -44,12 +47,14 @@ const props = defineProps<{
 const taskStore = useTaskStore();
 
 const task = ref<Task | undefined>();
+const subjects = ref<Subject[]>([]);
 
 const title = ref("");
 const description = ref("");
 const due = ref("");
 const assigned = ref<any[]>([]);
 const tags = ref<string[]>([]);
+const subject = ref<Subject | undefined>();
 
 onMounted(async () => {
   watch(
@@ -83,6 +88,8 @@ onMounted(async () => {
 
         console.log(assigned.value);
 
+        subject.value = task.value?.subject;
+
         loading.value = false;
       } else {
         emit("close");
@@ -90,6 +97,9 @@ onMounted(async () => {
     },
     { immediate: true }
   );
+
+  await useUntisStore().getSubjects();
+  subjects.value = useUntisStore().subjects;
 });
 
 const loading = ref(false);
@@ -142,6 +152,7 @@ async function onSubmit() {
     due_time: due.value,
     is_done: task.value?.is_done ?? false,
     tags: tags.value,
+    subject: subject.value,
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
     type: [],
@@ -177,7 +188,7 @@ async function deleteTask() {
       </template>
     </SideHeader>
     <div class="flex-1 overflow-y-auto">
-      <Transition name="fade" mode="out-in">
+      <Transition mode="out-in" name="fade">
         <div v-if="!loading" class="relative h-full px-8 py-6">
           <form class="w-full" @submit.prevent="onSubmit">
             <InputField id="title" :validation="v$.title" label="Title">
@@ -189,8 +200,17 @@ async function deleteTask() {
               </template>
             </InputField>
 
-            <InputField id="tags" label="Tags" :validation="v$.tags">
+            <InputField id="tags" :validation="v$.tags" label="Tags">
               <TagInput v-model="tags" :max-chars="20" />
+            </InputField>
+
+            <InputField id="subject" label="Subject">
+              <CustomDropDown
+                v-model="subject"
+                :subjects="subjects"
+                placeholder="Choose a subject"
+                class="w-[7rem] my-2 input-field"
+              />
             </InputField>
 
             <InputField

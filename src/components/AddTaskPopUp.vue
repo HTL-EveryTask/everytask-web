@@ -13,6 +13,7 @@ import CustomDatePicker from "@/components/CustomDatePicker.vue";
 import TagInput from "@/components/TagInput.vue";
 import type { Subject } from "@/models/Subject";
 import { useUntisStore } from "@/stores/untis";
+import CustomDropDown from "@/components/SubjectSelector.vue";
 
 defineProps<{
   expandedClass: string;
@@ -128,7 +129,10 @@ async function onSubmit() {
   title.value = "";
   description.value = "";
   due.value = new Date().toJSON().slice(0, 16);
-  emit("close");
+  assigned.value = [];
+  tags.value = [];
+  subject.value = undefined;
+  unExpand();
 }
 </script>
 
@@ -168,8 +172,8 @@ async function onSubmit() {
         >
           <div class="w-full p-4">
             <input
-              class="text-2xl mb-4 font-semibold w-full bg-transparent border-none focus:outline-none"
               v-model="title"
+              class="text-2xl mb-4 font-semibold w-full bg-transparent border-none focus:outline-none"
               placeholder="New Task"
             />
 
@@ -244,16 +248,11 @@ async function onSubmit() {
           </CustomDatePicker>
         </div>
 
-        <select class="mx-4 ml-auto quick-input" v-model="subject">
-          <option disabled selected :value="undefined">Subject</option>
-          <option
-            v-for="subject in subjects"
-            :key="subject.id"
-            :value="subject"
-          >
-            {{ subject.name }}
-          </option>
-        </select>
+        <CustomDropDown
+          v-model="subject"
+          :subjects="subjects"
+          class="w-[7rem] mx-4 ml-auto quick-input"
+        />
       </div>
     </form>
   </div>

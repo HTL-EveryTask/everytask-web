@@ -6,6 +6,7 @@ import IconCheck from "@/components/icons/IconCheck.vue";
 import IconLock from "@/components/icons/IconLock.vue";
 import IconSun from "@/components/icons/IconSun.vue";
 import IconGroup from "@/components/icons/IconGroup.vue";
+import SubjectChip from "@/components/SubjectChip.vue";
 
 const taskStore = useTaskStore();
 
@@ -74,15 +75,7 @@ const dateDayEnding = computed(() => {
       </div>
     </div>
     <div class="w-16 flex items-center justify-end">
-      <span
-        v-if="task.subject"
-        class="text-xs text-gray-500 p-1 min-w-[3rem] text-center rounded-full overflow-x-hidden overflow-ellipsis"
-        :style="{
-          backgroundColor: `${task.subject.back_color}70`,
-          color: `${task.subject.fore_color}`,
-        }"
-        >{{ task.subject?.name }}</span
-      >
+      <SubjectChip v-if="task?.subject" :subject="task?.subject" />
     </div>
     <div class="ml-4 border-[1px] border-raisin/20 p-2 rounded-full">
       <IconLock

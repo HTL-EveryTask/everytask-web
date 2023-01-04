@@ -10,7 +10,7 @@ export interface Task {
   is_done: boolean;
   due_time: string;
   tags: string[];
-  subject?: number | Subject;
+  subject?: Subject;
   notes?: Note[];
   assigned_users: User[];
   assigned_groups: Group[];
