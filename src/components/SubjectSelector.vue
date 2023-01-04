@@ -8,7 +8,7 @@ import IconX from "@/components/icons/IconX.vue";
 const props = defineProps<{
   subjects: Subject[];
   placeholder?: string;
-  modelValue: Subject;
+  modelValue: Subject | undefined;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
@@ -96,7 +96,7 @@ function beforeTaskLeave(el: any) {
               class="absolute text-raisin/50 flex items-center justify-center p-1 rounded-sm right-1 hover:text-raisin/70"
               type="button"
               @click="
-                selectedSubject = null;
+                selectedSubject = undefined;
                 search = '';
               "
             >

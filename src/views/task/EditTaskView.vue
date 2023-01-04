@@ -24,7 +24,7 @@ const mockNotes: Note[] = [
     text: "This is a note",
     user: {
       id: 1,
-      username: "test",
+      username: "Jürgen 1",
       profile_picture: "https://i.pravatar.cc/300",
     },
   },
@@ -33,8 +33,8 @@ const mockNotes: Note[] = [
     text: "This is another note",
     user: {
       id: 1,
-      username: "test",
-      profile_picture: "https://i.pravatar.cc/300",
+      username: "Jürgen 2",
+      profile_picture: "https://i.pravatar.cc/301",
     },
   },
 ];
@@ -54,7 +54,7 @@ const description = ref("");
 const due = ref("");
 const assigned = ref<any[]>([]);
 const tags = ref<string[]>([]);
-const subject = ref<Subject | undefined>();
+const subject = ref<Subject>();
 
 onMounted(async () => {
   watch(

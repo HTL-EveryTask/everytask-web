@@ -63,7 +63,7 @@ const description = ref("test");
 const due = ref(new Date().toJSON().slice(0, 16));
 const assigned = ref([]);
 const tags = ref<string[]>([]);
-const subject = ref(undefined);
+const subject = ref<Subject>();
 
 const date = ref("");
 
