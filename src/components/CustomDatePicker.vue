@@ -171,7 +171,7 @@ const isSmallScreen = computed(() => {
         :is="isSmallScreen ? ModalContainer : 'div'"
         :show="editing"
         class="bg-white"
-        title="Pick a Date"
+        :title="isSmallScreen ? 'Pick a Date' : ''"
         @close="editing = false"
       >
         <Transition name="side">

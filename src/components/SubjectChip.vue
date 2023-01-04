@@ -13,6 +13,7 @@ defineProps<{
       backgroundColor: `${subject.back_color}70`,
       color: `${subject.fore_color}`,
     }"
+    :title="subject?.long_name"
   >
     {{ subject?.name }}
   </div>

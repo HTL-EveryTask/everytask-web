@@ -27,6 +27,7 @@ const expanded = ref(false);
 
 function selectSubject(subject: Subject) {
   selectedSubject.value = subject;
+  console.log(selectedSubject.value);
 }
 
 const isEnoughSpace = computed(() => {
@@ -106,9 +107,15 @@ function beforeTaskLeave(el: any) {
             <div class="flex flex-col gap-y-2 items-end px-2 mt-2">
               <TransitionGroup name="list" @before-leave="beforeTaskLeave">
                 <SubjectChip
-                  v-for="subject in props.subjects.filter((s) =>
-                    s.name.toLowerCase().includes(search.toLowerCase())
-                  )"
+                  v-for="subject in props.subjects
+                    .filter(
+                      (s) =>
+                        s.name.toLowerCase().includes(search.toLowerCase()) ||
+                        s.long_name
+                          ?.toLowerCase()
+                          .includes(search.toLowerCase())
+                    )
+                    .sort((a, b) => a.name.localeCompare(b.name))"
                   :key="subject.id"
                   :subject="subject"
                   class="w-full cursor-pointer"
