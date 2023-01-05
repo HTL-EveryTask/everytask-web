@@ -12,6 +12,7 @@ export interface Task {
   tags: string[];
   subject?: Subject;
   notes?: Note[];
+  origin: string;
   assigned_users: User[];
   assigned_groups: Group[];
   type: [];

@@ -57,8 +57,27 @@ function beforeTaskLeave(el: any) {
       @click="expanded = false"
     />
 
-    <div :class="$attrs.class" class="relative">
-      <div class="w-full flex items-center" @click.stop="expanded = !expanded">
+    <div
+      :title="
+        subjects.length < 1
+          ? 'Authenticate with Untis to use this feature'
+          : selectedSubject
+          ? selectedSubject.name
+          : placeholder
+      "
+      :class="{
+        'cursor-not-allowed': subjects.length < 1,
+      }"
+      class="relative"
+    >
+      <div
+        :class="[
+          $attrs.class,
+          subjects.length < 1 ? 'pointer-events-none opacity-50' : '',
+        ]"
+        class="w-full flex items-center"
+        @click.stop="expanded = !expanded"
+      >
         <div class="flex-1">
           <div v-if="selectedSubject" class="pb-1">
             <SubjectChip :subject="selectedSubject" />

@@ -125,7 +125,7 @@ function expand(link: any) {
         </li>
         <li class="main-links" key="logout">
           <div
-            class="flex gap-4 p-4 rounded-r-full mr-4 pl-8 transition-all items-center hover:bg-yonder/5 hover:text-red-500"
+            class="flex gap-4 p-4 rounded-r-full mr-4 pl-8 transition-all items-center hover:bg-yonder/5 hover:text-red-500 cursor-pointer"
             @click="authenticateStore.logout()"
           >
             <IconLogout class="w-[26px] h-[26px] transition-all" />

@@ -8,6 +8,7 @@ import useVuelidate from "@vuelidate/core";
 import InputField from "@/components/InputField.vue";
 import { useUntisStore } from "@/stores/untis";
 import { useConnectionStore } from "@/stores/connection";
+import { useToastStore } from "@/stores/toast";
 
 const connectionStore = useConnectionStore();
 
@@ -50,13 +51,21 @@ const $v = useVuelidate(
   { $autoDirty: true }
 );
 
-function connectWebUntis() {
-  useUntisStore().createSession(
+async function connectWebUntis() {
+  const response = await useUntisStore().createSession(
     username.value,
     password.value,
     school.value,
     serverUrl.value
   );
+  if (response.ok) {
+    showWebUntisModal.value = false;
+    useToastStore().addToast({
+      title: "WebUntis connection established",
+      message: "You can now use WebUntis in the app",
+      type: "success",
+    });
+  }
 }
 </script>
 
@@ -108,6 +117,7 @@ function connectWebUntis() {
             <div class="flex items-center mt-2">
               <button
                 class="bg-yonder/10 text-raisin/70 rounded-full px-4 py-2 text-sm font-bold hover:bg-yonder/20 transition-colors duration-300"
+                @click="$router.push({ name: 'teamsauth' })"
               >
                 Connect
               </button>
@@ -124,7 +134,7 @@ function connectWebUntis() {
       @close="showWebUntisModal = false"
     >
       <form @submit.prevent="connectWebUntis">
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-0">
           <InputField
             id="serverUrl"
             v-model="serverUrl"
@@ -133,6 +143,18 @@ function connectWebUntis() {
           >
             <input
               v-model="serverUrl"
+              class="w-full px-4 py-2 rounded-lg border border-raisin/20 focus:border-raisin/50 focus:outline-none"
+              type="text"
+            />
+          </InputField>
+          <InputField
+            id="school"
+            v-model="school"
+            :validation="$v.school"
+            label="School"
+          >
+            <input
+              v-model="school"
               class="w-full px-4 py-2 rounded-lg border border-raisin/20 focus:border-raisin/50 focus:outline-none"
               type="text"
             />
@@ -161,21 +183,9 @@ function connectWebUntis() {
               type="password"
             />
           </InputField>
-          <InputField
-            id="school"
-            v-model="school"
-            :validation="$v.school"
-            label="School"
-          >
-            <input
-              v-model="school"
-              class="w-full px-4 py-2 rounded-lg border border-raisin/20 focus:border-raisin/50 focus:outline-none"
-              type="text"
-            />
-          </InputField>
 
           <button
-            class="bg-raisin/50 text-white rounded-full px-4 py-2 text-sm font-bold hover:bg-raisin/70 transition-colors duration-300"
+            class="btn-primary text-white rounded-full px-4 py-2 text-sm font-bold transition-colors duration-300"
             type="submit"
           >
             Connect

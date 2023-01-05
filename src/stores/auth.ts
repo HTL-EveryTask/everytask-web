@@ -38,6 +38,7 @@ export const useAuthenticateStore = defineStore("authenticate", () => {
     await router.push({ name: "login" });
     useGroupStore().groups = [];
     useTaskStore().tasks = [];
+    useUserStore().ME = null;
   }
 
   async function register(username: string, email: string, password: string) {

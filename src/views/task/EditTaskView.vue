@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { helpers, maxLength, required } from "@vuelidate/validators";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import useVuelidate from "@vuelidate/core";
 import ModalContainer from "@/components/ModalContainer.vue";
 import type { Task } from "@/models/Task";
@@ -86,8 +86,6 @@ onMounted(async () => {
 
         assigned.value = [...assignedUsers, ...assignedGroups];
 
-        console.log(assigned.value);
-
         subject.value = task.value?.subject;
 
         loading.value = false;
@@ -107,10 +105,14 @@ const loadingDelete = ref(false);
 
 let showDeleteModal = ref(false);
 
+const maxTitleLength = computed(() => {
+  return task.value?.origin === "teams" ? 100 : 32;
+});
+
 const rules = {
   title: {
     required,
-    maxLength: maxLength(32),
+    maxLength: maxLength(maxTitleLength),
   },
   description: {
     maxLength: maxLength(300),
@@ -153,6 +155,7 @@ async function onSubmit() {
     is_done: task.value?.is_done ?? false,
     tags: tags.value,
     subject: subject.value,
+    origin: "",
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
     type: [],
@@ -195,7 +198,7 @@ async function deleteTask() {
               <input id="title" v-model="title" class="w-full" type="text" />
               <template v-slot:right>
                 <span class="text-gray-500 text-sm">
-                  {{ title.length }}/32
+                  {{ title.length }}/{{ maxTitleLength }}
                 </span>
               </template>
             </InputField>
@@ -208,8 +211,8 @@ async function deleteTask() {
               <CustomDropDown
                 v-model="subject"
                 :subjects="subjects"
-                placeholder="Choose a subject"
                 class="w-[7rem] my-2 input-field"
+                placeholder="Choose"
               />
             </InputField>
 

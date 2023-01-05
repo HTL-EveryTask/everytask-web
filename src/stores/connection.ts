@@ -9,7 +9,7 @@ export const useConnectionStore = defineStore("connection", () => {
   }
 
   async function authenticateTeams(code: string) {
-    return await api.callApi("teams/authenticate", "POST", { code: code });
+    return await api.callApi("teams/authorize", "POST", { code: code });
   }
 
   return {

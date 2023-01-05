@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import { useConnectionStore } from "@/stores/connection";
 import { useToastStore } from "@/stores/toast";
+import router from "@/router";
 
 const clientId = "4692541b-da14-4367-b420-1a76fc090357";
 const tenantId = "9ec23210-0e57-409e-beac-05e755ea3dd8";
@@ -28,6 +29,7 @@ onMounted(async () => {
         message: "You can now use the Teams integration",
         type: "success",
       });
+      await router.push({ name: "connections" });
     } else {
       useToastStore().addToast({
         title: "Failed to authenticate",
