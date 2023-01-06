@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
-  label: string;
+  label?: string;
   id: string;
   validation?: any;
   input?: any;
@@ -34,7 +34,7 @@ watch(
 
 <template>
   <div :class="{ 'input-error': error || createdError }" class="input-field">
-    <label :for="id">{{ label }}</label>
+    <label v-if="label" :for="id">{{ label }}</label>
     <slot />
     <div class="flex text-sm min-h-[1.5em]">
       <div>

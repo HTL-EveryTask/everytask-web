@@ -120,6 +120,7 @@ async function onSubmit() {
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
     type: [],
+    origin: "",
   };
 
   loading.value = true;

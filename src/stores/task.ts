@@ -59,6 +59,39 @@ export const useTaskStore = defineStore("task", () => {
     });
   }
 
+  async function addSubTask(id: number, title: string) {
+    const response = await api.callApi(`subtask/${id}`, "PUT", {
+      title: title,
+    });
+    if (response.ok) {
+      const index = tasks.value.findIndex((t) => t.id === id);
+      const task = tasks.value[index];
+      const subTask = await response.json().then((data) => data.subtask);
+
+      if (task.subtasks) {
+        task.subtasks.push(subTask);
+      } else {
+        task.subtasks = [subTask];
+      }
+    }
+    return response;
+  }
+
+  async function deleteSubTask(subTaskId: number) {
+    const response = await api.callApi(`subtask/${subTaskId}`, "DELETE");
+    if (response.ok) {
+      // find the task that contains the subtask with the given id
+      const task = tasks.value.find((t) =>
+        t.subtasks?.some((st) => st.id === subTaskId)
+      );
+      if (task) {
+        const index = task.subtasks?.findIndex((st) => st.id === subTaskId);
+        task.subtasks?.splice(index!, 1);
+      }
+    }
+    return response;
+  }
+
   return {
     tasks,
     getTasks,
@@ -67,5 +100,7 @@ export const useTaskStore = defineStore("task", () => {
     updateTask,
     deleteTask,
     setTaskDone,
+    addSubTask,
+    deleteSubTask,
   };
 });

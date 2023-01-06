@@ -16,10 +16,11 @@ import NoteCard from "@/components/NoteCard.vue";
 import type { Subject } from "@/models/Subject";
 import CustomDropDown from "@/components/SubjectSelector.vue";
 import { useUntisStore } from "@/stores/untis";
+import SubTaskView from "@/views/task/SubTaskView.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
-  id?: number;
+  id: number;
 }>();
 
 const taskStore = useTaskStore();
@@ -159,6 +160,10 @@ async function deleteTask() {
   showDeleteModal.value = false;
   emit("close");
 }
+
+async function updateTask() {
+  task.value = await taskStore.getTask(props.id);
+}
 </script>
 
 <template>
@@ -170,7 +175,7 @@ async function deleteTask() {
     </SideHeader>
     <div class="flex-1 overflow-y-auto">
       <Transition mode="out-in" name="fade">
-        <div v-if="!loading" class="relative h-full px-8 py-6">
+        <div v-if="!loading && task" class="relative h-full px-8 py-6">
           <form class="w-full" @submit.prevent="onSubmit">
             <InputField id="title" :validation="v$.title" label="Title">
               <input id="title" v-model="title" class="w-full" type="text" />
@@ -181,62 +186,73 @@ async function deleteTask() {
               </template>
             </InputField>
 
-            <InputField id="tags" :validation="v$.tags" label="Tags">
-              <TagInput v-model="tags" :max-chars="20" />
-            </InputField>
+            <section class="my-4">
+              <InputField id="tags" :validation="v$.tags" label="Tags">
+                <TagInput v-model="tags" :max-chars="20" />
+              </InputField>
 
-            <InputField id="subject" label="Subject">
-              <CustomDropDown
-                v-model="subject"
-                :subjects="subjects"
-                class="w-[7rem] my-2 input-field"
-                placeholder="Choose"
-              />
-            </InputField>
+              <InputField id="subject" label="Subject">
+                <CustomDropDown
+                  v-model="subject"
+                  :subjects="subjects"
+                  class="w-[7rem] my-2 input-field"
+                  placeholder="Choose"
+                />
+              </InputField>
 
-            <InputField
-              id="description"
-              :validation="v$.description"
-              label="Description"
-            >
-              <textarea
+              <InputField
                 id="description"
-                v-model="description"
-                class="w-full"
-                rows="3"
-              ></textarea>
-              <template v-slot:right>
-                <span class="text-gray-500 text-sm">
-                  {{ description.length }}/300
-                </span>
-              </template>
-            </InputField>
+                :validation="v$.description"
+                label="Description"
+              >
+                <textarea
+                  id="description"
+                  v-model="description"
+                  class="w-full"
+                  rows="3"
+                ></textarea>
+                <template v-slot:right>
+                  <span class="text-gray-500 text-sm">
+                    {{ description.length }}/300
+                  </span>
+                </template>
+              </InputField>
 
-            <InputField id="due" :validation="v$.due" label="Due">
-              <input
-                id="due"
-                v-model="due"
-                class="w-full"
-                type="datetime-local"
-              />
-            </InputField>
+              <InputField id="due" :validation="v$.due" label="Due">
+                <input
+                  id="due"
+                  v-model="due"
+                  class="w-full"
+                  type="datetime-local"
+                />
+              </InputField>
 
-            <InputField id="assigned" label="Assigned">
-              <GroupUserSelector id="assigned" v-model="assigned" />
-            </InputField>
+              <InputField id="assigned" label="Assigned">
+                <GroupUserSelector id="assigned" v-model="assigned" />
+              </InputField>
+            </section>
 
-            <div class="flex gap-2 items-center mb-2">
-              <h2 class="text-lg font-semibold">Notes</h2>
-            </div>
-            <div
-              class="bg-yonder/10 rounded-lg p-4 mb-6 flex flex-col gap-2 shadow-yonder/10 shadow-inner max-w-[48em] overflow-y-auto"
-            >
-              <NoteCard
-                v-for="note in task?.note"
-                :key="note.id"
-                :note="note"
-              />
-            </div>
+            <section class="my-4">
+              <div>
+                <h2 class="text-lg font-medium">Subtasks</h2>
+              </div>
+              <SubTaskView :task="task" @update="updateTask" />
+            </section>
+
+            <section class="my-4">
+              <div class="flex gap-2 items-center mb-2">
+                <h2 class="text-lg font-semibold">Notes</h2>
+              </div>
+              <div
+                class="bg-yonder/10 rounded-lg p-4 mb-6 flex flex-col gap-2 shadow-yonder/10 shadow-inner max-w-[48em] overflow-y-auto"
+              >
+                <NoteCard
+                  v-for="note in task?.note"
+                  :key="note.id"
+                  :note="note"
+                />
+              </div>
+            </section>
 
             <LoadingButton
               :disabled="v$.$invalid"
