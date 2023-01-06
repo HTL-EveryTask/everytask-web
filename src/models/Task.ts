@@ -11,7 +11,7 @@ export interface Task {
   due_time: string;
   tags: string[];
   subject?: Subject;
-  notes?: Note[];
+  note?: Note[];
   origin: string;
   assigned_users: User[];
   assigned_groups: Group[];

@@ -8,7 +8,7 @@ const props = defineProps<{
   note: Note;
 }>();
 
-const text = ref(props.note.text);
+const text = ref(props.note.note);
 </script>
 
 <template>
@@ -18,11 +18,11 @@ const text = ref(props.note.text);
     <div class="flex items-center justify-between px-4 py-3">
       <div>
         <div
-          v-if="note.user.profile_picture"
+          v-if="note.user.picture"
           class="w-10 h-10 rounded-full overflow-hidden"
         >
           <img
-            :src="note.user.profile_picture"
+            :src="`data:image/png;base64,${note.user.picture}`"
             alt="Profile picture"
             class="w-full h-full object-cover"
           />

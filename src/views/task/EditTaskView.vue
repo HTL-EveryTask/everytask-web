@@ -13,31 +13,9 @@ import SideHeader from "@/components/SideHeader.vue";
 import IconSettings from "@/components/icons/IconSettings.vue";
 import TagInput from "@/components/TagInput.vue";
 import NoteCard from "@/components/NoteCard.vue";
-import type { Note } from "@/models/Note";
 import type { Subject } from "@/models/Subject";
 import CustomDropDown from "@/components/SubjectSelector.vue";
 import { useUntisStore } from "@/stores/untis";
-
-const mockNotes: Note[] = [
-  {
-    id: 1,
-    text: "This is a note",
-    user: {
-      id: 1,
-      username: "Jürgen 1",
-      profile_picture: "https://i.pravatar.cc/300",
-    },
-  },
-  {
-    id: 2,
-    text: "This is another note",
-    user: {
-      id: 1,
-      username: "Jürgen 2",
-      profile_picture: "https://i.pravatar.cc/301",
-    },
-  },
-];
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -251,9 +229,13 @@ async function deleteTask() {
               <h2 class="text-lg font-semibold">Notes</h2>
             </div>
             <div
-              class="bg-yonder/10 rounded-lg p-4 mb-6 flex flex-col gap-2 shadow-yonder/10 shadow-inner"
+              class="bg-yonder/10 rounded-lg p-4 mb-6 flex flex-col gap-2 shadow-yonder/10 shadow-inner max-w-[48em] overflow-y-auto"
             >
-              <NoteCard v-for="note in mockNotes" :key="note.id" :note="note" />
+              <NoteCard
+                v-for="note in task?.note"
+                :key="note.id"
+                :note="note"
+              />
             </div>
 
             <LoadingButton
