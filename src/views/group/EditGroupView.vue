@@ -143,9 +143,15 @@ function onContextMenu(e: MouseEvent, user: User) {
         customClass: "hover:bg-yonder/10",
       },
       {
-        label: "Make admin",
+        label: group.value?.users.find((u) => u.id === user.id)?.is_admin
+          ? "Remove admin"
+          : "Make admin",
         onClick: () => {
-          console.log("making admin", user);
+          if (group.value?.users.find((u) => u.id === user.id)?.is_admin) {
+            groupStore.removeAdmin(group.value.id, user.id);
+          } else {
+            groupStore.makeAdmin(group.value?.id || 0, user.id);
+          }
         },
         customClass: "hover:bg-yonder/10",
       },
@@ -182,7 +188,7 @@ async function deleteInvite() {
     await groupStore.getGroups;
   }
   showDeleteInviteModal.value = false;
-  updateGroup();
+  await updateGroup();
 }
 </script>
 

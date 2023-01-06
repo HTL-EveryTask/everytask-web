@@ -118,6 +118,43 @@ export const useGroupStore = defineStore("group", () => {
     }
   }
 
+  async function makeAdmin(groupId: number, userId: number) {
+    const response = await api.callApi(`group/${groupId}/admin`, "PUT", {
+      id: userId,
+    });
+    if (response.ok) {
+      // const group = await response.json();
+      // const index = groups.value.findIndex((g) => g.id === group.id);
+      // groups.value[index] = group;
+    }
+    return response;
+  }
+
+  async function removeAdmin(groupId: number, userId: number) {
+    const response = await api.callApi(`group/${groupId}/admin`, "DELETE", {
+      id: userId,
+    });
+    if (response.ok) {
+      // const group = await response.json();
+      // const index = groups.value.findIndex((g) => g.id === group.id);
+      // groups.value[index] = group;
+    }
+    return response;
+  }
+
+  async function removeUserFromGroup(groupId: number, userId: number) {
+    const response = await api.callApi(
+      `group/${groupId}/user/${userId}`,
+      "DELETE"
+    );
+    if (response.ok) {
+      // const group = await response.json();
+      // const index = groups.value.findIndex((g) => g.id === group.id);
+      // groups.value[index] = group;
+    }
+    return response;
+  }
+
   return {
     groups,
     getAllUsers,
@@ -132,5 +169,8 @@ export const useGroupStore = defineStore("group", () => {
     requestInvite,
     acceptInvite,
     deleteInvite,
+    makeAdmin,
+    removeAdmin,
+    removeUserFromGroup,
   };
 });
