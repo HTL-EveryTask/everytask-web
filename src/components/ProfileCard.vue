@@ -9,6 +9,7 @@ import LoadingButton from "@/components/LoadingButton.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import { useToastStore } from "@/stores/toast";
 import IconPlus from "@/components/icons/IconPlus.vue";
+import IconUpload from "@/components/icons/IconUpload.vue";
 
 const userStore = useUserStore();
 const loading = ref(true);
@@ -99,27 +100,33 @@ function uploadPicture() {
 <template>
   <div class="main-card bg-white my-4">
     <form v-if="!loading" @submit.prevent="updateProfile">
-      <div class="flex gap-4">
+      <div class="flex gap-4 items-center">
         <div
-          class="flex items-center relative overflow-visible"
+          class="flex items-center relative overflow-visible w-40 h-40"
           @click="uploadPicture"
         >
+          <div
+            class="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200"
+          >
+            <div
+              class="flex items-center justify-center h-full flex flex-col text-white"
+            >
+              <IconUpload class="w-12 h-12" />
+            </div>
+          </div>
           <img
-            v-if="uploadedPictureData"
-            :src="uploadedPictureData"
+            v-if="userStore.ME?.profile_picture || uploadedPictureData.value"
+            :src="
+              uploadedPictureData ||
+              `data:image/png;base64,${userStore.ME?.profile_picture}`
+            "
             alt="Profile Picture"
-            class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
-          />
-          <img
-            v-else-if="userStore.ME?.profile_picture"
-            :src="`data:image/png;base64,${userStore.ME.profile_picture}`"
-            alt="Profile Picture"
-            class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
+            class="w-full h-full rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
           />
 
           <IconPlus
             v-else
-            class="w-40 h-40 p-8 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
+            class="w-full h-full p-8 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
           />
         </div>
         <div class="flex-1 my-2">

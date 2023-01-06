@@ -42,6 +42,7 @@ onMounted(async () => {
               class="p-8 sm:p-4 overflow-y-auto w-full h-full border-b-2 border-yonder/60"
             >
               <TransitionGroup
+                v-if="groupStore.groups.length > 0"
                 appear
                 class="flex flex-col gap-4 w-full"
                 name="list"
@@ -67,6 +68,15 @@ onMounted(async () => {
                   "
                 />
               </TransitionGroup>
+              <div
+                v-else
+                class="flex flex-col items-center justify-center m-16"
+              >
+                <h1 class="text-2xl font-semibold">No groups yet</h1>
+                <p class="text-gray-500 text-center">
+                  Create a group to start collaborating with your friends
+                </p>
+              </div>
             </div>
             <button
               class="m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
@@ -93,8 +103,8 @@ onMounted(async () => {
 
     <SideViewContainer
       :show="$route.name === 'showGroup'"
-      title="Group"
       class="bg-ghost"
+      title="Group"
       @close="$router.push({ name: 'groups' })"
     >
       <RouterView @close="$router.push({ name: 'groups' })" />
