@@ -9,7 +9,6 @@ import LoadingButton from "@/components/LoadingButton.vue";
 import IconSpinner from "@/components/icons/IconSpinner.vue";
 import { useToastStore } from "@/stores/toast";
 import IconPlus from "@/components/icons/IconPlus.vue";
-import IconX from "@/components/icons/IconX.vue";
 
 const userStore = useUserStore();
 const loading = ref(true);
@@ -17,10 +16,10 @@ const loadingEditProfile = ref(false);
 const error = ref("");
 
 const pictures: Ref<any[]> = ref([]);
-const showPicturePopup = ref(false);
-const selectedPicture = ref<any>();
 
 const username = ref("");
+
+const uploadedPictureData = ref("");
 
 onMounted(async () => {
   loading.value = true;
@@ -48,13 +47,15 @@ const v$ = useVuelidate(rules, { username }, { $autoDirty: true });
 async function updateProfile() {
   try {
     let response = await userStore.changeUsername(username.value);
-    if (selectedPicture.value) {
-      await userStore.changeProfilePicture(selectedPicture.value.id);
+    if (uploadedPictureData.value) {
+      response = await userStore.changeProfilePicture(
+        uploadedPictureData.value
+      );
     }
     if (response.ok) {
       useToastStore().addToast({
-        title: "Success",
-        message: "Successfully updated profile",
+        title: "Profile updated",
+        message: "Your profile has been updated",
         type: "success",
       });
     } else {
@@ -73,6 +74,26 @@ async function updateProfile() {
     });
   }
 }
+
+function uploadPicture() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const data = e.target?.result;
+        if (data) {
+          uploadedPictureData.value = data.toString();
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
 </script>
 
 <template>
@@ -81,14 +102,11 @@ async function updateProfile() {
       <div class="flex gap-4">
         <div
           class="flex items-center relative overflow-visible"
-          @click="showPicturePopup = !showPicturePopup"
+          @click="uploadPicture"
         >
           <img
-            v-if="
-              selectedPicture?.picture &&
-              pictures.find((p) => p.id === selectedPicture?.id)
-            "
-            :src="`data:image/png;base64,${selectedPicture.picture}`"
+            v-if="uploadedPictureData"
+            :src="uploadedPictureData"
             alt="Profile Picture"
             class="w-40 h-40 rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
           />
@@ -103,25 +121,6 @@ async function updateProfile() {
             v-else
             class="w-40 h-40 p-8 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
           />
-          <div
-            v-if="showPicturePopup"
-            class="flex justify-around bg-ghost p-2 rounded-xl absolute bottom-0 -left-1/2 w-[300px] shadow-md shadow-yonder/10"
-          >
-            <div v-for="picture in pictures" :key="picture.id">
-              <img
-                :src="`data:image/png;base64,${picture.picture}`"
-                alt="Profile Picture"
-                class="w-12 h-12 rounded-full hover:shadow-lg shadow-yonder/10 cursor-pointer"
-                @click="selectedPicture = picture"
-              />
-            </div>
-            <div>
-              <IconX
-                class="w-12 h-12 p-2 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
-                @click="selectedPicture = null"
-              />
-            </div>
-          </div>
         </div>
         <div class="flex-1 my-2">
           <InputField

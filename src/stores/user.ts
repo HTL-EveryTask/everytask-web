@@ -38,14 +38,16 @@ export const useUserStore = defineStore("user", () => {
     return [];
   }
 
-  async function changeProfilePicture(pictureId: number) {
-    const response = await api.callApi(`user/picture/${pictureId}`, "PATCH");
+  async function changeProfilePicture(dataUrl: string) {
+    const base64 = dataUrl.split(",")[1];
+    const response = await api.callApi(`user/picture`, "PATCH", {
+      picture: base64,
+    });
     if (response.ok && ME.value) {
-      ME.value.profile_picture = await response
-        .json()
-        .then((data) => data.picture);
+      ME.value = await response.json().then((data) => data.user);
       console.log(ME.value);
     }
+    return response;
   }
 
   return {
