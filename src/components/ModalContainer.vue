@@ -65,8 +65,8 @@ onMounted(() => {
         v-if="show"
         :class="[
           $attrs.class,
-          mobileFull ? 'sm:h-screen sm:w-screen sm:rounded-none' : '',
           relative ? 'absolute' : 'fixed',
+          mobileFull ? 'sm:fixed sm:h-screen sm:w-screen sm:rounded-none' : '',
         ]"
         class="left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-lg shadow-yonder/10 z-50"
       >

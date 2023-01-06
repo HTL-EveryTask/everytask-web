@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <header class="flex items-center border-yonder border-b-2 p-4">
+  <header class="flex items-center p-4 shadow-md shadow-yonder/10">
     <button class="text-2xl text-rebecca p-2 mr-4" @click="emit('close')">
       <IconArrow
         class="h-6 w-6 transform rotate-180 hover:font-bold transition-colors duration-300"

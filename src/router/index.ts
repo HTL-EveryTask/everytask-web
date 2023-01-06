@@ -73,7 +73,6 @@ const router = createRouter({
           component: () => import("../views/settings/ProfileSettingsView.vue"),
         },
       ],
-      redirect: { name: "profileSettings" },
     },
 
     {

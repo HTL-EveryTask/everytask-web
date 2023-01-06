@@ -98,9 +98,9 @@ function uploadPicture() {
 </script>
 
 <template>
-  <div class="main-card bg-white my-4">
+  <div class="main-card bg-white">
     <form v-if="!loading" @submit.prevent="updateProfile">
-      <div class="flex gap-4 items-center">
+      <div class="flex gap-4 items-center sm:flex-col">
         <div
           class="flex items-center relative overflow-visible w-40 h-40"
           @click="uploadPicture"
@@ -129,7 +129,7 @@ function uploadPicture() {
             class="w-full h-full p-8 rounded-full bg-raisin/5 text-raisin/50 hover:bg-raisin/10 cursor-pointer active:bg-raisin/20"
           />
         </div>
-        <div class="flex-1 my-2">
+        <div class="flex-1 my-2 sm:w-full">
           <InputField
             id="username"
             v-model="v$.username.$model"

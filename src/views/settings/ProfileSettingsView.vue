@@ -55,7 +55,7 @@ function deleteAccount() {
   <div class="h-full p-4 relative">
     <section>
       <h2 class="text-2xl">My Profile</h2>
-      <ProfileCard />
+      <ProfileCard class="my-4 max-w-[46em] mx-0" />
     </section>
     <section class="mt-8">
       <h2 class="text-2xl">Change Password</h2>
@@ -67,6 +67,8 @@ function deleteAccount() {
           :show="showChangePasswordModal"
           class="bg-white w-[30rem]"
           relative
+          mobile-full
+          effect="shadow"
           title="Change Password"
           @close="showChangePasswordModal = false"
         >
