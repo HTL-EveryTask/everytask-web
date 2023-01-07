@@ -123,9 +123,9 @@ export const useGroupStore = defineStore("group", () => {
       id: userId,
     });
     if (response.ok) {
-      // const group = await response.json();
-      // const index = groups.value.findIndex((g) => g.id === group.id);
-      // groups.value[index] = group;
+      const group = await response.json().then((data) => data.group);
+      const index = groups.value.findIndex((g) => g.id === group.id);
+      groups.value[index] = group;
     }
     return response;
   }
@@ -135,22 +135,21 @@ export const useGroupStore = defineStore("group", () => {
       id: userId,
     });
     if (response.ok) {
-      // const group = await response.json();
-      // const index = groups.value.findIndex((g) => g.id === group.id);
-      // groups.value[index] = group;
+      const group = await response.json().then((data) => data.group);
+      const index = groups.value.findIndex((g) => g.id === group.id);
+      groups.value[index] = group;
     }
     return response;
   }
 
   async function removeUserFromGroup(groupId: number, userId: number) {
-    const response = await api.callApi(
-      `group/${groupId}/user/${userId}`,
-      "DELETE"
-    );
+    const response = await api.callApi(`group/${groupId}/kick`, "DELETE", {
+      id: userId,
+    });
     if (response.ok) {
-      // const group = await response.json();
-      // const index = groups.value.findIndex((g) => g.id === group.id);
-      // groups.value[index] = group;
+      const group = await response.json().then((data) => data.group);
+      const index = groups.value.findIndex((g) => g.id === group.id);
+      groups.value[index] = group;
     }
     return response;
   }

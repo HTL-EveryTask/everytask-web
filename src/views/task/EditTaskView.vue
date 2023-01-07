@@ -264,7 +264,12 @@ async function updateTask() {
             </LoadingButton>
           </form>
 
-          <button v-if="task" class="btn-red" @click="showDeleteModal = true">
+          <button
+            type="button"
+            v-if="task"
+            class="btn-red"
+            @click="showDeleteModal = true"
+          >
             Delete Task
           </button>
 
@@ -286,7 +291,11 @@ async function updateTask() {
                   @click="deleteTask"
                   >Delete
                 </LoadingButton>
-                <button class="btn-primary" @click="showDeleteModal = false">
+                <button
+                  type="button"
+                  class="btn-primary"
+                  @click="showDeleteModal = false"
+                >
                   Cancel
                 </button>
               </div>

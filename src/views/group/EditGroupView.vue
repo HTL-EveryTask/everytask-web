@@ -80,12 +80,16 @@ onMounted(async () => {
 const loading = ref(false);
 const loadingDelete = ref(false);
 const loadingLeave = ref(false);
+const loadingKick = ref(false);
 
 let showDeleteModal = ref(false);
 let showLeaveModal = ref(false);
 let showDeleteInviteModal = ref(false);
+let showKickModal = ref(false);
 
 let showAddUserModal = ref(false);
+
+let userToKick = ref<User | undefined>(undefined);
 
 const rules = {
   name: {
@@ -131,6 +135,7 @@ async function onSubmit() {
 
 function onContextMenu(e: MouseEvent, user: User) {
   e.preventDefault();
+  if (user.id === useUserStore().ME?.id) return;
   ContextMenu.showContextMenu({
     x: e.clientX,
     y: e.clientY,
@@ -138,7 +143,8 @@ function onContextMenu(e: MouseEvent, user: User) {
       {
         label: "Remove",
         onClick: () => {
-          console.log("removing user", user);
+          userToKick.value = user;
+          showKickModal.value = true;
         },
         customClass: "hover:bg-yonder/10",
       },
@@ -146,12 +152,13 @@ function onContextMenu(e: MouseEvent, user: User) {
         label: group.value?.users.find((u) => u.id === user.id)?.is_admin
           ? "Remove admin"
           : "Make admin",
-        onClick: () => {
+        onClick: async () => {
           if (group.value?.users.find((u) => u.id === user.id)?.is_admin) {
-            groupStore.removeAdmin(group.value.id, user.id);
+            await groupStore.removeAdmin(group.value.id, user.id);
           } else {
-            groupStore.makeAdmin(group.value?.id || 0, user.id);
+            await groupStore.makeAdmin(group.value?.id || 0, user.id);
           }
+          await updateGroup();
         },
         customClass: "hover:bg-yonder/10",
       },
@@ -188,6 +195,25 @@ async function deleteInvite() {
     await groupStore.getGroups;
   }
   showDeleteInviteModal.value = false;
+  await updateGroup();
+}
+
+async function kickUser() {
+  if (group.value && userToKick.value) {
+    const response = await groupStore.removeUserFromGroup(
+      group.value.id,
+      userToKick.value.id
+    );
+    if (response.ok) {
+      await updateGroup();
+    } else
+      useToastStore().addToast({
+        title: "Error",
+        message: "Unable to kick user",
+        type: "error",
+      });
+  }
+  showKickModal.value = false;
   await updateGroup();
 }
 </script>
@@ -270,6 +296,7 @@ async function deleteInvite() {
                 </span>
 
                 <IconDotsVertical
+                  v-if="user.id !== useUserStore().ME?.id"
                   class="w-7 h-7 rounded-full p-1 hover:bg-yonder/10 active:bg-yonder/20 text-gray-500 ml-auto"
                   @click="onContextMenu($event, user)"
                 />
@@ -310,7 +337,7 @@ async function deleteInvite() {
                 @click="deleteInvite"
                 >Delete Invite
               </LoadingButton>
-              <Button @click="showDeleteInviteModal = false">Cancel</Button>
+              <button @click="showDeleteInviteModal = false">Cancel</button>
             </div>
           </ModalContainer>
 
@@ -376,6 +403,30 @@ async function deleteInvite() {
                   >Leave
                 </LoadingButton>
                 <button class="btn-primary" @click="showLeaveModal = false">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </ModalContainer>
+          <ModalContainer
+            :show="showKickModal"
+            class="bg-ghost"
+            headless
+            relative
+            @close="showKickModal = false"
+          >
+            <div class="flex flex-col items-center">
+              <p class="whitespace-nowrap text-center my-2 font-bold px-4">
+                Are you sure you want to kick {{ userToKick?.username }}?
+              </p>
+              <div class="flex w-full gap-4 justify-center">
+                <LoadingButton
+                  :loading="loadingKick"
+                  class="btn-red"
+                  @click="kickUser"
+                  >Kick
+                </LoadingButton>
+                <button class="btn-primary" @click="showKickModal = false">
                   Cancel
                 </button>
               </div>
