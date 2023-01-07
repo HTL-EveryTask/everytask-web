@@ -84,10 +84,10 @@ function beforeTaskLeave(el: any) {
         </InputField>
       </form>
     </div>
-    <div class="my-4 mr-16">
+    <div class="my-4 border-b-2 border-raisin/10">
       <div
         v-if="task.subtasks && task.subtasks.length > 0"
-        class="flex flex-col gap-2"
+        class="flex flex-col gap-2 p-4 pt-2"
       >
         <TransitionGroup
           appear
@@ -101,11 +101,14 @@ function beforeTaskLeave(el: any) {
             :key="subTask.id"
             :subTask="subTask"
             class="bg-white"
-            @delete="emit('update')"
+            @update="emit('update')"
           />
         </TransitionGroup>
       </div>
-      <div v-else class="w-full h-full">
+      <div
+        v-else
+        class="w-full h-full text-center min-h-[6rem] flex justify-center items-center"
+      >
         <span class="text-gray-500">No Subtasks</span>
       </div>
     </div>

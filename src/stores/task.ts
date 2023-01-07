@@ -92,6 +92,28 @@ export const useTaskStore = defineStore("task", () => {
     return response;
   }
 
+  async function editSubTask(
+    subTaskId: number,
+    title: string,
+    isDone: boolean
+  ) {
+    const response = await api.callApi(`subtask/${subTaskId}`, "PATCH", {
+      title: title,
+      is_done: isDone,
+    });
+    if (response.ok) {
+      // find the task that contains the subtask with the given id
+      const task = tasks.value.find((t) =>
+        t.subtasks?.some((st) => st.id === subTaskId)
+      );
+      if (task) {
+        const index = task.subtasks?.findIndex((st) => st.id === subTaskId);
+        task.subtasks![index!].title = title;
+      }
+    }
+    return response;
+  }
+
   return {
     tasks,
     getTasks,
@@ -102,5 +124,6 @@ export const useTaskStore = defineStore("task", () => {
     setTaskDone,
     addSubTask,
     deleteSubTask,
+    editSubTask,
   };
 });

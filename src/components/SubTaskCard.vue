@@ -12,21 +12,35 @@ const props = defineProps<{
   subTask: SubTask;
 }>();
 
+const title = ref(props.subTask.title);
+const isDone = ref(props.subTask.is_done);
+
 const loading = ref(false);
 
 const emit = defineEmits<{
-  (e: "delete"): void;
+  (e: "update"): void;
 }>();
 
 async function toggleCompleted() {
-  // await taskStore.setTaskDone(props.subTask.id, !props.subTask.is_done);
+  loading.value = true;
+  isDone.value = !isDone.value;
+  await taskStore.editSubTask(props.subTask.id, title.value, isDone.value);
+  loading.value = false;
+  emit("update");
+}
+
+async function editSubTask() {
+  loading.value = true;
+  await taskStore.editSubTask(props.subTask.id, title.value, isDone.value);
+  loading.value = false;
+  emit("update");
 }
 
 async function deleteSubTask() {
   loading.value = true;
   await taskStore.deleteSubTask(props.subTask.id);
   loading.value = false;
-  emit("delete");
+  emit("update");
 }
 </script>
 
@@ -52,10 +66,15 @@ async function deleteSubTask() {
     <div
       class="flex flex-1 sm:w-[10em] items-baseline flex-wrap gap-x-4 min-w-0"
     >
-      <span
-        class="w-[50%] sm:w-[100%] sm:mr-2 min-w-[12em] sm:min-w-[10em] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
-        >{{ subTask.title }}</span
-      >
+      <input
+        v-model="title"
+        class="bg-transparent w-[50%] sm:w-[100%] sm:mr-2 min-w-[12em] sm:min-w-[10em] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
+        @keydown.enter="editSubTask"
+        @keydown.esc="
+          title = subTask.title;
+          $event.target.blur();
+        "
+      />
     </div>
     <div
       class="ml-auto rounded-full hover:bg-yonder/10 p-1 active:bg-yonder/20 text-raisin/50 hover:text-red-500 duration-200 cursor-pointer"
