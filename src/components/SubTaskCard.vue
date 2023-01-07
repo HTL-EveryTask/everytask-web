@@ -12,6 +12,8 @@ const props = defineProps<{
   subTask: SubTask;
 }>();
 
+const titleInput = ref();
+
 const title = ref(props.subTask.title);
 const isDone = ref(props.subTask.is_done);
 
@@ -68,11 +70,12 @@ async function deleteSubTask() {
     >
       <input
         v-model="title"
+        ref="titleInput"
         class="bg-transparent w-[50%] sm:w-[100%] sm:mr-2 min-w-[12em] sm:min-w-[10em] text-md whitespace-nowrap overflow-hidden overflow-ellipsis"
         @keydown.enter="editSubTask"
         @keydown.esc="
           title = subTask.title;
-          $event.target.blur();
+          titleInput.blur();
         "
       />
     </div>
