@@ -114,6 +114,26 @@ export const useTaskStore = defineStore("task", () => {
     return response;
   }
 
+  async function addOrReplaceNote(taskId: number, note: string) {
+    const response = await api.callApi(`note/${taskId}`, "PUT", {
+      note: note,
+    });
+    if (response.ok) {
+      // const index = tasks.value.findIndex((t) => t.id === taskId);
+      // tasks.value[index].note = note;
+    }
+    return response;
+  }
+
+  async function deleteNote(taskId: number) {
+    const response = await api.callApi(`note/${taskId}`, "DELETE");
+    if (response.ok) {
+      // const index = tasks.value.findIndex((t) => t.id === taskId);
+      // tasks.value[index].note = "";
+    }
+    return response;
+  }
+
   return {
     tasks,
     getTasks,
@@ -125,5 +145,7 @@ export const useTaskStore = defineStore("task", () => {
     addSubTask,
     deleteSubTask,
     editSubTask,
+    addOrReplaceNote,
+    deleteNote,
   };
 });

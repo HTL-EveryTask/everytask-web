@@ -244,13 +244,23 @@ async function updateTask() {
                 <h2 class="text-lg font-semibold">Notes</h2>
               </div>
               <div
-                class="bg-yonder/10 rounded-lg p-4 mb-6 flex flex-col gap-2 shadow-yonder/10 shadow-inner max-w-[48em] overflow-y-auto"
+                class="bg-yonder/10 rounded-lg p-4 mb-6 shadow-yonder/10 shadow-inner overflow-y-auto"
               >
-                <NoteCard
-                  v-for="note in task?.note"
-                  :key="note.id"
-                  :note="note"
-                />
+                <div
+                  class="flex flex-col gap-2"
+                  v-if="task?.note && task?.note.length > 0"
+                >
+                  <NoteCard
+                    v-for="note in task?.note"
+                    :key="note.id"
+                    :note="note"
+                    :task-id="task?.id"
+                    @update="updateTask"
+                  />
+                </div>
+                <div v-else>
+                  <NoteCard :task-id="task?.id" @update="updateTask" />
+                </div>
               </div>
             </section>
 
@@ -265,9 +275,9 @@ async function updateTask() {
           </form>
 
           <button
-            type="button"
             v-if="task"
             class="btn-red"
+            type="button"
             @click="showDeleteModal = true"
           >
             Delete Task
@@ -292,8 +302,8 @@ async function updateTask() {
                   >Delete
                 </LoadingButton>
                 <button
-                  type="button"
                   class="btn-primary"
+                  type="button"
                   @click="showDeleteModal = false"
                 >
                   Cancel
