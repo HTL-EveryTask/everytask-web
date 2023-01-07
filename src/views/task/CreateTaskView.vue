@@ -86,6 +86,7 @@ async function onSubmit() {
     due_time: due.value,
     tags: [],
     is_done: false,
+    origin: "",
     assigned_users: assignedUsers,
     assigned_groups: assignedGroups,
     type: [],

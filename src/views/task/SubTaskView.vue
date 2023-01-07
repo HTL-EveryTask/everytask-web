@@ -85,7 +85,10 @@ function beforeTaskLeave(el: any) {
       </form>
     </div>
     <div class="my-4 mr-16">
-      <div v-if="task.subtasks.length > 0" class="flex flex-col gap-2">
+      <div
+        v-if="task.subtasks && task.subtasks.length > 0"
+        class="flex flex-col gap-2"
+      >
         <TransitionGroup
           appear
           class="flex flex-col gap-4"

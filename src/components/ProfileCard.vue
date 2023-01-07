@@ -115,7 +115,7 @@ function uploadPicture() {
             </div>
           </div>
           <img
-            v-if="userStore.ME?.profile_picture || uploadedPictureData.value"
+            v-if="userStore.ME?.profile_picture || uploadedPictureData"
             :src="
               uploadedPictureData ||
               `data:image/png;base64,${userStore.ME?.profile_picture}`
