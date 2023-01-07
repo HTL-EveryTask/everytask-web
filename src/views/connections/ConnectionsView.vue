@@ -9,14 +9,21 @@ import InputField from "@/components/InputField.vue";
 import { useUntisStore } from "@/stores/untis";
 import { useConnectionStore } from "@/stores/connection";
 import { useToastStore } from "@/stores/toast";
+import IconTeams from "@/components/icons/IconTeams.vue";
+import IconDot from "@/components/icons/IconDot.vue";
 
 const connectionStore = useConnectionStore();
+const untisStore = useUntisStore();
 
 const connections = ref();
 
-onMounted(async () => {
+async function updateConnections() {
   const response = await connectionStore.checkConnections();
   connections.value = await response.json();
+}
+
+onMounted(async () => {
+  await updateConnections();
 });
 
 const showWebUntisModal = ref(false);
@@ -52,7 +59,7 @@ const $v = useVuelidate(
 );
 
 async function connectWebUntis() {
-  const response = await useUntisStore().createSession(
+  const response = await untisStore.createSession(
     username.value,
     password.value,
     school.value,
@@ -64,6 +71,49 @@ async function connectWebUntis() {
       title: "WebUntis connection established",
       message: "You can now use WebUntis in the app",
       type: "success",
+    });
+    await updateConnections();
+  } else {
+    useToastStore().addToast({
+      title: "WebUntis connection failed",
+      message: "Please check your credentials",
+      type: "error",
+    });
+  }
+}
+
+async function disconnectWebUntis() {
+  const response = await untisStore.deleteSession();
+  if (response.ok) {
+    useToastStore().addToast({
+      title: "WebUntis connection removed",
+      message: "You can no longer use WebUntis in the app",
+      type: "success",
+    });
+    await updateConnections();
+  } else {
+    useToastStore().addToast({
+      title: "Failed to remove WebUntis connection",
+      message: "Please try again later",
+      type: "error",
+    });
+  }
+}
+
+async function disconnectTeams() {
+  const response = await connectionStore.disconnectTeams();
+  if (response.ok) {
+    useToastStore().addToast({
+      title: "Microsoft Teams connection removed",
+      message: "You can no longer use Microsoft Teams in the app",
+      type: "success",
+    });
+    await updateConnections();
+  } else {
+    useToastStore().addToast({
+      title: "Failed to remove Microsoft Teams connection",
+      message: "Please try again later",
+      type: "error",
     });
   }
 }
@@ -83,8 +133,12 @@ async function connectWebUntis() {
 
       <section class="mt-8 flex flex-col gap-4">
         <div class="connection-card">
-          <div class="w-24 h-24 p-4 mx-2 bg-ghost rounded-2xl">
+          <div class="w-24 h-24 p-4 mx-2 bg-ghost rounded-2xl relative">
             <IconClock class="text-raisin/70" />
+            <IconDot
+              v-if="connections?.untis"
+              class="absolute -right-6 -bottom-6 w-16 h-16 text-green-500"
+            />
           </div>
           <div class="flex flex-col flex-1 m-2">
             <div class="flex flex-col flex-1 ml-0">
@@ -95,31 +149,53 @@ async function connectWebUntis() {
             </div>
             <div class="flex items-center mt-2">
               <button
+                v-if="!connections?.untis"
                 class="bg-yonder/10 text-raisin/70 rounded-full px-4 py-2 text-sm font-bold hover:bg-yonder/20 transition-colors duration-300"
                 @click="showWebUntisModal = true"
               >
                 Connect
               </button>
+              <button
+                v-else
+                class="bg-yonder/10 text-raisin/70 rounded-full px-4 py-2 text-sm font-bold hover:bg-yonder/20 transition-colors duration-300"
+                @click="disconnectWebUntis"
+              >
+                Disconnect
+              </button>
             </div>
           </div>
         </div>
         <div class="connection-card">
-          <div class="w-24 h-24 p-4 mx-2 bg-ghost rounded-2xl">
-            <IconClock class="text-raisin/70" />
+          <div class="w-24 h-24 p-4 mx-2 bg-ghost rounded-2xl relative">
+            <IconTeams class="text-raisin/100" />
+            <IconDot
+              v-if="connections?.teams"
+              class="absolute -right-6 -bottom-6 w-16 h-16 text-green-500"
+            />
           </div>
           <div class="flex flex-col flex-1 m-2">
             <div class="flex flex-col flex-1 ml-0">
               <div class="font-bold text-lg">Microsoft Teams</div>
               <div class="text-sm text-raisin/70">
-                Microsoft Teams is a chat-based collaboration tool.
+                Microsoft Teams allows you to synchronize your school's
+                Assignments into EveryTask.
               </div>
             </div>
+
             <div class="flex items-center mt-2">
               <button
+                v-if="!connections?.teams"
                 class="bg-yonder/10 text-raisin/70 rounded-full px-4 py-2 text-sm font-bold hover:bg-yonder/20 transition-colors duration-300"
                 @click="$router.push({ name: 'teamsauth' })"
               >
                 Connect
+              </button>
+              <button
+                v-else
+                class="bg-yonder/10 text-raisin/70 rounded-full px-4 py-2 text-sm font-bold hover:bg-yonder/20 transition-colors duration-300"
+                @click="disconnectTeams"
+              >
+                Disconnect
               </button>
             </div>
           </div>
@@ -193,14 +269,11 @@ async function connectWebUntis() {
         </div>
       </form>
     </ModalContainer>
-    <p class="text-center text-raisin/70 mt-8">
-      {{ connections }}
-    </p>
   </div>
 </template>
 
 <style scoped>
 .connection-card {
-  @apply w-full h-32 p-2 bg-white rounded-xl flex items-center;
+  @apply w-full h-32 p-2 bg-white rounded-xl flex items-center relative;
 }
 </style>

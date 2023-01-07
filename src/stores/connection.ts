@@ -12,8 +12,13 @@ export const useConnectionStore = defineStore("connection", () => {
     return await api.callApi("teams/authorize", "POST", { code: code });
   }
 
+  async function disconnectTeams() {
+    return await api.callApi("teams/disconnect", "DELETE");
+  }
+
   return {
     checkConnections,
     authenticateTeams,
+    disconnectTeams,
   };
 });

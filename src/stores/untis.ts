@@ -22,6 +22,10 @@ export const useUntisStore = defineStore("untis", () => {
     });
   }
 
+  async function deleteSession() {
+    return await api.callApi("untis", "DELETE");
+  }
+
   async function getSubjects() {
     const response = await api.callApi("subjects", "GET");
     if (response.ok) {
@@ -33,6 +37,7 @@ export const useUntisStore = defineStore("untis", () => {
   return {
     subjects,
     createSession,
+    deleteSession,
     getSubjects,
   };
 });

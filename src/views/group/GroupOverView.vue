@@ -6,25 +6,23 @@ import ModalContainer from "@/components/ModalContainer.vue";
 import { useGroupStore } from "@/stores/group";
 import router from "@/router";
 import SideViewContainer from "@/components/SideViewContainer.vue";
+import IconSpinner from "@/components/icons/IconSpinner.vue";
 
 const groupStore = useGroupStore();
 const error = ref("");
+const loading = ref(false);
 
 onMounted(async () => {
+  loading.value = true;
   try {
     await groupStore.getGroups();
     console.log(groupStore.groups);
   } catch {
     error.value = "Error while loading groups";
+  } finally {
+    loading.value = false;
   }
 });
-
-// const addPopUpExpanded = ref(false);
-
-// const addTaskPopUp = ref();
-// useClickOutside(addTaskPopUp, () => {
-//   addPopUpExpanded.value = false;
-// });
 </script>
 
 <template>
@@ -68,6 +66,9 @@ onMounted(async () => {
                   "
                 />
               </TransitionGroup>
+              <div v-else-if="loading" class="flex justify-center m-16">
+                <IconSpinner class="w-6 h-6" />
+              </div>
               <div
                 v-else
                 class="flex flex-col items-center justify-center m-16"
@@ -79,7 +80,7 @@ onMounted(async () => {
               </div>
             </div>
             <button
-              class="m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center bg-ghost border-2 border-yonder/30 hover:bg-yonder/10 rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
+              class="m-4 p-4 px-24 pr-[6.5rem] mx-auto flex items-center justify-center btn-primary rounded-xl shadow-md shadow-yonder/10 font-bold text-xl"
               @click="$router.push({ name: 'createGroup' })"
             >
               <IconPlus class="w-[2rem] h-[2rem] mr-2" />
