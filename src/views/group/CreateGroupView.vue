@@ -13,6 +13,7 @@ import type { User } from "@/models/User";
 import MemberSelector from "@/components/MemberSelector.vue";
 import IconCheck from "@/components/icons/IconCheck.vue";
 import { useToastStore } from "@/stores/toast";
+import IconUpload from "@/components/icons/IconUpload.vue";
 
 const emit = defineEmits(["close"]);
 
@@ -23,6 +24,7 @@ const change = ref(0);
 
 const name = ref("");
 const description = ref("");
+const uploadedPictureData = ref("");
 
 const selectedUsers = ref<User[]>([]);
 
@@ -42,7 +44,11 @@ const loading = ref(false);
 
 async function createGroup() {
   loading.value = true;
-  let response = await groupStore.createGroup(name.value, description.value);
+  let response = await groupStore.createGroup(
+    name.value,
+    description.value,
+    uploadedPictureData.value
+  );
   const data = await response.json();
   createdGroup.value = data.group;
   console.log(createdGroup.value);
@@ -94,6 +100,26 @@ function onSectionEnter(element: any, done: any) {
   );
 }
 
+function uploadPicture() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const data = e.target?.result;
+        if (data) {
+          uploadedPictureData.value = data.toString();
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
+
 function onSectionLeave(element: any, done: any) {
   gsap.fromTo(
     element,
@@ -110,7 +136,7 @@ function onSectionLeave(element: any, done: any) {
 
 <template>
   <form
-    class="w-full h-[30rem] min-h-[20rem] min-w-[600px] sm:min-w-0 px-4"
+    class="w-full h-[30rem] min-h-[20rem] min-w-[600px] sm:min-w-0 px-4 overflow-x-hidden"
     @submit.prevent
   >
     <Transition
@@ -123,9 +149,31 @@ function onSectionLeave(element: any, done: any) {
         <div class="flex flex-col h-[25rem]">
           <div class="flex sm:flex-col items-center gap-8">
             <div
-              class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost"
+              class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost relative"
+              @click="uploadPicture"
             >
-              <IconPlus class="w-1/2 h-1/2 text-raisin/50" />
+              <div
+                v-if="uploadedPictureData"
+                class="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200"
+              >
+                <div
+                  class="flex items-center justify-center h-full flex flex-col text-white"
+                >
+                  <IconUpload class="w-12 h-12" />
+                </div>
+              </div>
+              <img
+                v-if="uploadedPictureData"
+                :src="uploadedPictureData"
+                class="w-full h-full object-cover rounded-full"
+                alt="Group picture"
+              />
+              <div
+                v-else
+                class="w-full h-full hover:bg-yonder/5 flex items-center justify-center rounded-full text-raisin/50 hover:text-raisin/80 transition-colors duration-200"
+              >
+                <IconPlus class="w-1/2 h-1/2" />
+              </div>
             </div>
             <div class="flex-1 flex flex-col w-full">
               <InputField id="name" :validation="v$.name" label="Name">
@@ -185,8 +233,8 @@ function onSectionLeave(element: any, done: any) {
           </button>
           <LoadingButton
             :class="{ 'btn-light': selectedUsers.length === 0 }"
-            :loading="loading"
             :disabled="loading"
+            :loading="loading"
             class="btn-primary"
             type="button"
             @click="createGroup()"

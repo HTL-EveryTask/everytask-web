@@ -42,10 +42,16 @@ export const useGroupStore = defineStore("group", () => {
     return null;
   }
 
-  async function createGroup(name: string, description: string) {
+  async function createGroup(
+    name: string,
+    description: string,
+    pictureData?: string
+  ) {
+    const base64 = pictureData ? pictureData.split(",")[1] : undefined;
     return await api.callApi("group", "PUT", {
       name: name,
       description: description,
+      picture: pictureData ? base64 : undefined,
     });
   }
 

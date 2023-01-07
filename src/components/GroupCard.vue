@@ -9,8 +9,16 @@ const props = defineProps<{
 
 <template>
   <div class="p-4 flex items-center rounded-full min-w-0">
-    <div class="flex items-center rounded-full bg-ghost p-2">
-      <IconGroup class="w-6 h-6" />
+    <div
+      class="flex items-center rounded-full bg-ghost w-12 h-12 flex justify-center items-center"
+    >
+      <img
+        v-if="group.picture"
+        :src="`data:image/png;base64,${group.picture}`"
+        class="w-full h-full rounded-full object-cover"
+        alt="Group Picture"
+      />
+      <IconGroup v-else class="w-6 h-6" />
     </div>
     <div
       class="flex flex-col ml-4 flex-1 overflow-hidden whitespace-nowrap overflow-ellipsis min-w-0 inline-block w-0"
