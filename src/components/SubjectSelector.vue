@@ -58,6 +58,9 @@ function beforeTaskLeave(el: any) {
     />
 
     <div
+      :class="{
+        'cursor-not-allowed': subjects.length < 1,
+      }"
       :title="
         subjects.length < 1
           ? 'Authenticate with Untis to use this feature'
@@ -65,9 +68,6 @@ function beforeTaskLeave(el: any) {
           ? selectedSubject.name
           : placeholder
       "
-      :class="{
-        'cursor-not-allowed': subjects.length < 1,
-      }"
       class="relative"
     >
       <div
