@@ -17,6 +17,7 @@ import type { Subject } from "@/models/Subject";
 import CustomDropDown from "@/components/SubjectSelector.vue";
 import { useUntisStore } from "@/stores/untis";
 import SubTaskView from "@/views/task/SubTaskView.vue";
+import type { Tag } from "@/models/Tag";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -51,7 +52,16 @@ onMounted(async () => {
         title.value = task.value?.title || "";
         description.value = task.value?.description || "";
         due.value = task.value?.due_time || "";
-        tags.value = task.value?.tags || [];
+
+        // tags can either be a string[] or Tag[]
+        const fetchedTags = task.value?.tags;
+        if (fetchedTags) {
+          if (typeof fetchedTags[0] === "string") {
+            tags.value = fetchedTags as string[];
+          } else {
+            tags.value = (fetchedTags as Tag[]).map((tag) => tag.name);
+          }
+        }
 
         const assignedUsers = task.value?.assigned_users?.map((user) => ({
           ...user,
@@ -247,8 +257,8 @@ async function updateTask() {
                 class="bg-yonder/10 rounded-lg p-4 mb-6 shadow-yonder/10 shadow-inner overflow-y-auto"
               >
                 <div
-                  class="flex flex-col gap-2"
                   v-if="task?.note && task?.note.length > 0"
+                  class="flex flex-col gap-2"
                 >
                   <NoteCard
                     v-for="note in task?.note"

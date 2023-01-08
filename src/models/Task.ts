@@ -3,6 +3,7 @@ import type { User } from "@/models/User";
 import type { Subject } from "@/models/Subject";
 import type { Note } from "@/models/Note";
 import type { SubTask } from "@/models/SubTask";
+import type { Tag } from "@/models/Tag";
 
 export interface Task {
   id: number;
@@ -10,7 +11,7 @@ export interface Task {
   description: string;
   is_done: boolean;
   due_time: string;
-  tags: string[];
+  tags: string[] | Tag[];
   subject?: Subject;
   note?: Note[];
   subtasks?: SubTask[];
