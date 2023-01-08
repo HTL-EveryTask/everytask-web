@@ -136,7 +136,7 @@ function onSectionLeave(element: any, done: any) {
 
 <template>
   <form
-    class="w-full h-[30rem] min-h-[20rem] min-w-[600px] sm:min-w-0 px-4 overflow-x-hidden"
+    class="w-full min-w-[600px] sm:min-w-0 px-4 overflow-x-hidden"
     @submit.prevent
   >
     <Transition
@@ -146,7 +146,7 @@ function onSectionLeave(element: any, done: any) {
       @leave="onSectionLeave"
     >
       <section v-if="stepCounter === 1" class="h-full flex flex-col">
-        <div class="flex flex-col h-[25rem]">
+        <div class="flex flex-col h-[15rem]">
           <div class="flex sm:flex-col items-center gap-8">
             <div
               class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost relative"
