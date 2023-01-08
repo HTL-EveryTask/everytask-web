@@ -14,6 +14,7 @@ import MemberSelector from "@/components/MemberSelector.vue";
 import IconCheck from "@/components/icons/IconCheck.vue";
 import { useToastStore } from "@/stores/toast";
 import IconUpload from "@/components/icons/IconUpload.vue";
+import IconX from "@/components/icons/IconX.vue";
 
 const emit = defineEmits(["close"]);
 
@@ -152,6 +153,13 @@ function onSectionLeave(element: any, done: any) {
               class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost relative"
               @click="uploadPicture"
             >
+              <div
+                v-if="uploadedPictureData"
+                class="w-8 h-8 bg-red-500 rounded-full absolute top-0 right-0 text-white flex items-center justify-center z-30 hover:bg-red-600 cursor-pointer"
+                @click.stop="uploadedPictureData = ''"
+              >
+                <IconX class="w-7 h-7" />
+              </div>
               <div
                 v-if="uploadedPictureData"
                 class="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200"
