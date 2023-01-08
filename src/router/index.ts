@@ -4,6 +4,8 @@ import CreateGroupView from "../views/group/CreateGroupView.vue";
 import GroupOverView from "../views/group/GroupOverView.vue";
 import TaskOverView from "../views/task/TaskOverView.vue";
 import EditGroupView from "../views/group/EditGroupView.vue";
+import EditAppointmentView from "../views/appointment/EditAppointmentView.vue";
+import AppointmentOverView from "../views/appointment/AppointmentOverView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
@@ -36,6 +38,25 @@ const router = createRouter({
     {
       path: "/tasks",
       redirect: { name: "tasks", params: { type: "all" } },
+    },
+    {
+      path: "/appointments/:type",
+      name: "appointments",
+      component: AppointmentOverView,
+      props: true,
+      children: [
+        {
+          path: "appointments/:id",
+          name: "showAppointment",
+          component: EditAppointmentView,
+          meta: { modalTitle: "Edit Appointment" },
+          props: (route) => ({ id: Number(route.params.id) }),
+        },
+      ],
+    },
+    {
+      path: "/appointments",
+      redirect: { name: "appointments", params: { type: "all" } },
     },
     {
       path: "/groups",

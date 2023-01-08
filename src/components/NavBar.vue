@@ -6,6 +6,7 @@ import IconUser from "@/components/icons/IconUser.vue";
 import { useUserStore } from "@/stores/user";
 import { markRaw, onMounted, ref } from "vue";
 import IconLogout from "@/components/icons/IconLogout.vue";
+import IconClock from "@/components/icons/IconClock.vue";
 import { useAuthenticateStore } from "@/stores/auth";
 import IconChevron from "@/components/icons/IconChevron.vue";
 
@@ -32,6 +33,21 @@ const links = ref([
       },
     ],
     expanded: false,
+  },
+  {
+    route: { name: "appointments", params: { type: "all" } },
+    icon: markRaw(IconClock),
+    text: "Appointments",
+    children: [
+      {
+        route: { name: "appointments", params: { type: "private" } },
+        text: "Private",
+      },
+      {
+        route: { name: "appointments", params: { type: "groups" } },
+        text: "Groups",
+      },
+    ],
   },
   {
     route: { name: "groups" },
