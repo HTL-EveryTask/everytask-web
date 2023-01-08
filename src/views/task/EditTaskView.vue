@@ -18,6 +18,7 @@ import CustomDropDown from "@/components/SubjectSelector.vue";
 import { useUntisStore } from "@/stores/untis";
 import SubTaskView from "@/views/task/SubTaskView.vue";
 import type { Tag } from "@/models/Tag";
+import { useUserStore } from "@/stores/user";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -25,6 +26,7 @@ const props = defineProps<{
 }>();
 
 const taskStore = useTaskStore();
+const userStore = useUserStore();
 
 const task = ref<Task | undefined>();
 const subjects = ref<Subject[]>([]);
@@ -256,6 +258,16 @@ async function updateTask() {
               <div
                 class="bg-yonder/10 rounded-lg p-4 mb-6 shadow-yonder/10 shadow-inner overflow-y-auto"
               >
+                <NoteCard
+                  v-if="
+                    task?.note &&
+                    !task?.note.find(
+                      (note) => note.user.id === userStore.ME?.id
+                    )
+                  "
+                  :task-id="task?.id"
+                  @update="updateTask"
+                />
                 <div
                   v-if="task?.note && task?.note.length > 0"
                   class="flex flex-col gap-2"
@@ -269,7 +281,11 @@ async function updateTask() {
                   />
                 </div>
                 <div v-else>
-                  <NoteCard :task-id="task?.id" @update="updateTask" />
+                  <p
+                    class="mt-8 mb-6 text-gray-500 text-sm flex justify-center items-center"
+                  >
+                    No notes have been added yet.
+                  </p>
                 </div>
               </div>
             </section>
