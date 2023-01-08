@@ -7,6 +7,7 @@ import IconLock from "@/components/icons/IconLock.vue";
 import IconSun from "@/components/icons/IconSun.vue";
 import SubjectChip from "@/components/SubjectChip.vue";
 import IconTeams from "@/components/icons/IconTeams.vue";
+import IconGroup from "@/components/icons/IconGroup.vue";
 
 const taskStore = useTaskStore();
 
@@ -83,7 +84,7 @@ const dateDayEnding = computed(() => {
           ? 'Teams Task'
           : task.type.find((t) => t === 'private_task')
           ? 'Private Task'
-          : ''
+          : 'Group Task'
       "
       class="ml-4 border-[1px] border-raisin/40 h-8 w-8 rounded-full flex justify-center items-center"
     >
@@ -97,6 +98,7 @@ const dateDayEnding = computed(() => {
         class="w-4 h-4"
         @click.stop
       />
+      <IconGroup v-else class="w-4 h-4" @click.stop />
     </div>
     <div
       class="rounded-full hover:bg-cerulean/10 ml-4 p-1 sm:hidden"

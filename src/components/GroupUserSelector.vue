@@ -185,7 +185,7 @@ function beforeLeave(el: any) {
         v-if="
           (filteredGroups.length > 0 || filteredUsers.length > 0) && isFocused
         "
-        class="suggestions absolute max-w-[24rem] w-full overflow-scroll max-h-32 rounded-b-md shadow-yonder/10 shadow-lg border-raisin/10 border-2 bg-white"
+        class="suggestions absolute max-w-[24rem] w-full overflow-y-auto overflow-x-hidden max-h-32 rounded-b-md shadow-yonder/10 shadow-lg border-raisin/10 border-2 bg-white"
       >
         <div
           v-for="group in filteredGroups"
