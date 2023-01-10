@@ -242,63 +242,61 @@ async function updateTask() {
               <InputField id="assigned" label="Assigned">
                 <GroupUserSelector id="assigned" v-model="assigned" />
               </InputField>
-            </section>
 
-            <section class="my-4">
-              <div>
-                <h2 class="text-lg font-medium">Subtasks</h2>
-              </div>
-              <SubTaskView :task="task" @update="updateTask" />
+              <LoadingButton
+                :disabled="v$.$invalid"
+                :loading="loading"
+                class="btn-primary"
+                type="submit"
+              >
+                Update
+              </LoadingButton>
             </section>
+          </form>
 
-            <section class="my-4">
-              <div class="flex gap-2 items-center mb-2">
-                <h2 class="text-lg font-semibold">Notes</h2>
-              </div>
+          <section class="my-4">
+            <div>
+              <h2 class="text-lg font-medium">Subtasks</h2>
+            </div>
+            <SubTaskView :task="task" @update="updateTask" />
+          </section>
+
+          <section class="my-4">
+            <div class="flex gap-2 items-center mb-2">
+              <h2 class="text-lg font-semibold">Notes</h2>
+            </div>
+            <div
+              class="bg-yonder/10 rounded-lg p-4 mb-6 shadow-yonder/10 shadow-inner overflow-y-auto"
+            >
+              <NoteCard
+                v-if="
+                  task?.note &&
+                  !task?.note.find((note) => note.user.id === userStore.ME?.id)
+                "
+                :task-id="task?.id"
+                @update="updateTask"
+              />
               <div
-                class="bg-yonder/10 rounded-lg p-4 mb-6 shadow-yonder/10 shadow-inner overflow-y-auto"
+                v-if="task?.note && task?.note.length > 0"
+                class="flex flex-col gap-2"
               >
                 <NoteCard
-                  v-if="
-                    task?.note &&
-                    !task?.note.find(
-                      (note) => note.user.id === userStore.ME?.id
-                    )
-                  "
+                  v-for="note in task?.note"
+                  :key="note.id"
+                  :note="note"
                   :task-id="task?.id"
                   @update="updateTask"
                 />
-                <div
-                  v-if="task?.note && task?.note.length > 0"
-                  class="flex flex-col gap-2"
-                >
-                  <NoteCard
-                    v-for="note in task?.note"
-                    :key="note.id"
-                    :note="note"
-                    :task-id="task?.id"
-                    @update="updateTask"
-                  />
-                </div>
-                <div v-else>
-                  <p
-                    class="mt-8 mb-6 text-gray-500 text-sm flex justify-center items-center"
-                  >
-                    No notes have been added yet.
-                  </p>
-                </div>
               </div>
-            </section>
-
-            <LoadingButton
-              :disabled="v$.$invalid"
-              :loading="loading"
-              class="btn-primary mt-4"
-              type="submit"
-            >
-              Update
-            </LoadingButton>
-          </form>
+              <div v-else>
+                <p
+                  class="mt-8 mb-6 text-gray-500 text-sm flex justify-center items-center"
+                >
+                  No notes have been added yet.
+                </p>
+              </div>
+            </div>
+          </section>
 
           <button
             v-if="task"

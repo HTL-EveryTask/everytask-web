@@ -28,7 +28,11 @@ const rules = {
   },
 };
 
-const v$ = useVuelidate(rules, { newSubTaskTitle }, { $autoDirty: true });
+const v$ = useVuelidate(
+  rules,
+  { newSubTaskTitle },
+  { $autoDirty: true, $scope: false }
+);
 
 async function addSubTask() {
   loading.value = true;
@@ -77,6 +81,7 @@ function beforeTaskLeave(el: any) {
           <button
             class="flex items-center justify-center btn-primary p-2 rounded-full"
             type="submit"
+            :disabled="v$.$invalid"
           >
             <IconPlus class="w-6 h-6" v-if="!loading" />
             <IconSpinner class="w-6 h-6" v-else />
