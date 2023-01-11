@@ -16,16 +16,16 @@ const loading = ref(true);
 const loadingEditProfile = ref(false);
 const error = ref("");
 
-const pictures: Ref<any[]> = ref([]);
+const images: Ref<any[]> = ref([]);
 
 const username = ref("");
 
-const uploadedPictureData = ref("");
+const uploadedImageData = ref("");
 
 onMounted(async () => {
   loading.value = true;
   await userStore.getMe();
-  pictures.value = await userStore.getAllProfilePictures();
+  images.value = await userStore.getAllProfilePictures();
   if (userStore.ME) {
     username.value = userStore.ME.username;
   } else {
@@ -47,11 +47,12 @@ const v$ = useVuelidate(rules, { username }, { $autoDirty: true });
 
 async function updateProfile() {
   try {
-    let response = await userStore.changeUsername(username.value);
-    if (uploadedPictureData.value) {
-      response = await userStore.changeProfilePicture(
-        uploadedPictureData.value
-      );
+    let response = await userStore.changeUsername(
+      username.value,
+      uploadedImageData.value
+    );
+    if (uploadedImageData.value) {
+      response = await userStore.changeProfilePicture(uploadedImageData.value);
     }
     if (response.ok) {
       useToastStore().addToast({
@@ -87,7 +88,7 @@ function uploadPicture() {
       reader.onload = async (e) => {
         const data = e.target?.result;
         if (data) {
-          uploadedPictureData.value = data.toString();
+          uploadedImageData.value = data.toString();
         }
       };
       reader.readAsDataURL(file);
@@ -115,11 +116,8 @@ function uploadPicture() {
             </div>
           </div>
           <img
-            v-if="userStore.ME?.profile_picture || uploadedPictureData"
-            :src="
-              uploadedPictureData ||
-              `data:image/png;base64,${userStore.ME?.profile_picture}`
-            "
+            v-if="userStore.ME?.image || uploadedImageData"
+            :src="uploadedImageData || userStore.ME?.image"
             alt="Profile Picture"
             class="w-full h-full rounded-full shadow-lg shadow-yonder/10 border-2 border-raisin/70"
           />

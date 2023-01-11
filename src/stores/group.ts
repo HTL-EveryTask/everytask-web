@@ -51,7 +51,7 @@ export const useGroupStore = defineStore("group", () => {
     return await api.callApi("group", "PUT", {
       name: name,
       description: description,
-      picture: pictureData ? base64 : undefined,
+      image: pictureData ? base64 : undefined,
     });
   }
 

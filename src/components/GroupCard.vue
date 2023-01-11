@@ -13,8 +13,8 @@ const props = defineProps<{
       class="flex items-center rounded-full bg-ghost w-12 h-12 flex justify-center items-center"
     >
       <img
-        v-if="group.picture"
-        :src="`data:image/png;base64,${group.picture}`"
+        v-if="group.image"
+        :src="group.image"
         class="w-full h-full rounded-full object-cover"
         alt="Group Picture"
       />

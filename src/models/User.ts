@@ -4,6 +4,5 @@ export interface User {
   isTeacher?: boolean;
   email?: string;
   is_admin?: boolean;
-  profile_picture?: string;
-  picture?: string;
+  image?: string;
 }

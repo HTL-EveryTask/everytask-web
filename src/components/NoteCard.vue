@@ -22,9 +22,7 @@ const loading = ref(false);
 const editing = ref(!props.note);
 
 const text = ref(props.note?.note || "");
-const picture = ref(
-  props.note?.user.picture || userStore.ME?.profile_picture || ""
-);
+const picture = ref(props.note?.user.image || userStore.ME?.image || "");
 const username = ref(props.note?.user.username || userStore.ME?.username || "");
 
 onMounted(async () => {
@@ -34,7 +32,7 @@ onMounted(async () => {
     (me) => {
       if (me) {
         if (!props.note) {
-          picture.value = me.profile_picture || "";
+          picture.value = me.image || "";
           username.value = me.username;
         }
       }
@@ -93,9 +91,9 @@ function onInput(e: any) {
   >
     <div class="flex items-center justify-between px-4 py-3">
       <div>
-        <div v-if="picture" class="w-10 h-10 rounded-full overflow-hidden">
+        <div v-if="image" class="w-10 h-10 rounded-full overflow-hidden">
           <img
-            :src="`data:image/png;base64,${picture}`"
+            :src="image"
             alt="Profile picture"
             class="w-full h-full object-cover"
           />

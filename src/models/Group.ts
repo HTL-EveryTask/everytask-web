@@ -5,6 +5,6 @@ export interface Group {
   name: string;
   description: string;
   users: User[];
-  picture?: string;
+  image?: string;
   key?: string;
 }

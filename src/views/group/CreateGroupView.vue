@@ -25,7 +25,7 @@ const change = ref(0);
 
 const name = ref("");
 const description = ref("");
-const uploadedPictureData = ref("");
+const uploadedImageData = ref("");
 
 const selectedUsers = ref<User[]>([]);
 
@@ -48,7 +48,7 @@ async function createGroup() {
   let response = await groupStore.createGroup(
     name.value,
     description.value,
-    uploadedPictureData.value
+    uploadedImageData.value
   );
   const data = await response.json();
   createdGroup.value = data.group;
@@ -112,7 +112,7 @@ function uploadPicture() {
       reader.onload = async (e) => {
         const data = e.target?.result;
         if (data) {
-          uploadedPictureData.value = data.toString();
+          uploadedImageData.value = data.toString();
         }
       };
       reader.readAsDataURL(file);
@@ -154,14 +154,14 @@ function onSectionLeave(element: any, done: any) {
               @click="uploadPicture"
             >
               <div
-                v-if="uploadedPictureData"
+                v-if="uploadedImageData"
                 class="w-8 h-8 bg-red-500 rounded-full absolute top-0 right-0 text-white flex items-center justify-center z-30 hover:bg-red-600 cursor-pointer"
-                @click.stop="uploadedPictureData = ''"
+                @click.stop="uploadedImageData = ''"
               >
                 <IconX class="w-7 h-7" />
               </div>
               <div
-                v-if="uploadedPictureData"
+                v-if="uploadedImageData"
                 class="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200"
               >
                 <div
@@ -171,8 +171,8 @@ function onSectionLeave(element: any, done: any) {
                 </div>
               </div>
               <img
-                v-if="uploadedPictureData"
-                :src="uploadedPictureData"
+                v-if="uploadedImageData"
+                :src="uploadedImageData"
                 class="w-full h-full object-cover rounded-full"
                 alt="Group picture"
               />

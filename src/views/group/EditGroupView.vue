@@ -19,6 +19,8 @@ import AddMemberView from "@/views/group/AddMemberView.vue";
 import type { User } from "@/models/User";
 import ContextMenu from "@imengyu/vue3-context-menu";
 import IconDotsVertical from "@/components/icons/IconDotsVertical.vue";
+import IconUpload from "@/components/icons/IconUpload.vue";
+import IconX from "@/components/icons/IconX.vue";
 
 const emit = defineEmits(["close"]);
 const props = defineProps<{
@@ -48,6 +50,9 @@ const orderedUsers = computed(() => {
 
 const name = ref("");
 const description = ref("");
+const image = ref("");
+
+const uploadedImageData = ref("");
 
 onMounted(async () => {
   watch(
@@ -70,6 +75,7 @@ onMounted(async () => {
         }
         name.value = group.value?.name || "";
         description.value = group.value?.description || "";
+        image.value = group.value?.image || "";
         loading.value = false;
       }
     },
@@ -113,11 +119,13 @@ async function updateGroup() {
 
 async function onSubmit() {
   loading.value = true;
+  const base64 = uploadedImageData.value.split(",")[1] || "";
   const newGroup: Group = {
     id: group.value?.id || 0,
     name: name.value,
     description: description.value,
     users: group.value?.users || [],
+    image: base64,
   };
   if (group.value) {
     await groupStore.updateGroup(newGroup);
@@ -216,6 +224,26 @@ async function kickUser() {
   showKickModal.value = false;
   await updateGroup();
 }
+
+function uploadPicture() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const data = e.target?.result;
+        if (data) {
+          uploadedImageData.value = data.toString();
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
 </script>
 
 <template>
@@ -228,81 +256,136 @@ async function kickUser() {
     <div class="flex-1 overflow-y-auto">
       <Transition mode="out-in" name="fade">
         <div v-if="!loading && group" class="relative h-full px-8 py-6">
-          <form class="w-full" @submit.prevent="onSubmit">
-            <InputField id="name" :validation="v$.name" label="Name">
-              <input id="name" v-model="name" class="w-full" type="text" />
-              <template v-slot:right>
-                <span class="text-gray-500 text-sm">
-                  {{ name.length }}/32
-                </span>
-              </template>
-            </InputField>
-
-            <InputField
-              id="description"
-              :validation="v$.description"
-              label="Description"
-            >
-              <textarea
-                id="description"
-                v-model="description"
-                class="w-full"
-                rows="3"
-              ></textarea>
-              <template v-slot:right>
-                <span class="text-gray-500 text-sm">
-                  {{ description.length }}/300
-                </span>
-              </template>
-            </InputField>
-
-            <ModalContainer
-              :show="showAddUserModal"
-              class="w-[30rem] bg-white"
-              effect="shadow"
-              title="Add Users"
-              @close="showAddUserModal = false"
-            >
-              <AddMemberView
-                :group="group"
-                @close="
-                  showAddUserModal = false;
-                  updateGroup();
-                "
-              />
-            </ModalContainer>
-
-            <div class="flex gap-2 items-center mb-2">
-              <h2 class="text-lg font-bold">Members</h2>
-              <button
-                class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
-                type="button"
-                @click="showAddUserModal = true"
-              >
-                <IconPlus class="w-5 h-5" />
-              </button>
-            </div>
-            <div class="flex flex-col">
+          <form class="w-full mb-4" @submit.prevent="onSubmit">
+            <div class="flex flex-col items-center">
               <div
-                v-for="user in orderedUsers"
-                :key="user.id"
-                class="flex gap-2 items-center hover:bg-yonder/10 p-3 transition-colors duration-200"
-                @contextmenu.prevent="onContextMenu($event, user)"
+                class="w-36 h-36 flex items-center justify-center rounded-full bg-ghost relative"
+                @click="uploadPicture"
               >
-                <IconUser class="w-8 h-8" />
-                <span class="text-raisin/80">{{ user.username }}</span>
-                <span v-if="user.is_admin" class="text-raisin/40">
-                  (Admin)
-                </span>
-
-                <IconDotsVertical
-                  v-if="user.id !== useUserStore().ME?.id"
-                  class="w-7 h-7 rounded-full p-1 hover:bg-yonder/10 active:bg-yonder/20 text-gray-500 ml-auto"
-                  @click="onContextMenu($event, user)"
+                <div
+                  v-if="uploadedImageData"
+                  class="w-8 h-8 bg-red-500 rounded-full absolute top-0 right-0 text-white flex items-center justify-center z-30 hover:bg-red-600 cursor-pointer"
+                  @click.stop="
+                    uploadedImageData = '';
+                    image = '';
+                  "
+                >
+                  <IconX class="w-7 h-7" />
+                </div>
+                <div
+                  v-if="uploadedImageData || image"
+                  class="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200"
+                >
+                  <div
+                    class="flex items-center justify-center h-full flex flex-col text-white"
+                  >
+                    <IconUpload class="w-12 h-12" />
+                  </div>
+                </div>
+                <img
+                  v-if="uploadedImageData || image"
+                  :src="uploadedImageData || image"
+                  alt="Group picture"
+                  class="w-full h-full object-cover rounded-full"
                 />
+                <div
+                  v-else
+                  class="w-full h-full hover:bg-yonder/5 flex items-center justify-center rounded-full text-raisin/50 hover:text-raisin/80 transition-colors duration-200"
+                >
+                  <IconPlus class="w-1/2 h-1/2" />
+                </div>
+              </div>
+              <div class="flex-1 w-full">
+                <InputField id="name" :validation="v$.name" label="Name">
+                  <input id="name" v-model="name" class="w-full" type="text" />
+                  <template v-slot:right>
+                    <span class="text-gray-500 text-sm">
+                      {{ name.length }}/32
+                    </span>
+                  </template>
+                </InputField>
+
+                <InputField
+                  id="description"
+                  :validation="v$.description"
+                  label="Description"
+                >
+                  <textarea
+                    id="description"
+                    v-model="description"
+                    class="w-full"
+                    rows="3"
+                  ></textarea>
+                  <template v-slot:right>
+                    <span class="text-gray-500 text-sm">
+                      {{ description.length }}/300
+                    </span>
+                  </template>
+                </InputField>
               </div>
             </div>
+
+            <LoadingButton
+              :disabled="v$.$invalid"
+              :loading="loading"
+              class="btn-primary"
+              type="submit"
+              @click="onSubmit"
+            >
+              Update
+            </LoadingButton>
           </form>
+
+          <ModalContainer
+            :show="showAddUserModal"
+            class="w-[30rem] bg-white"
+            effect="shadow"
+            title="Add Users"
+            @close="showAddUserModal = false"
+          >
+            <AddMemberView
+              :group="group"
+              @close="
+                showAddUserModal = false;
+                updateGroup();
+              "
+            />
+          </ModalContainer>
+
+          <div class="flex gap-2 items-center mb-2">
+            <h2 class="text-lg font-bold">Members</h2>
+            <button
+              class="flex items-center justify-center p-[0.4rem] rounded-md bg-yonder/10 hover:bg-yonder/20 hover:text-yonder/100"
+              type="button"
+              @click="showAddUserModal = true"
+            >
+              <IconPlus class="w-5 h-5" />
+            </button>
+          </div>
+          <div class="flex flex-col">
+            <div
+              v-for="user in orderedUsers"
+              :key="user.id"
+              class="flex gap-2 items-center hover:bg-yonder/10 p-3 transition-colors duration-200"
+              @contextmenu.prevent="onContextMenu($event, user)"
+            >
+              <img
+                v-if="user.image"
+                :src="user.image"
+                class="w-10 h-10 rounded-full"
+                alt="User Picture"
+              />
+              <IconUser v-else class="w-10 h-10" />
+              <span class="text-raisin/80">{{ user.username }}</span>
+              <span v-if="user.is_admin" class="text-raisin/40"> (Admin) </span>
+
+              <IconDotsVertical
+                v-if="user.id !== useUserStore().ME?.id"
+                class="w-7 h-7 rounded-full p-1 hover:bg-yonder/10 active:bg-yonder/20 text-gray-500 ml-auto"
+                @click="onContextMenu($event, user)"
+              />
+            </div>
+          </div>
 
           <h2 class="text-lg font-bold mt-4 mb-2">Invite</h2>
           <GenerateInviteView :group="group" :invite-key="group?.key" />
@@ -340,16 +423,6 @@ async function kickUser() {
               <button @click="showDeleteInviteModal = false">Cancel</button>
             </div>
           </ModalContainer>
-
-          <LoadingButton
-            :disabled="v$.$invalid"
-            :loading="loading"
-            class="btn-primary mt-4"
-            type="submit"
-            @click="onSubmit"
-          >
-            Update
-          </LoadingButton>
 
           <button v-if="group" class="btn-red" @click="showDeleteModal = true">
             Delete Group

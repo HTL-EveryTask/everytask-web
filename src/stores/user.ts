@@ -40,8 +40,8 @@ export const useUserStore = defineStore("user", () => {
 
   async function changeProfilePicture(dataUrl: string) {
     const base64 = dataUrl.split(",")[1];
-    const response = await api.callApi(`user/picture`, "PATCH", {
-      picture: base64,
+    const response = await api.callApi(`user/image`, "PATCH", {
+      image: base64,
     });
     if (response.ok && ME.value) {
       ME.value = await response.json().then((data) => data.user);

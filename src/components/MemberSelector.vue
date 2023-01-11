@@ -123,8 +123,8 @@ function beforeLeave(el: any) {
           @click="select(user)"
         >
           <img
-            v-if="user.profile_picture"
-            :src="user.profile_picture"
+            v-if="user.image"
+            :src="user.image"
             alt="Profile picture"
             class="w-10 h-10 rounded-full"
           />
