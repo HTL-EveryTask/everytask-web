@@ -1,10 +1,6 @@
 <script lang="ts" setup>
-import IconSpinner from "@/components/icons/IconSpinner.vue";
-import AppointmentCard from "@/components/AppointmentCard.vue";
-import router from "@/router";
 import { computed, ref } from "vue";
 import type { Appointment } from "@/models/Appointment";
-import IconSearch from "@/components/icons/IconSearch.vue";
 
 const props = defineProps<{
   appointments: Appointment[];
@@ -31,71 +27,65 @@ function beforeAppointmentLeave(el: any) {
   el.style.width = width;
   el.style.height = height;
 }
+
+const month = new Date().getMonth();
+const year = new Date().getFullYear();
+const masks = {
+  weekdays: "WWW",
+};
+
+const attributes = computed(() => {
+  return props.appointments.map((appointment) => {
+    return {
+      key: appointment.id,
+      popover: {
+        label: appointment.title,
+        visibility: "focus",
+      },
+      customData: {
+        title: appointment.title,
+        class: "bg-red-600 text-white",
+        foreColor: appointment.subject?.fore_color,
+        backColor: appointment.subject?.back_color,
+      },
+      dates: new Date(appointment.start_time),
+    };
+  });
+});
 </script>
 
 <template>
-  <div class="main-board flex flex-col">
-    <header class="text-3xl p-8 border-b-2 border-yonder/60 flex items-center">
-      <h1 class="font-semibold">{{ title }}</h1>
-      <div
-        class="h-10 rounded-full flex bg-white items-center p-4 mx-8 sm:mx-2 border-[1px] border-yonder/20"
-      >
-        <input
-          type="text"
-          class="text-sm w-full"
-          placeholder="Search..."
-          v-model="query"
-        />
-        <div class="ml-auto">
-          <IconSearch class="h-4 w-4" />
+  <div class="main-board flex flex-col h-auto">
+    <v-calendar
+      :attributes="attributes"
+      :masks="masks"
+      class="custom-calendar max-w-full"
+      disable-page-swipe
+      is-expanded
+    >
+      <template v-slot:day-content="{ day, attributes, dayEvents }">
+        <div class="flex flex-col h-full z-10 overflow-hidden">
+          <span class="day-label text-sm text-gray-900">{{ day.day }}</span>
+          <div class="flex-grow overflow-y-auto overflow-x-auto">
+            <p
+              v-for="attr in attributes"
+              :key="attr.key"
+              :class="attr.customData.class"
+              :style="{
+                backgroundColor: attr.customData.backColor,
+                color: attr.customData.foreColor,
+              }"
+              class="text-xs leading-tight rounded-sm p-1 mt-0 mb-1 bg-blue-500 text-white"
+            >
+              {{ attr.customData.title }}
+            </p>
+          </div>
         </div>
-      </div>
-    </header>
-    <div class="p-8 sm:p-4 sm:px-2 overflow-y-auto w-full h-full">
-      <Transition appear mode="out-in" name="fade">
-        <div v-if="loading" class="flex justify-center items-center h-full">
-          <IconSpinner />
-        </div>
-        <div v-else-if="error" class="flex justify-center items-center h-full">
-          <span>{{ error }}</span>
-        </div>
-        <div
-          v-else-if="appointments.length === 0"
-          class="flex justify-center items-center h-full"
-        >
-          <span>No appointments</span>
-        </div>
-        <TransitionGroup
-          v-else
-          appear
-          class="flex flex-col gap-4"
-          name="list"
-          tag="div"
-          @before-leave="beforeAppointmentLeave"
-        >
-          <AppointmentCard
-            v-for="(appointment, index) in filteredAppointments"
-            :key="appointment.id"
-            :class="[
-              Number(router.currentRoute.value.params.id) === appointment.id
-                ? 'border-cerulean/50 border-2'
-                : 'border-transparent border-2',
-            ]"
-            :data-index="index"
-            :appointment="appointment"
-            class="bg-white shadow-md shadow-yonder/10 hover:bg-blue-50 hover:shadow-yonder/20 transition-all duration-300"
-            @click="
-              Number(router.currentRoute.value.params.id) === appointment.id
-                ? router.push({ name: 'appointments' })
-                : router.replace({
-                    name: 'showAppointment',
-                    params: { id: appointment.id },
-                  })
-            "
-          />
-        </TransitionGroup>
-      </Transition>
-    </div>
+      </template>
+      <template v-slot:day-popover>
+        <div>Using my own content now</div>
+      </template>
+    </v-calendar>
   </div>
 </template>
 
@@ -144,5 +134,72 @@ function beforeAppointmentLeave(el: any) {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+:deep(.custom-calendar.vc-container) {
+  --day-border: 1px solid #b8c2cc;
+  --day-border-highlight: 1px solid #b8c2cc;
+  --day-width: 90px;
+  --day-height: 90px;
+  --weekday-bg: #f8fafc;
+  --weekday-border: 1px solid #eaeaea;
+  border-radius: 0;
+  width: 100%;
+  @apply rounded-xl;
+
+  & .vc-header {
+    background-color: #f1f5f8;
+    padding: 10px 0;
+    @apply rounded-xl;
+  }
+
+  & .vc-weeks {
+    padding: 0;
+  }
+
+  & .vc-weekday {
+    background-color: var(--weekday-bg);
+    border-bottom: var(--weekday-border);
+    border-top: var(--weekday-border);
+    padding: 5px 0;
+  }
+
+  & .vc-day {
+    padding: 0 5px 3px 5px;
+    text-align: left;
+    height: var(--day-height);
+    min-width: var(--day-width);
+    @apply sm:min-w-[20px];
+    background-color: white;
+
+    &.weekday-1,
+    &.weekday-7 {
+      background-color: #eff8ff;
+    }
+
+    &:not(.on-bottom) {
+      border-bottom: var(--day-border);
+
+      &.weekday-1 {
+        border-bottom: var(--day-border-highlight);
+      }
+    }
+
+    &:not(.on-right) {
+      border-right: var(--day-border);
+    }
+  }
+
+  & .vc-day-dots {
+    margin-bottom: 5px;
+  }
 }
 </style>

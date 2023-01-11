@@ -3,8 +3,8 @@ const data = [
   [
     {
       startTime: 8000,
-      endTime: 9000,
-      title: "Test",
+      endTime: 8500,
+      title: "Test1",
       description: "Test",
     },
   ],
@@ -12,13 +12,13 @@ const data = [
     {
       startTime: 9000,
       endTime: 10000,
-      title: "Test",
+      title: "Test2",
       description: "Test",
     },
     {
       startTime: 9000,
       endTime: 11000,
-      title: "Test",
+      title: "Test3",
       description: "Test",
     },
   ],
@@ -26,7 +26,7 @@ const data = [
     {
       startTime: 10000,
       endTime: 11000,
-      title: "Test",
+      title: "Test4",
       description: "Test",
     },
     {
@@ -40,13 +40,13 @@ const data = [
     {
       startTime: 11000,
       endTime: 12000,
-      title: "Test",
+      title: "Test5",
       description: "Test",
     },
     {
       startTime: 11000,
       endTime: 13000,
-      title: "Test",
+      title: "Test6",
       description: "Test",
     },
   ],
@@ -54,7 +54,7 @@ const data = [
     {
       startTime: 12000,
       endTime: 13000,
-      title: "Test",
+      title: "Test7",
       description: "Test",
     },
     {
@@ -68,7 +68,7 @@ const data = [
     {
       startTime: 13000,
       endTime: 14000,
-      title: "Test",
+      title: "Test8",
       description: "Test",
     },
     {
@@ -82,13 +82,13 @@ const data = [
     {
       startTime: 14000,
       endTime: 15000,
-      title: "Test",
+      title: "Test9",
       description: "Test",
     },
     {
-      startTime: 14000,
+      startTime: 14400,
       endTime: 16000,
-      title: "Test",
+      title: "Test10",
       description: "Test",
     },
   ],
@@ -96,13 +96,7 @@ const data = [
     {
       startTime: 15000,
       endTime: 16000,
-      title: "Test",
-      description: "Test",
-    },
-    {
-      startTime: 15000,
-      endTime: 17000,
-      title: "Test",
+      title: "Test11",
       description: "Test",
     },
   ],
@@ -110,13 +104,13 @@ const data = [
     {
       startTime: 16000,
       endTime: 17000,
-      title: "Test",
+      title: "Test12",
       description: "Test",
     },
     {
-      startTime: 16000,
+      startTime: 16200,
       endTime: 18000,
-      title: "Test",
+      title: "Test13",
       description: "Test",
     },
   ],
@@ -124,20 +118,24 @@ const data = [
     {
       startTime: 17000,
       endTime: 18000,
-      title: "Test",
+      title: "Test14",
       description: "Test",
     },
     {
       startTime: 17500,
       endTime: 19000,
-      title: "Test",
+      title: "Test15",
       description: "Test",
     },
   ],
 ];
 
 function calculateStartingPosition(startTime: number) {
-  return (startTime / 1000) * 80 + 45;
+  return (startTime / 1000) * 150 + 44;
+}
+
+function calculateHeight(startTime: number, endTime: number) {
+  return ((endTime - startTime) / 1000) * 150;
 }
 </script>
 
@@ -147,7 +145,7 @@ function calculateStartingPosition(startTime: number) {
       <div
         v-for="index in 24"
         :key="index"
-        class="flex h-[80px] text-raisin/50"
+        class="flex h-[150px] text-raisin/50"
       >
         {{ index - 1 }}
       </div>
@@ -162,7 +160,22 @@ function calculateStartingPosition(startTime: number) {
         <div
           v-for="event in entry"
           :key="event.title"
-          class="h-12 w-full bg-raisin/50"
+          :style="{
+            marginTop:
+              calculateStartingPosition(event.startTime) -
+              calculateStartingPosition(entry[0].startTime) +
+              'px',
+            height: calculateHeight(event.startTime, event.endTime) + 'px',
+            backgroundColor:
+              'rgba(' +
+              Math.floor(Math.random() * 255) +
+              ',' +
+              Math.floor(Math.random() * 255) +
+              ',' +
+              Math.floor(Math.random() * 255) +
+              ', 0.5)',
+          }"
+          class="h-12 w-full bg-raisin/50 m-1"
         >
           {{ event.title }}
         </div>
